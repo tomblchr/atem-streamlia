@@ -17,8 +17,23 @@ namespace SwitcherServer.Atem
 
         public IBMDSwitcherInput Switcher => _bmd;
 
-        public long Id { get; set; }
+        public long Id 
+        { 
+            get
+            {
+                _bmd.GetInputId(out long id);
+                return id;
+            }
+        }
 
-        public string Name { get; set; }
+        public string Name 
+        { 
+            get
+            {
+                _bmd.GetShortName(out string n);
+                _bmd.GetLongName(out string name);
+                return $"{n} - {name}";
+            }
+        }
     }
 }

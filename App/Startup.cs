@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using SwitcherServer.Atem;
 using System;
 using System.ComponentModel;
@@ -15,8 +16,11 @@ namespace SwitcherServer
 {
     public class Startup
     {
+        readonly ILogger _logger;
+
         public Startup(IConfiguration configuration)
         {
+            _logger = Program._loggerFactory.CreateLogger<Startup>();
             Configuration = configuration;
         }
 
@@ -29,6 +33,7 @@ namespace SwitcherServer
             services.AddMediatR(typeof(Startup));
             services.AddControllersWithViews();
             services.AddTransient<AtemHubContext>();
+            services.AddTransient<MessageNotificationHandler>();
             services.AddSingleton(services => 
             {
                 return new SwitcherBuilder(services.GetRequiredService<IMediator>())

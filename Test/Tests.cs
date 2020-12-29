@@ -7,7 +7,7 @@ namespace SwitcherServerTests
 {
     public class Tests
     {
-        readonly ILogger<Tests> _logger;
+        readonly ILogger _logger;
 
         public Tests()
         {
@@ -19,6 +19,6 @@ namespace SwitcherServerTests
             _logger = factory.CreateLogger<Tests>();
         }
 
-        protected ILogger<Tests> Logger => _logger;
+        protected ILogger Logger => _logger;
     }
 }

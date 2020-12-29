@@ -11,13 +11,15 @@ namespace SwitcherServer
 {
     public class AtemWorker : BackgroundService
     {
-        private readonly Switcher switcher;
-        private readonly AtemHubContext hub;
+        private readonly Switcher _switcher;
+        private readonly AtemHubContext _hub;
+        private readonly MessageNotificationHandler _message;
 
-        public AtemWorker(Switcher switcher, AtemHubContext hub)
+        public AtemWorker(Switcher switcher, AtemHubContext hub, MessageNotificationHandler message)
         {
-            this.switcher = switcher;
-            this.hub = hub;
+            _switcher = switcher;
+            _hub = hub;
+            _message = message;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)

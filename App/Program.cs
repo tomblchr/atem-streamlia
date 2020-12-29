@@ -11,13 +11,40 @@ namespace SwitcherServer
 {
     public class Program
     {
+        public static ILoggerFactory _loggerFactory;
+        static ILogger _logger;
+
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            try
+            {
+                using var factory = LoggerFactory
+                    .Create(builder => builder
+                        .AddConsole()
+                        .SetMinimumLevel(LogLevel.Information));
+
+                _loggerFactory = factory;
+                _logger = factory.CreateLogger<Program>();
+
+                CreateHostBuilder(args).Build().Run();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError("Application Error: ", e);
+            }
+            finally
+            {
+                _logger.LogInformation("Exiting. Have a good day.");
+            }
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+                .ConfigureLogging(logging =>
+                {
+                    logging.ClearProviders();
+                    logging.AddConsole();
+                })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();

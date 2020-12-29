@@ -14,7 +14,8 @@ namespace SwitcherServerTests
 
         public SwitcherTests()
         {
-            _switcher = new SwitcherBuilder(new MockMediator()).Build();
+            _switcher = new SwitcherBuilder(new MockMediator())
+                .Build();
         }
 
         [Test]
@@ -64,6 +65,8 @@ namespace SwitcherServerTests
         {
             // arrange
             var start = _switcher.GetMixEffectBlocks().First();
+            var startProgram = start.ProgramInput.Id;
+            var startPreview = start.PreviewInput.Id;
 
             // act
             _switcher.PerformAutoTransition();
@@ -73,8 +76,8 @@ namespace SwitcherServerTests
 
             // assert
             var end = _switcher.GetMixEffectBlocks().First();
-            Assert.AreEqual(start.ProgramInput.Id, end.PreviewInput.Id);
-            Assert.AreEqual(start.PreviewInput.Id, end.ProgramInput.Id);
+            Assert.AreEqual(startProgram, end.PreviewInput.Id);
+            Assert.AreEqual(startPreview, end.ProgramInput.Id);
         }
     }
 }
