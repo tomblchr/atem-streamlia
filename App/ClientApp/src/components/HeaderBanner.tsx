@@ -1,9 +1,19 @@
-﻿import * as React from "react";
+﻿import React, { Component } from "react";
+import { Collapse, Container, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink } from "reactstrap";
+import { Link } from "react-router-dom";
+import { AlertTriangle, Zap } from "react-feather";
+
+interface INavMenuState {
+    collapsed: boolean;
+}
 
 export default function HeaderBanner(): JSX.Element {
-    return (
-        /*
-         * svelte original
+    const [state, setState] = React.useState<INavMenuState>({ collapsed: false });
+
+    const toggleNavbar = (): void => { setState({ collapsed: !state.collapsed }) };
+
+/*
+ * svelte original
 <header>
   <h1>{atem.state._pin}</h1>
   <a href="#switcher" class="tab"><Feather icon="grid"/>Switcher</a>
@@ -20,20 +30,36 @@ export default function HeaderBanner(): JSX.Element {
     ATEM
   </span>
 </header>
-         */
+ */
+
+    return (
         <header>
-            <h1>Switcher Name</h1>
-            <a href="#switcher" className="tab">Switcher</a>
-            <a href="#media" className="tab">Media</a>
-            <a href="#macros" className="tab">Macros</a>
-            <span className="tab connection-status"
-                title="Connection status: green=connected, red=disconnected">
-                Server
-            </span>
-            <span className="tab connection-status"
-                title="Connection status: green=connected, red=disconnected">
-                ATEM
-            </span>
+            <Navbar className="navbar-expand-sm navbar-toggleable-sm ng-white border-bottom box-shadow mb-3" dark>
+                <Container>
+                    <NavbarBrand tag={Link} to="/">SwitcherServer</NavbarBrand>
+                    <NavbarToggler onClick={toggleNavbar} className="mr-2" />
+                    <Collapse className="d-sm-inline-flex flex-sm-row-reverse" isOpen={!state.collapsed} navbar>
+                    <ul className="navbar-nav flex-grow">
+                        <NavItem>
+                            <span className="tab connection-status connected" title="Connection status: green=connected, red=disconnected">
+                                <Zap />
+                            </span>
+                        </NavItem>
+                        <NavItem>
+                            <span className="tab connection-status" title="Connection status: green=connected, red=disconnected">
+                                <AlertTriangle />
+                            </span>
+                        </NavItem>
+                        <NavItem>
+                            <NavLink tag={Link} className="tab text-light" to="/">Home</NavLink>
+                        </NavItem>
+                        <NavItem>
+                            <NavLink tag={Link} className="tab text-light" to="/tally-light">Tally Light</NavLink>
+                        </NavItem>
+                    </ul>
+                    </Collapse>
+                </Container>
+            </Navbar>            
         </header>
     )
 }
