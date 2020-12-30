@@ -7,7 +7,7 @@ interface INavMenuState {
   collapsed: boolean;
 }
 
-export class NavMenu extends Component<any, INavMenuState> {
+class NavMenu extends Component<any, INavMenuState> {
   static displayName = NavMenu.name;
 
   constructor (props: any) {
@@ -38,7 +38,7 @@ export class NavMenu extends Component<any, INavMenuState> {
                   <NavLink tag={Link} className="text-dark" to="/">Home</NavLink>
                 </NavItem>
                 <NavItem>
-                  <NavLink tag={Link} className="text-dark" to="/tally-light">Tally Light</NavLink>
+                  <NavLink tag={Link} className="text-dark" to="/tally-light">Tally</NavLink>
                 </NavItem>
               </ul>
             </Collapse>
@@ -48,3 +48,5 @@ export class NavMenu extends Component<any, INavMenuState> {
     );
   }
 }
+
+export default NavMenu;

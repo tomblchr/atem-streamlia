@@ -6,21 +6,30 @@ using System.Threading.Tasks;
 
 namespace SwitcherServer
 {
+    /// <summary>
+    /// The current state of the switcher.
+    /// </summary>
     public class SceneDetail
     {
         public SceneDetail(Switcher switcher)
         {
+            Inputs = switcher
+                .GetInputs()
+                .ToArray();
+
             var i = switcher
                 .GetMixEffectBlocks()
                 .ToList()
                 .First();
             
-            Program = i.ProgramInput.Name;
-            Preview = i.PreviewInput.Name;
+            Program = i.ProgramInput.Id;
+            Preview = i.PreviewInput.Id;
         }
 
-        public string Program { get; private set; }
+        public long Program { get; private set; }
 
-        public string Preview { get; private set; }
+        public long Preview { get; private set; }
+
+        public Input[] Inputs { get; private set; }
     }
 }

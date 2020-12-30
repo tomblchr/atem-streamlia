@@ -1,6 +1,7 @@
 ﻿using BMDSwitcherAPI;
 using MediatR;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Logging;
 using SwitcherServer.Atem;
 using System;
 using System.Collections.Generic;
@@ -31,15 +32,19 @@ namespace SwitcherServer
     public class AtemHub : Hub<IAtemClient>, IAtemServer
     {
         private readonly Switcher _switcher;
+        private readonly ILogger _logger;
 
-        public AtemHub(Switcher switcher)
+        public AtemHub(Switcher switcher, ILogger<AtemHub> logger)
         {
             _switcher = switcher;
+            _logger = logger;
         }
 
         public async override Task OnConnectedAsync()
         {
+            _logger.LogInformation($"Client Connected... Welcome {Context.ConnectionId}-{Context.UserIdentifier}!");
             await base.OnConnectedAsync();
+            await SendSceneChange();
         }
 
         public async Task Subscribe(Guid id)

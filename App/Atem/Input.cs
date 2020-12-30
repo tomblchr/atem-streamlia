@@ -30,9 +30,17 @@ namespace SwitcherServer.Atem
         { 
             get
             {
-                _bmd.GetShortName(out string n);
+                _bmd.GetShortName(out string name);
+                return name;
+            }
+        }
+
+        public string LongName
+        {
+            get
+            {
                 _bmd.GetLongName(out string name);
-                return $"{n} - {name}";
+                return name;
             }
         }
     }

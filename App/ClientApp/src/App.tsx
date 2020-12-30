@@ -4,8 +4,9 @@ import { Layout } from './components/Layout';
 import { Home } from './components/Home';
 import TallyLight from './components/TallyLight';
 
-import './custom.css';
-import './style.css';
+import "./style.css";
+import "./global.css";
+import "./custom.css";
 
 export default class App extends Component {
   static displayName = App.name;

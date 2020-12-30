@@ -21,6 +21,7 @@ namespace SwitcherServer.Atem
             switch (eventType)
             {
                 case _BMDSwitcherMixEffectBlockEventType.bmdSwitcherMixEffectBlockEventTypeProgramInputChanged:
+                case _BMDSwitcherMixEffectBlockEventType.bmdSwitcherMixEffectBlockEventTypePreviewInputChanged:
                     _mediator.Publish(new InputChangeNotify());
                     break;
                 default:

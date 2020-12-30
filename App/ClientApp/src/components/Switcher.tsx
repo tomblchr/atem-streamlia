@@ -1,6 +1,6 @@
 ﻿import * as React from "react";
 import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
-import Inputs from "./Inputs";
+import Inputs, { IInput } from "./Inputs";
 import Transitions from "./Transitions";
 import NextTransition from "./NextTransition";
 import TransitionStyle from "./TransitionStyle";
@@ -9,6 +9,8 @@ import FadeToBlack from "./FadeToBlack";
 
 interface ISceneDetail {
     program: number;
+    preview: number;
+    inputs: IInput[];
 }
 
 export default function Switcher(): JSX.Element {
@@ -19,7 +21,7 @@ export default function Switcher(): JSX.Element {
         console.log("Creating connection...");
 
         const newConnection: HubConnection = new HubConnectionBuilder()
-            .withUrl("https://localhost:44373/atemhub")
+            .withUrl("/atemhub")
             .withAutomaticReconnect()
             .build();
 
@@ -47,14 +49,16 @@ export default function Switcher(): JSX.Element {
     };
 
     return (
-        <div id="switcher" className="screen" onClick={sendSceneChange}>
-            <h2>{scene?.program}</h2>
-            <Inputs />
-            <Transitions />
-            <NextTransition />
-            <TransitionStyle />
-            <DownstreamKey />
-            <FadeToBlack />
+        <div>
+            <div><h2>{scene?.program}</h2></div>
+            <div id="switcher" className="screen" onClick={sendSceneChange}>
+                <Inputs program={scene?.program} preview={scene?.preview} inputs={scene?.inputs} />
+                <Transitions />
+                <NextTransition />
+                <TransitionStyle />
+                <DownstreamKey />
+                <FadeToBlack />
+            </div>
         </div>
     );
 }
