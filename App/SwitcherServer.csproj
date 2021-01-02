@@ -85,7 +85,7 @@
     </PropertyGroup>
   </Target>
 
-  <Target Name="ZipOutputPath" AfterTargets="PublishRunWebpack">
+  <Target Name="ZipOutputPath" AfterTargets="Publish">
         <ZipDirectory
             Overwrite="true"        
             SourceDirectory="$(OutputPath)\publish"
