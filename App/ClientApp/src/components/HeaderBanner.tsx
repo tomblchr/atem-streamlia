@@ -54,7 +54,7 @@ export default function HeaderBanner(): JSX.Element {
                             <NavLink tag={Link} className="tab text-light" to="/">Home</NavLink>
                         </NavItem>
                         <NavItem>
-                            <NavLink tag={Link} className="tab text-light" to="/tally-light">Tally Light</NavLink>
+                            <NavLink tag={Link} className="tab text-light" to="/tally-light">Tally</NavLink>
                         </NavItem>
                     </ul>
                     </Collapse>

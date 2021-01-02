@@ -47,10 +47,26 @@ namespace SwitcherServer
                     .AllowAnyHeader()
                     .AllowCredentials()));
 
+
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {
                 configuration.RootPath = "ClientApp/public";
+
+                // check other locations
+                var folders = new[]
+                {
+                    "ClientApp/public",
+                    "ClientApp/build"
+                };
+                foreach (var folder in folders)
+                {
+                    if (System.IO.Directory.Exists(System.IO.Path.Join(GetRootPath(), folder)))
+                    {
+                        configuration.RootPath = System.IO.Path.Join(GetRootPath(), folder);
+                        continue;
+                    }
+                }
             });
 
             services.AddHostedService<AtemWorker>();
@@ -95,6 +111,13 @@ namespace SwitcherServer
                     spa.UseReactDevelopmentServer(npmScript: "start");
                 }
             });
+        }
+
+        string GetRootPath()
+        {
+            var pathToExe = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName;
+            var pathToContentRoot = System.IO.Path.GetDirectoryName(pathToExe);
+            return pathToContentRoot;
         }
     }
 }

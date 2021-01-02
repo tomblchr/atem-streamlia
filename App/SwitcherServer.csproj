@@ -7,6 +7,11 @@
     <IsPackable>false</IsPackable>
     <SpaRoot>ClientApp\</SpaRoot>
     <DefaultItemExcludes>$(DefaultItemExcludes);$(SpaRoot)node_modules\**</DefaultItemExcludes>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <AssemblyVersion>1.0.1.0</AssemblyVersion>
+    <FileVersion>1.0.1.0</FileVersion>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <Version>1.0.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -31,10 +36,18 @@
   </ItemGroup>
   
   <ItemGroup>
+    <Content Remove="ClientApp\package-lock.json" />
+    <Content Remove="ClientApp\package.json" />
+    <Content Remove="ClientApp\public\manifest.json" />
+    <Content Remove="ClientApp\tsconfig.json" />
     <Content Remove="tsconfig.json" />
   </ItemGroup>
   
   <ItemGroup>
+    <None Include="ClientApp\package-lock.json" />
+    <None Include="ClientApp\package.json" />
+    <None Include="ClientApp\public\manifest.json" />
+    <None Include="ClientApp\tsconfig.json" />
     <None Include="tsconfig.json">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
@@ -71,5 +84,12 @@
       <InteropOutputPath>$(MSBuildProjectDirectory)\$(IntermediateOutputPath)</InteropOutputPath>
     </PropertyGroup>
   </Target>
+
+  <Target Name="ZipOutputPath" AfterTargets="PublishRunWebpack">
+        <ZipDirectory
+            Overwrite="true"        
+            SourceDirectory="$(OutputPath)\publish"
+            DestinationFile="$(MSBuildProjectDirectory)\bin\SwitcherServer.zip" />
+    </Target>
 
 </Project>
