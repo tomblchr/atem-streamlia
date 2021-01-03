@@ -19,6 +19,8 @@ namespace SwitcherServer
         Task ReceiveSceneChange(SceneDetail detail);
 
         Task ReceiveConnectConfirmation(string message);
+
+        Task ReceiveConnectionStatus(bool connected);
     }
 
     /// <summary>
@@ -42,7 +44,7 @@ namespace SwitcherServer
 
         public async override Task OnConnectedAsync()
         {
-            _logger.LogInformation($"Client Connected... Welcome {Context.ConnectionId}-{Context.UserIdentifier}!");
+            _logger.LogInformation($"Client Connected... Welcome {Context.ConnectionId}!");
             await base.OnConnectedAsync();
             await SendSceneChange();
         }
@@ -56,6 +58,18 @@ namespace SwitcherServer
         public async Task SendSceneChange()
         {
             await Clients.All.ReceiveSceneChange(new SceneDetail(_switcher));
+        }
+
+        public async Task SendProgramChange(long input)
+        {
+            _switcher.GetMixEffectBlocks().First().Switcher.SetProgramInput(input);
+            await Task.CompletedTask;
+        }
+
+        public async Task SendPreviewChange(long input)
+        {
+            _switcher.GetMixEffectBlocks().First().Switcher.SetPreviewInput(input);
+            await Task.CompletedTask;
         }
     }
 }

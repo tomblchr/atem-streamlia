@@ -1,5 +1,6 @@
 ﻿import * as React from "react";
-import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
+import { HubConnection, HubConnectionBuilder, HubConnectionState } from "@microsoft/signalr";
+import { AlertTriangle, Zap } from "react-feather";
 import Inputs, { IInput } from "./Inputs";
 import Transitions from "./Transitions";
 import NextTransition from "./NextTransition";
@@ -16,6 +17,7 @@ interface ISceneDetail {
 export default function Switcher(): JSX.Element {
     const [connection, setConnection] = React.useState<HubConnection | null>(null);
     const [scene, setScene] = React.useState<ISceneDetail | null>(null);
+    const [switchConnection, setSwitchConnection] = React.useState<boolean>(false);
 
     React.useEffect(() => {
         console.log("Creating connection...");
@@ -33,32 +35,33 @@ export default function Switcher(): JSX.Element {
             connection
                 .start()
                 .then(() => {
-                    console.log('Connected!');
-                    connection.on('ReceiveSceneChange', message => {
+                    console.log("Connected!");
+                    connection.on("ReceiveSceneChange", message => {
+                        console.log(`ReceiveSceneChange - ${message}`);
                         setScene(message);
+                        setSwitchConnection(true);
+                    });
+                    connection.on("ReceiveConnectionStatus", message => {
+                        console.log(`ReceivedConnectionStatus - ${message}`);
+                        setSwitchConnection(message);
                     });
                 })
                 .catch(e => console.log('Connection failed: ', e));
         }
     }, [connection]);
 
-    const sendSceneChange = async (): Promise<void> => {
-        await connection?.send("SendSceneChange")
-            .then(() => { })
-            .catch(e => console.log('SendSceneChange failed: ', e));
-    };
-
     return (
         <div>
-            <div><h2>{scene?.program}</h2></div>
-            <div id="switcher" className="screen" onClick={sendSceneChange}>
-                <Inputs program={scene?.program} preview={scene?.preview} inputs={scene?.inputs} />
-                <Transitions />
-                <NextTransition />
-                <TransitionStyle />
-                <DownstreamKey />
-                <FadeToBlack />
+            <div className="float-right">
+                {connection?.state === HubConnectionState.Connected ? <span className="tab connection-status connected" title="Server Connection"><Zap /></span> : <AlertTriangle /> }
+                {switchConnection ? <span className="tab connection-status connected" title="Switch Connection"><Zap /></span> : <AlertTriangle /> }
             </div>
+            <Inputs program={scene?.program} preview={scene?.preview} inputs={scene?.inputs} connection={connection} />
+            <Transitions />
+            <NextTransition />
+            <TransitionStyle />
+            <DownstreamKey />
+            <FadeToBlack />
         </div>
     );
 }

@@ -24,7 +24,7 @@ namespace SwitcherServer.Atem
 
         public Switcher Build()
         {
-            var connection = new SwitcherConnectionKeeper(_ipaddress);
+            var connection = new SwitcherConnectionKeeper(_ipaddress, _mediator);
             var result = new Switcher(connection, _mediator);
             return result;
         }

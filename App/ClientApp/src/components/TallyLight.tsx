@@ -51,6 +51,9 @@ function TallyLight() {
 
     return (
         <section className="channels">
+            <div className={isLive ? "well tally active" : "well tally"}>
+                <p>Camera {isLive ? "LIVE!" : isPreview ? "PREVIEW!" : "Off" }</p>
+            </div>
             <h3>Choose Your Camera</h3>
             <div className="well">
                 {scene.inputs.map(i => (
@@ -58,9 +61,6 @@ function TallyLight() {
                         <p>{i.name}</p>
                     </div>
                 ))}
-            </div>
-            <div className={isLive ? "well tally active" : "well tally"}>
-                <p>Camera {isLive ? "LIVE!" : isPreview ? "PREVIEW!" : "Off" }</p>
             </div>
         </section>
     );

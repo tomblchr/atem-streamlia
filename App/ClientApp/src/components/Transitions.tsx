@@ -11,7 +11,9 @@ export default function Transitions(): JSX.Element {
             <div className="button red" onClick={c => { apiTransition(); }}>
                 <p>AUTO</p>
             </div>
-            <input className="slider" type="range" min="0" max="1" step="0.001" />
+            <div>
+                <input className="slider" type="range" min="0" max="1" step="0.001" />
+            </div>
         </div>
-    </section>;
+    </section>
 }

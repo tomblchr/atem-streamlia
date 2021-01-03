@@ -19,7 +19,7 @@
     "isolatedModules": true,
     "noEmit": true,
     "noEmitOnError": true,
-    "outDir": "./build/obj",
+    "outDir": "./build",
     "jsx": "react-jsx",
     "noFallthroughCasesInSwitch": true
   },

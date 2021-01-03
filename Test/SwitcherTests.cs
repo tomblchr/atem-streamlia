@@ -79,5 +79,17 @@ namespace SwitcherServerTests
             Assert.AreEqual(startProgram, end.PreviewInput.Id);
             Assert.AreEqual(startPreview, end.ProgramInput.Id);
         }
+        
+        [Test]
+        public void TestChangeProgramInput()
+        {
+
+        }
+
+        [Test]
+        public void TestChangePreviewInput()
+        {
+
+        }
     }
 }

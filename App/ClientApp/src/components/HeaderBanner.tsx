@@ -1,7 +1,6 @@
 ﻿import React, { Component } from "react";
 import { Collapse, Container, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink } from "reactstrap";
 import { Link } from "react-router-dom";
-import { AlertTriangle, Zap } from "react-feather";
 
 interface INavMenuState {
     collapsed: boolean;
@@ -41,17 +40,7 @@ export default function HeaderBanner(): JSX.Element {
                     <Collapse className="d-sm-inline-flex flex-sm-row-reverse" isOpen={!state.collapsed} navbar>
                     <ul className="navbar-nav flex-grow">
                         <NavItem>
-                            <span className="tab connection-status connected" title="Connection status: green=connected, red=disconnected">
-                                <Zap />
-                            </span>
-                        </NavItem>
-                        <NavItem>
-                            <span className="tab connection-status" title="Connection status: green=connected, red=disconnected">
-                                <AlertTriangle />
-                            </span>
-                        </NavItem>
-                        <NavItem>
-                            <NavLink tag={Link} className="tab text-light" to="/">Home</NavLink>
+                            <NavLink tag={Link} className="tab text-light" to="/">Switch</NavLink>
                         </NavItem>
                         <NavItem>
                             <NavLink tag={Link} className="tab text-light" to="/tally-light">Tally</NavLink>

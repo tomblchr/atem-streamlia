@@ -10,6 +10,10 @@ using System.Threading.Tasks;
 
 namespace SwitcherServer
 {
+    /// <summary>
+    /// Relay notifications from the application, usually from callbacks
+    /// triggered by the switcher, to the connected client applications.
+    /// </summary>
     public class AtemHubContext : INotificationHandler<InputChangeNotify>
     {
         private readonly Switcher _switcher;
@@ -23,15 +27,16 @@ namespace SwitcherServer
             _logger = logger;
         }
 
-        public async Task SendSceneChange()
+        public async Task Handle(ConnectionChangeNotify notification, CancellationToken cancellationToken)
         {
-            await _hub.Clients.All.ReceiveSceneChange(new SceneDetail(_switcher));
+            _logger.LogInformation("Send 'connection status' notification");
+            await _hub.Clients.All.ReceiveConnectionStatus(notification.Connected);
         }
 
-        public Task Handle(InputChangeNotify notification, CancellationToken cancellationToken)
+        public async Task Handle(InputChangeNotify notification, CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Handle 'Input Change' notification");
-            return SendSceneChange();
+            _logger.LogInformation("Send 'input change' notification");
+            await _hub.Clients.All.ReceiveSceneChange(new SceneDetail(_switcher));
         }
     }
 }

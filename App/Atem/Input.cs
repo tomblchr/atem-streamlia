@@ -43,5 +43,14 @@ namespace SwitcherServer.Atem
                 return name;
             }
         }
+
+        public _BMDSwitcherPortType InputType
+        {
+            get
+            {
+                _bmd.GetPortType(out _BMDSwitcherPortType portType);
+                return portType;
+            }
+        }
     }
 }

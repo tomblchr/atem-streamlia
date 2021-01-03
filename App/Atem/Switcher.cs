@@ -39,6 +39,15 @@ namespace SwitcherServer.Atem
             return _inputs;
         }
 
+        public IEnumerable<Input> GetSourceInputs()
+        {
+            var sourceInputs = new [] { 
+                _BMDSwitcherPortType.bmdSwitcherPortTypeBlack,
+                _BMDSwitcherPortType.bmdSwitcherPortTypeExternal
+            };
+            return GetInputs().Where(c => sourceInputs.Contains(c.InputType));
+        }
+
         private IEnumerable<MixEffectBlock> _mixEffectBlocks;
         public IEnumerable<MixEffectBlock> GetMixEffectBlocks()
         {

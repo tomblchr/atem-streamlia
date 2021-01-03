@@ -1,4 +1,5 @@
 ﻿using BMDSwitcherAPI;
+using MediatR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,10 +13,12 @@ namespace SwitcherServer.Atem
         static bool _isConnected = false;
         static readonly object _lock = new object();
         readonly string _ipaddress;
+        private readonly IMediator _mediator;
 
-        public SwitcherConnectionKeeper(string ipaddress)
+        public SwitcherConnectionKeeper(string ipaddress, IMediator mediator)
         {
             _ipaddress = ipaddress;
+            _mediator = mediator;
         }
 
         public IBMDSwitcher Connect()
@@ -40,7 +43,7 @@ namespace SwitcherServer.Atem
                 }
                 _switcher.AddCallback(this);
             }
-
+            _mediator.Publish(new ConnectionChangeNotify { Connected = _isConnected });
             return _switcher;
         }
 
@@ -49,6 +52,7 @@ namespace SwitcherServer.Atem
             lock (_lock)
             {
                 _isConnected = false;
+                _mediator.Publish(new ConnectionChangeNotify { Connected = _isConnected });
             }
         }
 
@@ -71,6 +75,10 @@ namespace SwitcherServer.Atem
         {
             lock (_lock)
             {
+                if (_mediator != null)
+                {
+                    _mediator.Publish(new ConnectionChangeNotify { Connected = false });
+                }
                 if (_switcher != null)
                 {
                     _switcher.RemoveCallback(this);

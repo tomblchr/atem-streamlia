@@ -21,9 +21,11 @@ namespace SwitcherServer.Atem
             switch (eventType)
             {
                 case _BMDSwitcherEventType.bmdSwitcherEventTypeDisconnected:
+                    _mediator.Publish(new ConnectionChangeNotify { Connected = false });
                     _mediator.Publish(new SwitcherMessageNotify { Message = $"Switcher Disconnected! ({ coreVideoMode })" });
                     break;
                 default:
+                    _mediator.Publish(new ConnectionChangeNotify { Connected = false });
                     _mediator.Publish(new SwitcherMessageNotify { Message = eventType.ToString() });
                     break;
             }
