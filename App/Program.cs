@@ -48,6 +48,13 @@ namespace SwitcherServer
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
+                    webBuilder.UseKestrel(options =>
+                    {
+                        options.ListenAnyIP(5001, configure =>
+                        {
+                            configure.UseHttps();
+                        });
+                    });
                 });
     }
 }
