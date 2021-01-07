@@ -19,7 +19,7 @@ namespace SwitcherServer.Atem
             _bmd = bmd;
             _mediator = mediator;
             
-            _bmd.AddCallback(new MixEffectBlockCallback(_mediator));
+            _bmd.AddCallback(new MixEffectBlockCallback(this, _mediator));
         }
 
         public IBMDSwitcherMixEffectBlock Switcher => _bmd;

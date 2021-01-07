@@ -15,6 +15,9 @@ namespace SwitcherServer
     /// triggered by the switcher, to the connected client applications.
     /// </summary>
     public class AtemHubContext : INotificationHandler<InputChangeNotify>
+        , INotificationHandler<MasterOutLevelNotify>
+        , INotificationHandler<InTransitionNotify>
+//        , INotificationHandler<ConnectionChangeNotify>
     {
         private readonly Switcher _switcher;
         private readonly IHubContext<AtemHub, IAtemClient> _hub;
@@ -37,6 +40,18 @@ namespace SwitcherServer
         {
             _logger.LogInformation("Send 'input change' notification");
             await _hub.Clients.All.ReceiveSceneChange(new SceneDetail(_switcher));
+        }
+
+        public async Task Handle(MasterOutLevelNotify notification, CancellationToken token)
+        {
+            _logger.LogInformation($"Master Out Level: {notification.NumLevels}-{notification.Levels}");
+            await _hub.Clients.All.ReceiveVolume(notification.Levels);
+        }
+
+        public async Task Handle(InTransitionNotify notification, CancellationToken cancellationToken)
+        {
+            _logger.LogDebug($"In Transition: {notification.InTransition}");
+            await _hub.Clients.All.ReceiveInTransition(notification.InTransition);
         }
     }
 }

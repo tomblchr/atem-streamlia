@@ -21,6 +21,10 @@ namespace SwitcherServer
         Task ReceiveConnectConfirmation(string message);
 
         Task ReceiveConnectionStatus(bool connected);
+
+        Task ReceiveVolume(double volume);
+
+        Task ReceiveInTransition(bool inTransition);
     }
 
     /// <summary>
@@ -29,6 +33,14 @@ namespace SwitcherServer
     public interface IAtemServer
     {
         Task SendSceneChange();
+
+        Task SendProgramChange(long input);
+
+        Task SendPreviewChange(long input);
+
+        Task SendAutoTransition();
+
+        Task SendCutTransition();
     }
 
     public class AtemHub : Hub<IAtemClient>, IAtemServer
@@ -69,6 +81,18 @@ namespace SwitcherServer
         public async Task SendPreviewChange(long input)
         {
             _switcher.GetMixEffectBlocks().First().Switcher.SetPreviewInput(input);
+            await Task.CompletedTask;
+        }
+
+        public async Task SendAutoTransition()
+        {
+            _switcher.GetMixEffectBlocks().First().Switcher.PerformAutoTransition();
+            await Task.CompletedTask;
+        }
+
+        public async Task SendCutTransition()
+        {
+            _switcher.GetMixEffectBlocks().First().Switcher.PerformCut();
             await Task.CompletedTask;
         }
     }
