@@ -17,6 +17,9 @@ namespace SwitcherServer.Atem
         {
             _connection = connection ?? throw new ArgumentNullException(nameof(connection));
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+
+            GetMixEffectBlocks();
+            GetFairlightAudioMixer();
         }
 
         public IBMDSwitcher SwitcherDirect => _connection.Connect();
@@ -60,6 +63,16 @@ namespace SwitcherServer.Atem
             }
 
             return _mixEffectBlocks;
+        }
+
+        private FairlightAudioMixer _fairlightAudioMixer;
+        public FairlightAudioMixer GetFairlightAudioMixer()
+        {
+            if (_fairlightAudioMixer == null)
+            {
+                _fairlightAudioMixer = new FairlightAudioMixer(SwitcherDirect.GetFairlightAudioMixer(), _mediator);
+            }
+            return _fairlightAudioMixer;
         }
 
         public void PerformAutoTransition()
