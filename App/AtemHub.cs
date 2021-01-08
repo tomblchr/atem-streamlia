@@ -25,6 +25,8 @@ namespace SwitcherServer
         Task ReceiveVolume(double volume);
 
         Task ReceiveInTransition(bool inTransition);
+
+        Task ReceiveIsFadeToBlack(FullyBlackNotify isBlack);
     }
 
     /// <summary>
@@ -41,6 +43,8 @@ namespace SwitcherServer
         Task SendAutoTransition();
 
         Task SendCutTransition();
+
+        Task SendFadeToBlackTransition();
     }
 
     public class AtemHub : Hub<IAtemClient>, IAtemServer
@@ -93,6 +97,12 @@ namespace SwitcherServer
         public async Task SendCutTransition()
         {
             _switcher.GetMixEffectBlocks().First().Switcher.PerformCut();
+            await Task.CompletedTask;
+        }
+
+        public async Task SendFadeToBlackTransition()
+        {
+            _switcher.GetMixEffectBlocks().First().Switcher.PerformFadeToBlack();
             await Task.CompletedTask;
         }
     }

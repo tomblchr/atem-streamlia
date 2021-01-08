@@ -14,9 +14,11 @@ namespace SwitcherServer
     /// Relay notifications from the application, usually from callbacks
     /// triggered by the switcher, to the connected client applications.
     /// </summary>
-    public class AtemHubContext : INotificationHandler<InputChangeNotify>
+    public class AtemHubContext : 
+          INotificationHandler<InputChangeNotify>
         , INotificationHandler<MasterOutLevelNotify>
         , INotificationHandler<InTransitionNotify>
+        , INotificationHandler<FullyBlackNotify>
 //        , INotificationHandler<ConnectionChangeNotify>
     {
         private readonly Switcher _switcher;
@@ -52,6 +54,12 @@ namespace SwitcherServer
         {
             _logger.LogDebug($"In Transition: {notification.InTransition}");
             await _hub.Clients.All.ReceiveInTransition(notification.InTransition);
+        }
+
+        public async Task Handle(FullyBlackNotify notification, CancellationToken cancellationToken)
+        {
+            _logger.LogDebug($"Is fully black: {notification.IsFullyBlack}. Is in transition: {notification.IsInTransition}");
+            await _hub.Clients.All.ReceiveIsFadeToBlack(notification);
         }
     }
 }

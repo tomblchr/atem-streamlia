@@ -30,6 +30,12 @@ namespace SwitcherServer.Atem
                     _mixEffectBlock.Switcher.GetInTransition(out int inTransition);
                     _mediator.Publish(new InTransitionNotify { InTransition = inTransition == 1 });
                     break;
+                case _BMDSwitcherMixEffectBlockEventType.bmdSwitcherMixEffectBlockEventTypeFadeToBlackFullyBlackChanged:
+                case _BMDSwitcherMixEffectBlockEventType.bmdSwitcherMixEffectBlockEventTypeInFadeToBlackChanged:
+                    _mixEffectBlock.Switcher.GetFadeToBlackFullyBlack(out int fullyBlack);
+                    _mixEffectBlock.Switcher.GetFadeToBlackInTransition(out int inFullyBlackTransition);
+                    _mediator.Publish(new FullyBlackNotify { IsFullyBlack = fullyBlack == 1, IsInTransition = inFullyBlackTransition == 1 });
+                    break;
                 default:
                     _mediator.Publish(new SwitcherMessageNotify { Message = eventType.ToString() } );
                     break;

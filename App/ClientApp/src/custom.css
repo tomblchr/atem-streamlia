@@ -12,3 +12,17 @@ code {
   background-color: #1b6ec2;
   border-color: #1861ac;
 }
+
+.button.red.flashing {
+    animation: blinker 0.5s alternate infinite;
+}
+
+@keyframes blinker {
+    from {
+        background-color: white;
+    }
+
+    to {
+        background-color: black;
+    }
+}

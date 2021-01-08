@@ -61,7 +61,7 @@ export default function Switcher(): JSX.Element {
             <NextTransition />
             <TransitionStyle />
             <DownstreamKey />
-            <FadeToBlack />
+            <FadeToBlack connection={connection} />
         </div>
     );
 }
