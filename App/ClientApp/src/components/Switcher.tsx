@@ -59,7 +59,7 @@ export default function Switcher(): JSX.Element {
             <Inputs program={scene?.program} preview={scene?.preview} inputs={scene?.inputs} connection={connection} />
             <Transitions connection={connection} />
             <NextTransition />
-            <TransitionStyle />
+            <TransitionStyle connection={connection} />
             <DownstreamKey />
             <FadeToBlack connection={connection} />
         </div>

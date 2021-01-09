@@ -19,6 +19,7 @@ namespace SwitcherServer
         , INotificationHandler<MasterOutLevelNotify>
         , INotificationHandler<InTransitionNotify>
         , INotificationHandler<FullyBlackNotify>
+        , INotificationHandler<TransitionStyleNotify>
 //        , INotificationHandler<ConnectionChangeNotify>
     {
         private readonly Switcher _switcher;
@@ -60,6 +61,12 @@ namespace SwitcherServer
         {
             _logger.LogDebug($"Is fully black: {notification.IsFullyBlack}. Is in transition: {notification.IsInTransition}");
             await _hub.Clients.All.ReceiveIsFadeToBlack(notification);
+        }
+
+        public async Task Handle(TransitionStyleNotify notification, CancellationToken cancellationToken)
+        {
+            _logger.LogDebug($"Transition Style: {notification.Current}");
+            await _hub.Clients.All.ReceiveTransitionStyle(notification.Current);
         }
     }
 }

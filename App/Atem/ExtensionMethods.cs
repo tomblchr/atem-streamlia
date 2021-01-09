@@ -39,11 +39,23 @@ namespace SwitcherServer.Atem
             return result;
         }
 
+        /// <summary>
+        /// Query the switcher for the Fairlight Audio Mixer
+        /// </summary>
+        /// <param name="o"></param>
+        /// <returns></returns>
         public static IBMDSwitcherFairlightAudioMixer GetFairlightAudioMixer(this IBMDSwitcher o)
         {
             Guid g = typeof(IBMDSwitcherFairlightAudioMixer).GUID;
             Marshal.QueryInterface(Marshal.GetIUnknownForObject(o), ref g, out IntPtr ptr);
             return (IBMDSwitcherFairlightAudioMixer)Marshal.GetObjectForIUnknown(ptr);
+        }
+
+        public static IBMDSwitcherTransitionParameters GetTransitionParameters(this IBMDSwitcherMixEffectBlock m)
+        {
+            Guid g = typeof(IBMDSwitcherTransitionParameters).GUID;
+            Marshal.QueryInterface(Marshal.GetIUnknownForObject(m), ref g, out IntPtr ptr);
+            return (IBMDSwitcherTransitionParameters)Marshal.GetObjectForIUnknown(ptr);
         }
     }
 }

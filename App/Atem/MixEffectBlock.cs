@@ -12,14 +12,17 @@ namespace SwitcherServer.Atem
         private readonly IMediator _mediator;
         private readonly Switcher _switcher;
         private readonly IBMDSwitcherMixEffectBlock _bmd;
+        private readonly IBMDSwitcherTransitionParameters _transitionParameters;
 
         public MixEffectBlock(Switcher switcher, IBMDSwitcherMixEffectBlock bmd, IMediator mediator)
         {
             _switcher = switcher;
             _bmd = bmd;
             _mediator = mediator;
-            
+            _transitionParameters = _bmd.GetTransitionParameters();
+
             _bmd.AddCallback(new MixEffectBlockCallback(this, _mediator));
+            _transitionParameters.AddCallback(new TransitionParametersCallback(_transitionParameters, _mediator));
         }
 
         public IBMDSwitcherMixEffectBlock Switcher => _bmd;

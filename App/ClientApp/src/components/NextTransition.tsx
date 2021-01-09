@@ -8,7 +8,7 @@ export default function NextTransition(): JSX.Element {
                 <p>BKGD</p>
             </div>
             <div className="button red" onClick={c => { alert("Hello"); }}>
-                <p>ON AIR</p>
+                <p>ON<br />AIR</p>
             </div>
             <div className="button yellow" onClick={c => { alert("Hello"); }}>
                 <p>Key 1</p>
