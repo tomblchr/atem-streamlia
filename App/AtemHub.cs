@@ -11,47 +11,7 @@ using System.Threading.Tasks;
 
 namespace SwitcherServer
 {
-    /// <summary>
-    /// Methods that client applications will be listening for
-    /// </summary>
-    public interface IAtemClient
-    {
-        Task ReceiveSceneChange(SceneDetail detail);
-
-        Task ReceiveConnectConfirmation(string message);
-
-        Task ReceiveConnectionStatus(bool connected);
-
-        Task ReceiveVolume(double volume);
-
-        Task ReceiveInTransition(bool inTransition);
-
-        Task ReceiveIsFadeToBlack(FullyBlackNotify isBlack);
-
-        Task ReceiveTransitionStyle(_BMDSwitcherTransitionStyle style);
-    }
-
-    /// <summary>
-    /// Methods the client applications will be calling
-    /// </summary>
-    public interface IAtemServer
-    {
-        Task SendSceneChange();
-
-        Task SendProgramChange(long input);
-
-        Task SendPreviewChange(long input);
-
-        Task SendAutoTransition();
-
-        Task SendCutTransition();
-
-        Task SendFadeToBlackTransition();
-
-        Task SendTransitionStyle(_BMDSwitcherTransitionStyle current);
-    }
-
-    public class AtemHub : Hub<IAtemClient>, IAtemServer
+    public class AtemHub : Hub<IClientNotifications>, IOperateSwitcher
     {
         private readonly Switcher _switcher;
         private readonly ILogger _logger;

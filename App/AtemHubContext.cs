@@ -23,10 +23,10 @@ namespace SwitcherServer
 //        , INotificationHandler<ConnectionChangeNotify>
     {
         private readonly Switcher _switcher;
-        private readonly IHubContext<AtemHub, IAtemClient> _hub;
+        private readonly IHubContext<AtemHub, IClientNotifications> _hub;
         private readonly ILogger<AtemHubContext> _logger;
 
-        public AtemHubContext(Switcher switcher, IHubContext<AtemHub, IAtemClient> hub, ILogger<AtemHubContext> logger)
+        public AtemHubContext(Switcher switcher, IHubContext<AtemHub, IClientNotifications> hub, ILogger<AtemHubContext> logger)
         {
             _switcher = switcher;
             _hub = hub;

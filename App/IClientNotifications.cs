@@ -1,0 +1,29 @@
+﻿using BMDSwitcherAPI;
+using SwitcherServer.Atem;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace SwitcherServer
+{
+    /// <summary>
+    /// Methods that client applications will be listening for
+    /// </summary>
+    public interface IClientNotifications
+    {
+        Task ReceiveSceneChange(SceneDetail detail);
+
+        Task ReceiveConnectConfirmation(string message);
+
+        Task ReceiveConnectionStatus(bool connected);
+
+        Task ReceiveVolume(double volume);
+
+        Task ReceiveInTransition(bool inTransition);
+
+        Task ReceiveIsFadeToBlack(FullyBlackNotify isBlack);
+
+        Task ReceiveTransitionStyle(_BMDSwitcherTransitionStyle style);
+    }
+}
