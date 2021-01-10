@@ -15,6 +15,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="ClientApp\build\**" />
+    <Content Remove="ClientApp\build\**" />
+    <EmbeddedResource Remove="ClientApp\build\**" />
+    <None Remove="ClientApp\build\**" />
+    <TypeScriptCompile Remove="ClientApp\build\**" />
+    <TypeScriptCompile Remove="ClientApp\node_modules\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="MediatR" Version="9.0.0" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="9.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="3.1.10" />
@@ -86,10 +95,10 @@
   </Target>
 
   <Target Name="ZipOutputPath" AfterTargets="Publish">
-        <ZipDirectory
-            Overwrite="true"        
-            SourceDirectory="$(OutputPath)\publish"
-            DestinationFile="$(MSBuildProjectDirectory)\bin\SwitcherServer.zip" />
-    </Target>
+    <PropertyGroup>
+      <CurrentDate>$([System.DateTime]::Now.ToString(yyyy.MM.dd))</CurrentDate>
+    </PropertyGroup>
+    <ZipDirectory Overwrite="true" SourceDirectory="$(OutputPath)\publish" DestinationFile="$(MSBuildProjectDirectory)\bin\SwitcherServer.$(CurrentDate).zip" />
+  </Target>
 
 </Project>
