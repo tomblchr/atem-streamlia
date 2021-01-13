@@ -25,5 +25,7 @@ namespace SwitcherServer
         Task ReceiveIsFadeToBlack(FullyBlackNotify isBlack);
 
         Task ReceiveTransitionStyle(_BMDSwitcherTransitionStyle style);
+
+        Task ReceiveTransitionPosition(TransitionPositionNotify position);
     }
 }

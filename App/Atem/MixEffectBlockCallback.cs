@@ -36,6 +36,11 @@ namespace SwitcherServer.Atem
                     _mixEffectBlock.Switcher.GetFadeToBlackInTransition(out int inFullyBlackTransition);
                     _mediator.Publish(new FullyBlackNotify { IsFullyBlack = fullyBlack == 1, IsInTransition = inFullyBlackTransition == 1 });
                     break;
+                case _BMDSwitcherMixEffectBlockEventType.bmdSwitcherMixEffectBlockEventTypeTransitionPositionChanged:
+                    _mixEffectBlock.Switcher.GetTransitionPosition(out double transitionPosition);
+                    _mixEffectBlock.Switcher.GetTransitionFramesRemaining(out uint transitionFramesRemaining);
+                    _mediator.Publish(new TransitionPositionNotify { Position = transitionPosition, FramesRemaining = transitionFramesRemaining });
+                    break;
                 default:
                     _mediator.Publish(new SwitcherMessageNotify { Message = eventType.ToString() } );
                     break;

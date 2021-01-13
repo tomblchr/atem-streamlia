@@ -30,7 +30,7 @@ namespace SwitcherServer
         public void ConfigureServices(IServiceCollection services)
         {
             var ip = Configuration.GetValue<string>("ipaddress") ?? "10.0.0.201";
-            _logger.LogInformation($"Connecting to ATEM at IP {ip} (use the '--ipaddress=...' command line argument to set this value)");
+            _logger.LogInformation($"Connecting to ATEM at IP {ip} (use the '--ipaddress=...' command line argument or appsettings.json to set this value)");
 
             services.AddSignalR();
             services.AddMediatR(typeof(Startup));

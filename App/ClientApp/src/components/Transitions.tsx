@@ -7,11 +7,13 @@ export interface ITransitionsProps {
 
 interface ITransistionState {
     inTransition: boolean;
+    position: number;
+    framesRemaining: number;
 }
 
 const Transitions = ({ connection }: ITransitionsProps): React.ReactElement => {
 
-    const [state, setState] = React.useState<ITransistionState>({ inTransition: false });
+    const [state, setState] = React.useState<ITransistionState>({ inTransition: false, position: 0, framesRemaining: 0 });
 
     const sendAutoTransition = async (): Promise<void> => {
         await connection?.send("SendAutoTransition")
@@ -29,7 +31,11 @@ const Transitions = ({ connection }: ITransitionsProps): React.ReactElement => {
         if (connection) {
             connection.on("ReceiveInTransition", message => {
                 console.log(`ReceiveInTransition - ${message}`);
-                setState({ inTransition : message })
+                setState({ inTransition: message, position: state.position, framesRemaining: state.framesRemaining });
+            });
+            connection.on("ReceiveTransitionPosition", message => {
+                console.log(`ReceiveTransitionPosition - ${message}`);
+                setState({ inTransition: state.inTransition, position: message.position, framesRemaining: message.framesRemaining });
             });
         }
     }, [connection]);
@@ -43,9 +49,7 @@ const Transitions = ({ connection }: ITransitionsProps): React.ReactElement => {
             <div className={state.inTransition ? "button red" : "button"} onClick={sendAutoTransition}>
                 <p>AUTO</p>
             </div>
-            <div>
-                <input className="slider" type="range" min="0" max="1" step="0.001" />
-            </div>
+            <input className="slider" type="range" min="0" max="1" step="0.0001" value={state.position} />
         </div>
     </section>
 }

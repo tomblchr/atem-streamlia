@@ -4,7 +4,6 @@ import { Layout } from './components/Layout';
 import { Home } from './components/Home';
 import TallyLight from './components/TallyLight';
 
-import "./style.css";
 import "./global.css";
 import "./custom.css";
 
