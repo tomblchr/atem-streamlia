@@ -28,7 +28,7 @@ namespace SwitcherServerTests
         }
 
         [Test]
-        public void CanGetFairlightAudioMixer()
+        public void CanGetFairlightAudioMixerProperties()
         {
             // act
             var result = _switcher.GetFairlightAudioMixer();

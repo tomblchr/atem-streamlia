@@ -1,5 +1,6 @@
 ﻿using BMDSwitcherAPI;
 using MediatR;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,7 +24,10 @@ namespace SwitcherServer.Atem
 
         public void MasterOutLevelNotification(uint numLevels, ref double levels, uint numPeakLevels, ref double peakLevels)
         {
-            _mediator.Publish(new MasterOutLevelNotify { NumLevels = numLevels, Levels = levels });
+            var l = BlackMagicDesignSdk.ConvertDoubleArray(numLevels, ref levels);
+            var p = BlackMagicDesignSdk.ConvertDoubleArray(numPeakLevels, ref peakLevels);
+
+            _mediator.Publish(new MasterOutLevelNotify { Levels = l, Peaks = p });
         }
     }
 }

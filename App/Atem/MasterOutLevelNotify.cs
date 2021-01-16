@@ -8,8 +8,8 @@ namespace SwitcherServer.Atem
 {
     public class MasterOutLevelNotify : INotification
     {
-        public uint NumLevels { get; set; }
+        public double[] Levels { get; set; }
 
-        public double Levels { get; set; }
+        public double[] Peaks { get; set; }
     }
 }

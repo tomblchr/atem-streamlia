@@ -18,7 +18,7 @@ namespace SwitcherServer
 
         Task ReceiveConnectionStatus(bool connected);
 
-        Task ReceiveVolume(double volume);
+        Task ReceiveVolume(MasterOutLevelNotify volume);
 
         Task ReceiveInTransition(bool inTransition);
 

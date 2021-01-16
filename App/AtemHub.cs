@@ -29,6 +29,13 @@ namespace SwitcherServer
             await SendSceneChange();
         }
 
+        public async override Task OnDisconnectedAsync(Exception exception)
+        {
+            _logger.LogError($"Client Disconnected... {exception}!");
+            await base.OnDisconnectedAsync(exception);
+
+        }
+
         public async Task Subscribe(Guid id)
         {
             await Groups.AddToGroupAsync(Context.ConnectionId, id.ToString());

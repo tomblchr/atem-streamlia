@@ -48,8 +48,8 @@ namespace SwitcherServer
 
         public async Task Handle(MasterOutLevelNotify notification, CancellationToken token)
         {
-            _logger.LogInformation($"Master Out Level: {notification.NumLevels}-{notification.Levels}");
-            await _hub.Clients.All.ReceiveVolume(notification.Levels);
+            _logger.LogInformation($"Master Out Level: {string.Join(',', notification.Levels)}");
+            await _hub.Clients.All.ReceiveVolume(notification);
         }
 
         public async Task Handle(InTransitionNotify notification, CancellationToken cancellationToken)
