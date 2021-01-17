@@ -49,7 +49,7 @@ const Transitions = ({ connection }: ITransitionsProps): React.ReactElement => {
             <div className={state.inTransition ? "button red" : "button"} onClick={sendAutoTransition}>
                 <p>AUTO</p>
             </div>
-            <input className="slider" type="range" min="0" max="1" step="0.0001" value={state.position} />
+            <input className="slider" type="range" min="0" max="1" step="0.0001" value={state.position} defaultValue="0" />
         </div>
     </section>
 }
