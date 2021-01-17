@@ -75,6 +75,17 @@ namespace SwitcherServer.Atem
             return _fairlightAudioMixer;
         }
 
+        private IEnumerable<DownstreamKey> _downstreamKeys;
+        public IEnumerable<DownstreamKey> GetDownstreamKeys()
+        {
+            if (_downstreamKeys == null)
+            {
+                var items = SwitcherDirect.GetDownstreamKeys();
+                _downstreamKeys = new List<DownstreamKey>(items.ToList().Select(c => new DownstreamKey(c, _mediator)));
+            }
+            return _downstreamKeys;
+        }
+
         public void PerformAutoTransition()
         {
             GetMixEffectBlocks()

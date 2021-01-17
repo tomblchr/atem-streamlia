@@ -24,5 +24,11 @@ namespace SwitcherServer
         Task SendFadeToBlackTransition();
 
         Task SendTransitionStyle(_BMDSwitcherTransitionStyle current);
+
+        Task SendDownstreamKeyOnAir(bool onAir);
+
+        Task SendDownstreamKeyTie(bool tie);
+
+        Task SendDownstreamKeyAutoTransition();
     }
 }

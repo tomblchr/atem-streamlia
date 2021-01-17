@@ -82,5 +82,23 @@ namespace SwitcherServer
             _switcher.GetMixEffectBlocks().First().Switcher.GetTransitionParameters().SetNextTransitionStyle(current);
             await Task.CompletedTask;
         }
+
+        public async Task SendDownstreamKeyOnAir(bool onAir)
+        {
+            _switcher.GetDownstreamKeys().First().OnAir = onAir;
+            await Task.CompletedTask;
+        }
+
+        public async Task SendDownstreamKeyTie(bool tie)
+        {
+            _switcher.GetDownstreamKeys().First().Tie = tie;
+            await Task.CompletedTask;
+        }
+
+        public async Task SendDownstreamKeyAutoTransition()
+        {
+            _switcher.GetDownstreamKeys().First().DoSomething();
+            await Task.CompletedTask;
+        }
     }
 }

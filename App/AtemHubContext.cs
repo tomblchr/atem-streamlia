@@ -21,6 +21,7 @@ namespace SwitcherServer
         , INotificationHandler<FullyBlackNotify>
         , INotificationHandler<TransitionStyleNotify>
         , INotificationHandler<TransitionPositionNotify>
+        , INotificationHandler<DownstreamKeyAutoTransitionNotify>
 //        , INotificationHandler<ConnectionChangeNotify>
     {
         private readonly Switcher _switcher;
@@ -74,6 +75,12 @@ namespace SwitcherServer
         {
             _logger.LogDebug($"Transition Position: {notification.Position}, {notification.FramesRemaining}");
             await _hub.Clients.All.ReceiveTransitionPosition(notification);
+        }
+
+        public async Task Handle(DownstreamKeyAutoTransitionNotify notification, CancellationToken cancellationToken)
+        {
+            _logger.LogDebug($"DownstreamKey In Transition: {notification.IsTransitioning}");
+            await _hub.Clients.All.ReceiveDownstreamKeyInTransition(notification.IsTransitioning);
         }
     }
 }

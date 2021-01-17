@@ -24,6 +24,9 @@ namespace SwitcherServer
             
             Program = i.ProgramInput.Id;
             Preview = i.PreviewInput.Id;
+
+            DownstreamKeyOnAir = switcher.GetDownstreamKeys().First().OnAir;
+            DownstreamKeyTieOn = switcher.GetDownstreamKeys().First().Tie;
         }
 
         public long Program { get; private set; }
@@ -31,5 +34,9 @@ namespace SwitcherServer
         public long Preview { get; private set; }
 
         public Input[] Inputs { get; private set; }
+
+        public bool DownstreamKeyOnAir { get; private set; }
+
+        public bool DownstreamKeyTieOn { get; private set; }
     }
 }

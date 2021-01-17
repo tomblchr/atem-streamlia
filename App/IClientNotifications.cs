@@ -27,5 +27,7 @@ namespace SwitcherServer
         Task ReceiveTransitionStyle(_BMDSwitcherTransitionStyle style);
 
         Task ReceiveTransitionPosition(TransitionPositionNotify position);
+
+        Task ReceiveDownstreamKeyInTransition(bool inTransition);
     }
 }

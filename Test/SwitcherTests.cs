@@ -61,6 +61,19 @@ namespace SwitcherServerTests
         }
 
         [Test]
+        public void TestDownstreamKeys()
+        {
+            // act
+            var dk = _switcher.GetDownstreamKeys();
+
+            // assert
+            Assert.IsNotEmpty(dk);
+
+            // info
+            dk.ToList().ForEach(c => Logger.LogInformation($"{c.OnAir}"));
+        }
+
+        [Test]
         public void TestTransition()
         {
             // arrange

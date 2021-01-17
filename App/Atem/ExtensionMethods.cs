@@ -39,6 +39,21 @@ namespace SwitcherServer.Atem
             return result;
         }
 
+        public static IEnumerable<IBMDSwitcherDownstreamKey> GetDownstreamKeys(this IBMDSwitcher o)
+        {
+            var result = new List<IBMDSwitcherDownstreamKey>();
+            Guid g = typeof(IBMDSwitcherDownstreamKeyIterator).GUID;
+            o.CreateIterator(ref g, out IntPtr ptr);
+            var iterator = (IBMDSwitcherDownstreamKeyIterator)Marshal.GetObjectForIUnknown(ptr);
+            iterator.Next(out IBMDSwitcherDownstreamKey input);
+            while (input != null)
+            {
+                result.Add(input);
+                iterator.Next(out input);
+            }
+            return result;
+        }
+
         /// <summary>
         /// Query the switcher for the Fairlight Audio Mixer
         /// </summary>
