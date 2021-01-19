@@ -23,6 +23,14 @@ namespace SwitcherServer.Atem
 
         public IBMDSwitcher Connect()
         {
+            lock (_lock)
+            {
+                return ConnectImpl();
+            }
+        }
+
+        IBMDSwitcher ConnectImpl()
+        { 
             if (string.IsNullOrEmpty(_ipaddress))
             {
                 Console.WriteLine("Warning: IP address has not been initialized. I do not like your chances.");
@@ -43,7 +51,7 @@ namespace SwitcherServer.Atem
                 }
                 _switcher.AddCallback(this);
             }
-            _mediator.Publish(new ConnectionChangeNotify { Connected = _isConnected });
+
             return _switcher;
         }
 

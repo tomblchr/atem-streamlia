@@ -17,12 +17,24 @@ namespace SwitcherServer.Atem
         {
             _connection = connection ?? throw new ArgumentNullException(nameof(connection));
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
-
-            GetMixEffectBlocks();
-            GetFairlightAudioMixer();
         }
 
-        public IBMDSwitcher SwitcherDirect => _connection.Connect();
+        public IBMDSwitcher SwitcherDirect
+        {
+            get
+            {
+                return _connection.Connect();
+            }
+        }
+
+        public void Reset()
+        {
+            _inputs = null;
+            _mixEffectBlocks = null;
+            _fairlightAudioMixer = null;
+            _downstreamKeys = null;
+            _connection.Connect();
+        }
 
         public string GetVideoMode()
         {

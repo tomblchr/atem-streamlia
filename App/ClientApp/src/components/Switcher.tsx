@@ -25,14 +25,14 @@ export default function Switcher(): JSX.Element {
     React.useEffect(() => {
         console.log("Creating connection...");
 
-        const newConnection: HubConnection = new HubConnectionBuilder()
+        const newConnection: HubConnection = connection ?? new HubConnectionBuilder()
             .withUrl("/atemhub")
             .withAutomaticReconnect()
             .configureLogging(LogLevel.Debug)
             .build();
 
         setConnection(newConnection);
-    }, []);
+    }, [connection, switchConnection]);
 
     React.useEffect(() => {
         if (connection) {
@@ -48,7 +48,7 @@ export default function Switcher(): JSX.Element {
                     });
                     connection.on("ReceiveConnectionStatus", message => {
                         console.log(`ReceivedConnectionStatus - ${message}`);
-                        //setSwitchConnection(message);
+                        setSwitchConnection(message);
                     });
                 })
                 .catch(e => console.log('Connection failed: ', e));

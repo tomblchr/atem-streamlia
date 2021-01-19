@@ -22,7 +22,7 @@ namespace SwitcherServer
         , INotificationHandler<TransitionStyleNotify>
         , INotificationHandler<TransitionPositionNotify>
         , INotificationHandler<DownstreamKeyAutoTransitionNotify>
-//        , INotificationHandler<ConnectionChangeNotify>
+        , INotificationHandler<ConnectionChangeNotify>
     {
         private readonly Switcher _switcher;
         private readonly IHubContext<AtemHub, IClientNotifications> _hub;
