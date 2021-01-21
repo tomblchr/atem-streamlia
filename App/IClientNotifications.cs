@@ -29,5 +29,7 @@ namespace SwitcherServer
         Task ReceiveTransitionPosition(TransitionPositionNotify position);
 
         Task ReceiveDownstreamKeyInTransition(bool inTransition);
+
+        Task ReceiveNextTransition(NextTransition notification);
     }
 }

@@ -56,7 +56,8 @@ namespace SwitcherServer
 
                     Task.WaitAll(
                         _mediator.Publish(new ConnectionChangeNotify { Connected = true }),
-                        _mediator.Publish(new InputChangeNotify())
+                        _mediator.Publish(new InputChangeNotify()),
+                        _mediator.Publish(new NextTransitionNotify())
                     );
 
                     return Task.CompletedTask;

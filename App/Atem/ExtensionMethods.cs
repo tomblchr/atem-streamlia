@@ -39,6 +39,21 @@ namespace SwitcherServer.Atem
             return result;
         }
 
+        public static IEnumerable<IBMDSwitcherKey> GetKeys(this IBMDSwitcherMixEffectBlock o)
+        {
+            var result = new List<IBMDSwitcherKey>();
+            Guid g = typeof(IBMDSwitcherKeyIterator).GUID;
+            o.CreateIterator(ref g, out IntPtr ptr);
+            var iterator = (IBMDSwitcherKeyIterator)Marshal.GetObjectForIUnknown(ptr);
+            iterator.Next(out IBMDSwitcherKey input);
+            while (input != null)
+            {
+                result.Add(input);
+                iterator.Next(out input);
+            }
+            return result;
+        }
+
         public static IEnumerable<IBMDSwitcherDownstreamKey> GetDownstreamKeys(this IBMDSwitcher o)
         {
             var result = new List<IBMDSwitcherDownstreamKey>();

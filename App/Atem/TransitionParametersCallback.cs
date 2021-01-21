@@ -22,6 +22,10 @@ namespace SwitcherServer.Atem
         {
             switch (eventType)
             {
+                case _BMDSwitcherTransitionParametersEventType.bmdSwitcherTransitionParametersEventTypeNextTransitionStyleChanged:
+                case _BMDSwitcherTransitionParametersEventType.bmdSwitcherTransitionParametersEventTypeNextTransitionSelectionChanged:
+                    _mediator.Publish(new NextTransitionNotify());
+                    break;
                 case _BMDSwitcherTransitionParametersEventType.bmdSwitcherTransitionParametersEventTypeTransitionStyleChanged:
                     _transitionParameters.GetTransitionStyle(out _BMDSwitcherTransitionStyle style);
                     _mediator.Publish(new TransitionStyleNotify { Current = style });

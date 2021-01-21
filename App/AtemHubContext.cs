@@ -22,6 +22,7 @@ namespace SwitcherServer
         , INotificationHandler<TransitionStyleNotify>
         , INotificationHandler<TransitionPositionNotify>
         , INotificationHandler<DownstreamKeyAutoTransitionNotify>
+        , INotificationHandler<NextTransitionNotify>
         , INotificationHandler<ConnectionChangeNotify>
     {
         private readonly Switcher _switcher;
@@ -81,6 +82,12 @@ namespace SwitcherServer
         {
             _logger.LogDebug($"DownstreamKey In Transition: {notification.IsTransitioning}");
             await _hub.Clients.All.ReceiveDownstreamKeyInTransition(notification.IsTransitioning);
+        }
+
+        public async Task Handle(NextTransitionNotify notification, CancellationToken cancellationToken)
+        {
+            _logger.LogDebug($"Next Transition");
+            await _hub.Clients.All.ReceiveNextTransition(_switcher.GetMixEffectBlocks().First().GetNextTransition());
         }
     }
 }

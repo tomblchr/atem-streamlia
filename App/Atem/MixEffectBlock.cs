@@ -19,19 +19,20 @@ namespace SwitcherServer.Atem
             _switcher = switcher;
             _bmd = bmd;
             _mediator = mediator;
-            _transitionParameters = _bmd.GetTransitionParameters();
+            
+            _transitionParameters = _bmd.GetTransitionParameters();            
 
             _bmd.AddCallback(new MixEffectBlockCallback(this, _mediator));
-            _transitionParameters.AddCallback(new TransitionParametersCallback(_transitionParameters, _mediator));
+            _transitionParameters.AddCallback(new TransitionParametersCallback(_transitionParameters, _mediator));            
         }
 
         public IBMDSwitcherMixEffectBlock Switcher => _bmd;
 
-        public Input ProgramInput 
+        public Input ProgramInput
         {
             get 
             {
-                _bmd.GetProgramInput(out long value);
+                Switcher.GetProgramInput(out long value);
                 return _switcher.GetInputs().Single(c => c.Id == value);
             }
         }
@@ -40,9 +41,28 @@ namespace SwitcherServer.Atem
         {
             get
             {
-                _bmd.GetPreviewInput(out long value);
+                Switcher.GetPreviewInput(out long value);
                 return _switcher.GetInputs().Single(c => c.Id == value);
             }
+        }
+
+        private IEnumerable<Key> _keys;
+        public IEnumerable<Key> Keys
+        {
+            get
+            {
+                if (_keys == null)
+                {
+                    var keys = Switcher.GetKeys();
+                    _keys = keys.Select(c => new Key(c, _mediator)).ToList();
+                }
+                return _keys;
+            }
+        }
+
+        public NextTransition GetNextTransition()
+        {
+            return new NextTransition(Keys, _transitionParameters);
         }
     }
 }

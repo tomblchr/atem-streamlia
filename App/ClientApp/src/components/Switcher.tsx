@@ -58,12 +58,12 @@ export default function Switcher(): JSX.Element {
     return (
         <div key="switcher">
             <div className="float-right">
-                {connection?.state === HubConnectionState.Connected ? <span className="tab connection-status connected" title="Server Connection"><Zap /></span> : <AlertTriangle />}
-                {switchConnection ? <span className="tab connection-status connected" title="Switch Connection"><Zap /></span> : <AlertTriangle />}
+                <span className="tab connection-status connected" title="Server Connection">{connection?.state === HubConnectionState.Connected ? <Zap /> : <AlertTriangle />}</span>
+                <span className="tab connection-status connected" title="Switch Connection">{switchConnection ? <Zap /> : <AlertTriangle />}</span>
             </div>
             <Inputs program={scene?.program} preview={scene?.preview} inputs={scene?.inputs} connection={connection} />
             <Transitions connection={connection} />
-            <NextTransition />
+            <NextTransition connection={connection} />
             <TransitionStyle connection={connection} />
             <DownstreamKey connection={connection} onAir={scene?.downstreamKeyOnAir ?? false} tieOn={scene?.downstreamKeyTieOn ?? false} />
             <FadeToBlack connection={connection} />

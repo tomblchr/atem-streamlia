@@ -60,7 +60,7 @@ namespace SwitcherServer.Atem
             lock (_lock)
             {
                 _isConnected = false;
-                _mediator.Publish(new ConnectionChangeNotify { Connected = _isConnected });
+                
             }
         }
 
@@ -75,6 +75,10 @@ namespace SwitcherServer.Atem
             {
                 case _BMDSwitcherEventType.bmdSwitcherEventTypeDisconnected:
                     Disconnect();
+                    _mediator.Publish(new ConnectionChangeNotify { Connected = false });
+                    break;
+                default:
+                    _mediator.Publish(new SwitcherMessageNotify { Message = $"Switcher says: {eventType}" });
                     break;
             }
         }
