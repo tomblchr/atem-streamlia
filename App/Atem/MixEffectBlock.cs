@@ -64,5 +64,14 @@ namespace SwitcherServer.Atem
         {
             return new NextTransition(Keys, _transitionParameters);
         }
+
+        public void SetIncludeInNextTrasition(_BMDSwitcherTransitionSelection keyToInclude, bool included)
+        {
+            _transitionParameters.GetNextTransitionSelection(out var selection);
+            selection = included 
+                ? selection | keyToInclude
+                : selection ^ keyToInclude;
+            _transitionParameters.SetNextTransitionSelection(selection);
+        }
     }
 }

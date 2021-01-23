@@ -74,6 +74,33 @@ namespace SwitcherServerTests
         }
 
         [Test]
+        public void TestKeys()
+        {
+            // act
+            var dk = _switcher.GetMixEffectBlocks().First().Keys;
+
+            // assert
+            Assert.IsNotEmpty(dk);
+
+            // info
+            dk.ToList().ForEach(c => Logger.LogInformation($"{(int)c.TransitionSelectionMask}-{c.OnAir}"));
+        }
+
+        [Test]
+        public void TestNextTransition()
+        {
+            // act
+            var transition = _switcher.GetMixEffectBlocks().First().GetNextTransition();
+
+            // assert
+            Assert.IsNotEmpty(transition.Keys);
+
+            // info
+            Logger.LogInformation($"{transition.IncludeBackground} => {transition.Keys}");
+            transition.Keys.ToList().ForEach(c => Logger.LogInformation($"{c.Key}-{c.OnAir}"));
+        }
+
+        [Test]
         public void TestTransition()
         {
             // arrange

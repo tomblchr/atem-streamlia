@@ -100,5 +100,35 @@ namespace SwitcherServer
             _switcher.GetDownstreamKeys().First().DoSomething();
             await Task.CompletedTask;
         }
+
+        public async Task SendKeyOnAir(int key, bool onAir)
+        {
+            var keyer = _switcher.GetMixEffectBlocks().First()
+                .Keys
+                .Where(c => (int)c.TransitionSelectionMask == key)
+                .Single();
+            
+            keyer.OnAir = onAir;
+            
+            await Task.CompletedTask;
+        }
+
+        public async Task SendKeyIncludedInTransition(int key, bool included)
+        {
+            var keyer = _switcher.GetMixEffectBlocks().First();
+
+            keyer.SetIncludeInNextTrasition((_BMDSwitcherTransitionSelection)key, included);
+
+            await Task.CompletedTask;
+        }
+
+        public async Task SendNextTransitionBackground(bool included)
+        {
+            var keyer = _switcher.GetMixEffectBlocks().First();
+
+            keyer.SetIncludeInNextTrasition(_BMDSwitcherTransitionSelection.bmdSwitcherTransitionSelectionBackground, included);
+
+            await Task.CompletedTask;
+        }
     }
 }

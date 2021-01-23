@@ -30,6 +30,10 @@ namespace SwitcherServer.Atem
             }
         }
 
+        /// <summary>
+        /// This property uniquely identifies the key and is used when
+        /// setting whether the key is included in the next transition
+        /// </summary>
         public _BMDSwitcherTransitionSelection TransitionSelectionMask
         {
             get

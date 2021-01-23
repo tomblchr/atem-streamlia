@@ -30,5 +30,11 @@ namespace SwitcherServer
         Task SendDownstreamKeyTie(bool tie);
 
         Task SendDownstreamKeyAutoTransition();
+
+        Task SendKeyOnAir(int key, bool onAir);
+
+        Task SendKeyIncludedInTransition(int key, bool included);
+
+        Task SendNextTransitionBackground(bool included);
     }
 }

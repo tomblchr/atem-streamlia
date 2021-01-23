@@ -14,12 +14,12 @@ namespace SwitcherServer.Atem
 
             IncludeBackground = included.HasFlag(_BMDSwitcherTransitionSelection.bmdSwitcherTransitionSelectionBackground);
 
-            Keys = keys.Select(key => new NextTransitionKey
-            {
-                Key = (int)key.TransitionSelectionMask,
-                OnAir = key.OnAir,
-                Included = included.HasFlag(key.TransitionSelectionMask)
-            }).OrderBy(c => c.Key);
+            Keys = keys
+                .Select(key => new NextTransitionKey(
+                    (int)key.TransitionSelectionMask, 
+                    key.OnAir, 
+                    included.HasFlag(key.TransitionSelectionMask)))
+                .OrderBy(c => c.Key);
         }
 
         public bool IncludeBackground { get; private set; }

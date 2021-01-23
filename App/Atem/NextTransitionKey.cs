@@ -7,10 +7,17 @@ namespace SwitcherServer.Atem
 {
     public class NextTransitionKey
     {
-        public int Key { get; set; }
+        public NextTransitionKey(int key, bool onAir, bool included)
+        {
+            Key = key;
+            OnAir = onAir;
+            Included = included;
+        }
 
-        public bool OnAir { get; set; }
+        public int Key { get; private set; }
 
-        public bool Included { get; set; }
+        public bool OnAir { get; private set; }
+
+        public bool Included { get; private set; }
     }
 }
