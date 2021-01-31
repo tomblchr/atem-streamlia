@@ -61,6 +61,7 @@ export default function Switcher(): JSX.Element {
                 <span className="tab connection-status connected" title="Server Connection">{connection?.state === HubConnectionState.Connected ? <Zap /> : <AlertTriangle />}</span>
                 <span className="tab connection-status connected" title="Switch Connection">{switchConnection ? <Zap /> : <AlertTriangle />}</span>
             </div>
+            <MasterAudioMeter connection={connection} />
             <Inputs program={scene?.program} preview={scene?.preview} inputs={scene?.inputs} connection={connection} />
             <Transitions connection={connection} />
             <NextTransition connection={connection} />

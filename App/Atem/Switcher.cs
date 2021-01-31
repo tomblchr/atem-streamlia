@@ -36,10 +36,15 @@ namespace SwitcherServer.Atem
             _connection.Connect();
         }
 
+        public string GetProductName()
+        {
+            SwitcherDirect.GetProductName(out string productName);
+            return productName;
+        }
+
         public string GetVideoMode()
         {
             SwitcherDirect.GetVideoMode(out _BMDSwitcherVideoMode name);
-
             return name.ToString();
         }
 

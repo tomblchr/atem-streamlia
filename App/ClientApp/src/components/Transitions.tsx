@@ -40,6 +40,10 @@ const Transitions = ({ connection }: ITransitionsProps): React.ReactElement => {
         }
     }, [connection]);
 
+    const sliderChange = (value: string): void => {
+        console.log(`Transition slider set to ${value}`);
+    }
+
     return <section className="transition">
         <h3>Transition</h3>
         <div className="well">
@@ -49,7 +53,7 @@ const Transitions = ({ connection }: ITransitionsProps): React.ReactElement => {
             <div className={state.inTransition ? "button red" : "button"} onClick={sendAutoTransition}>
                 <p>AUTO</p>
             </div>
-            <input className="slider" type="range" min="0" max="1" step="0.0001" value={state.position} defaultValue="0" />
+            <input className="slider" type="range" min="0" max="1" step="0.0001" value={state.position} onChange={e => sliderChange(e.target.value)} />
         </div>
     </section>
 }

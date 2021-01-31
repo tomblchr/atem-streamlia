@@ -4,12 +4,14 @@
 
 This project relies on a COM reference to the BMD interop DLL. Building the software using the .NET Framework version of MSBuild, which contains the [ResolveComReference build task](https://docs.microsoft.com/en-ca/visualstudio/msbuild/resolvecomreference-task).
 
-> ...MSBuild.exe -p:Configuration=release -t:publish
+Use the `build.ps1` script to build from the command line.
 
 ## Inspirations
 
-https://github.com/filiphanes/atem-live-controller
-https://github.com/LibAtem/LibAtem
+* https://github.com/filiphanes/atem-live-controller
+** A similar concept implemented using node. Uses the [applest-atem](https://github.com/applest/node-applest-atem) library to communicate with the ATEM.
+* https://github.com/LibAtem/LibAtem
+** A .NET Core library that is not shackled to the ATEM SDK.
 
 ## Contributing
 

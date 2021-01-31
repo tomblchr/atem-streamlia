@@ -24,6 +24,7 @@ namespace SwitcherServer
         , INotificationHandler<DownstreamKeyAutoTransitionNotify>
         , INotificationHandler<NextTransitionNotify>
         , INotificationHandler<ConnectionChangeNotify>
+        , INotificationHandler<SwitcherMessageNotify>
     {
         private readonly Switcher _switcher;
         private readonly IHubContext<AtemHub, IClientNotifications> _hub;
@@ -50,7 +51,8 @@ namespace SwitcherServer
 
         public async Task Handle(MasterOutLevelNotify notification, CancellationToken token)
         {
-            _logger.LogInformation($"Master Out Level: {string.Join(',', notification.Levels)}");
+            // there are lots of these
+            //_logger.LogDebug($"Master Out Level: {string.Join(',', notification.Levels)}");
             await _hub.Clients.All.ReceiveVolume(notification);
         }
 
@@ -88,6 +90,17 @@ namespace SwitcherServer
         {
             _logger.LogDebug($"Next Transition");
             await _hub.Clients.All.ReceiveNextTransition(_switcher.GetMixEffectBlocks().First().GetNextTransition());
+        }
+
+        public async Task Handle(SwitcherMessageNotify notification, CancellationToken cancellationToken)
+        {
+            _logger.LogDebug($"{notification.Message}");
+
+            // not the right place for this stuff but will work for now
+            _switcher.GetFairlightAudioMixer();
+            _switcher.GetInputs();
+
+            await _hub.Clients.All.ReceiveSceneChange(new SceneDetail(_switcher));
         }
     }
 }

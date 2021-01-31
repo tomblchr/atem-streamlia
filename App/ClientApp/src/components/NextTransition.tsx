@@ -45,7 +45,7 @@ const NextTransition = ({ connection }: IKeyProps): React.ReactElement => {
             .then(() => { console.log(`SendKeyIncludedInTransition (${key},${included})`) })
             .catch(e => console.log("SendKeyIncludedInTransition failed: ", e));
     };
-
+ 
     return <section className="next-transition">
         <h3>Next Transition</h3>
         <div className="well">
