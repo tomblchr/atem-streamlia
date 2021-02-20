@@ -20,9 +20,6 @@ a {
 
 header {
   background: linear-gradient(rgba(200, 200, 200, 0.15), rgba(0, 0, 0, 0.404));
-  padding: .5rem 2rem;
-  margin: 0 0 1rem;
-  display: flex;
 }
 
 header h1 {
@@ -239,17 +236,17 @@ section.transition {
   min-width: 15rem;
   cursor: pointer;
 }
-
+/* 
 #switcher {
   display: flex;
   flex-wrap: wrap;
-  /* justify-content: space-between; */
+  justify-content: space-between; 
   margin-bottom: 1rem;
 }
 
 #media {
 }
-
+*/
 .media-thumb {
   cursor: pointer;
   display: inline-block;

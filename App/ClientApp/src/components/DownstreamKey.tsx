@@ -56,7 +56,7 @@ const DownstreamKey = ({onAir, tieOn, connection }: IDownstreamKeyProps): React.
             </div>
             <div className={onAir ? "button red" : "button"}
                 onClick={c => { sendDownstreamKeyOnAir(!onAir); }}>
-                <p>ON AIR</p>
+                <p>ON<br/>AIR</p>
             </div>
             <div className={state.inTransition ? "button red" : "button" } onClick={c => { sendDownstreamKeyAutoTransition(); }}>
                 <p>AUTO</p>
