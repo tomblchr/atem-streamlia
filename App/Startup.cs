@@ -29,7 +29,7 @@ namespace SwitcherServer
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var ip = Configuration.GetValue<string>("ipaddress") ?? "10.0.0.201";
+            var ip = Configuration.GetValue<string>("ipaddress");
             _logger.LogInformation($"Connecting to ATEM at IP {ip} (use the '--ipaddress=...' command line argument or appsettings.json to set this value)");
 
             services.AddSignalR();
@@ -39,7 +39,7 @@ namespace SwitcherServer
             services.AddTransient<MessageNotificationHandler>();
             services.AddSingleton(services => 
             {
-                return new SwitcherBuilder(services.GetRequiredService<IMediator>())
+                return new SwitcherBuilder(services)
                     .NetworkIP(ip)
                     .Build();
             });

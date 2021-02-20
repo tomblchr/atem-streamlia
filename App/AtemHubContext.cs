@@ -53,6 +53,22 @@ namespace SwitcherServer
         {
             // there are lots of these
             //_logger.LogDebug($"Master Out Level: {string.Join(',', notification.Levels)}");
+            // TODO: rework this to put it into the correct place
+            for (int i = 0; i < notification.Levels.Length; i++)
+            {
+                if (notification.Levels[i] == double.NegativeInfinity)
+                {
+                    notification.Levels[i] = -120;
+                }
+            }
+            for (int i = 0; i < notification.Peaks.Length; i++)
+            {
+                if (notification.Peaks[i] == double.NegativeInfinity)
+                {
+                    notification.Peaks[i] = -120;
+                }
+            }
+
             await _hub.Clients.All.ReceiveVolume(notification);
         }
 

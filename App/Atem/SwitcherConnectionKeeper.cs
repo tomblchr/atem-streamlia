@@ -1,5 +1,8 @@
 ﻿using BMDSwitcherAPI;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,20 +15,48 @@ namespace SwitcherServer.Atem
         static IBMDSwitcher _switcher;
         static bool _isConnected = false;
         static readonly object _lock = new object();
-        readonly string _ipaddress;
-        private readonly IMediator _mediator;
+        
+        string _ipaddress;
 
-        public SwitcherConnectionKeeper(string ipaddress, IMediator mediator)
+        private readonly IMediator _mediator;
+        private readonly ILogger _logger;
+
+        public SwitcherConnectionKeeper(IMediator mediator, ILogger<SwitcherConnectionKeeper> logger)
         {
-            _ipaddress = ipaddress;
             _mediator = mediator;
+            _logger = (ILogger)logger ?? NullLogger.Instance;
         }
 
         public IBMDSwitcher Connect()
         {
             lock (_lock)
             {
-                return ConnectImpl();
+                if (_switcher == null || !_isConnected)
+                {
+                    return ConnectImpl();
+                }
+                return _switcher;
+            }
+        }
+
+        public IBMDSwitcher Connect(string ipaddress)
+        {
+            lock (_lock)
+            {
+                if (_switcher == null || !_isConnected)
+                {
+                    _ipaddress = ipaddress;
+                    return ConnectImpl();
+                }
+                return _switcher;                
+            }
+        }
+
+        public bool IsConnected
+        {
+            get
+            {
+                return _isConnected;
             }
         }
 
@@ -39,28 +70,40 @@ namespace SwitcherServer.Atem
             if (_switcher == null || !_isConnected)
             {
                 var discovery = new CBMDSwitcherDiscovery();
-                discovery.ConnectTo(_ipaddress, out _switcher, out var failure);
-                if ((int)failure == 0)
+                _BMDSwitcherConnectToFailure failure = 0;
+                try
+                {
+                    discovery.ConnectTo(_ipaddress, out _switcher, out failure);
+                }
+                catch (System.Runtime.InteropServices.COMException e)
+                {
+                    _logger.LogWarning(e, $"Could not connect: {failure}");
+                }
+                catch (Exception e)
+                {
+                    _logger.LogError(e, "Could not connect");
+                }
+                if (failure == 0)
                 {
                     _isConnected = true;
-                    Console.WriteLine("Happy Days... Connected!");
+                    _switcher.AddCallback(this);
+                    _switcher.GetProductName(out string productName);
+                    _logger.LogInformation($"Happy Days... connected to {productName}@{_ipaddress}!");
                 }
                 else
                 {
-                    Console.WriteLine(failure.ToString());
+                    _logger.LogWarning(failure.ToString());
                 }
-                _switcher.AddCallback(this);
             }
 
             return _switcher;
         }
 
-        void Disconnect()
+        public void Disconnect()
         {
             lock (_lock)
             {
                 _isConnected = false;
-                
             }
         }
 

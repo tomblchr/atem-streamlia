@@ -11,6 +11,8 @@ namespace SwitcherServer
     /// </summary>
     public interface IOperateSwitcher
     {
+        Task SendConnect(string ipaddress);
+
         Task SendSceneChange();
 
         Task SendProgramChange(long input);

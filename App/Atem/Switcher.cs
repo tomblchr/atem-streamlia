@@ -27,13 +27,22 @@ namespace SwitcherServer.Atem
             }
         }
 
-        public void Reset()
+        public void Reset(string ipaddress = "")
         {
             _inputs = null;
             _mixEffectBlocks = null;
             _fairlightAudioMixer = null;
             _downstreamKeys = null;
-            _connection.Connect();
+            _connection.Disconnect();
+            _connection.Connect(ipaddress);
+        }
+
+        public bool IsConnected
+        {
+            get
+            {
+                return _connection.IsConnected;
+            }
         }
 
         public string GetProductName()

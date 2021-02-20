@@ -12,6 +12,12 @@ namespace SwitcherServer.Atem
         public static IEnumerable<IBMDSwitcherInput> GetInputs(this IBMDSwitcher o)
         {
             var result = new List<IBMDSwitcherInput>();
+
+            if (o == null)
+            {
+                return result;
+            }
+
             Guid g = typeof(IBMDSwitcherInputIterator).GUID;
             o.CreateIterator(ref g, out IntPtr ptr);
             var iterator = (IBMDSwitcherInputIterator)Marshal.GetObjectForIUnknown(ptr);
@@ -27,6 +33,12 @@ namespace SwitcherServer.Atem
         public static IEnumerable<IBMDSwitcherMixEffectBlock> GetMixEffectBlocks(this IBMDSwitcher o)
         {
             var result = new List<IBMDSwitcherMixEffectBlock>();
+
+            if (o == null)
+            {
+                return result;
+            }
+
             Guid g = typeof(IBMDSwitcherMixEffectBlockIterator).GUID;
             o.CreateIterator(ref g, out IntPtr ptr);
             var iterator = (IBMDSwitcherMixEffectBlockIterator)Marshal.GetObjectForIUnknown(ptr);
@@ -42,6 +54,12 @@ namespace SwitcherServer.Atem
         public static IEnumerable<IBMDSwitcherKey> GetKeys(this IBMDSwitcherMixEffectBlock o)
         {
             var result = new List<IBMDSwitcherKey>();
+
+            if (o == null)
+            {
+                return result;
+            }
+
             Guid g = typeof(IBMDSwitcherKeyIterator).GUID;
             o.CreateIterator(ref g, out IntPtr ptr);
             var iterator = (IBMDSwitcherKeyIterator)Marshal.GetObjectForIUnknown(ptr);
@@ -57,6 +75,12 @@ namespace SwitcherServer.Atem
         public static IEnumerable<IBMDSwitcherDownstreamKey> GetDownstreamKeys(this IBMDSwitcher o)
         {
             var result = new List<IBMDSwitcherDownstreamKey>();
+
+            if (o == null)
+            {
+                return result;
+            }
+
             Guid g = typeof(IBMDSwitcherDownstreamKeyIterator).GUID;
             o.CreateIterator(ref g, out IntPtr ptr);
             var iterator = (IBMDSwitcherDownstreamKeyIterator)Marshal.GetObjectForIUnknown(ptr);

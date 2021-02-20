@@ -22,11 +22,33 @@ namespace SwitcherServer
             _logger = logger;
         }
 
+        /// <summary>
+        /// Connect this application to a switcher at the given address
+        /// </summary>
+        /// <param name="ipaddress"></param>
+        /// <returns></returns>
+        public async Task SendConnect(string ipaddress)
+        {
+            _switcher.Reset(ipaddress);
+            await Clients.Caller.ReceiveConnectionStatus(_switcher.IsConnected);
+            await Task.CompletedTask;
+        }
+
         public async override Task OnConnectedAsync()
         {
             _logger.LogInformation($"Client Connected... Welcome {Context.ConnectionId}!");
+
             await base.OnConnectedAsync();
-            await SendSceneChange();
+
+            Task.WaitAll(
+                Clients.Caller.ReceiveConnectConfirmation("Connected to server!"),
+                Clients.Caller.ReceiveConnectionStatus(_switcher.IsConnected)
+            );
+
+            if (_switcher.IsConnected)
+            {
+                await Clients.Caller.ReceiveSceneChange(new SceneDetail(_switcher));
+            }
         }
 
         public async override Task OnDisconnectedAsync(Exception exception)
@@ -39,7 +61,8 @@ namespace SwitcherServer
         public async Task Subscribe(Guid id)
         {
             await Groups.AddToGroupAsync(Context.ConnectionId, id.ToString());
-            await Clients.Caller.ReceiveConnectConfirmation("Connected!");
+            await Clients.Caller.ReceiveConnectConfirmation("Connected to server!");
+            await Clients.Caller.ReceiveConnectionStatus(_switcher.IsConnected);
         }
 
         public async Task SendSceneChange()

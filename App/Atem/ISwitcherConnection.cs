@@ -9,5 +9,11 @@ namespace SwitcherServer.Atem
     interface ISwitcherConnection
     {
         IBMDSwitcher Connect();
+
+        IBMDSwitcher Connect(string ipaddress);
+
+        bool IsConnected { get; }
+
+        void Disconnect();
     }
 }
