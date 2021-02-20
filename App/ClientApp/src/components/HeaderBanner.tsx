@@ -1,4 +1,4 @@
-﻿import React, { Component } from "react";
+﻿import * as React from "react";
 import { Collapse, Container, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink } from "reactstrap";
 import { Link } from "react-router-dom";
 
@@ -33,7 +33,7 @@ export default function HeaderBanner(): JSX.Element {
 
     return (
         <header>
-            <Navbar className="navbar-expand-sm navbar-toggleable-sm ng-white border-bottom box-shadow mb-3" dark>
+            <Navbar className="navbar-expand-sm navbar-toggleable-sm ng-white box-shadow mb-3" dark>
                 <Container>
                     <NavbarBrand tag={Link} to="/">streamlia</NavbarBrand>
                     <NavbarToggler onClick={toggleNavbar} className="mr-2" />
@@ -44,6 +44,9 @@ export default function HeaderBanner(): JSX.Element {
                         </NavItem>
                         <NavItem>
                             <NavLink tag={Link} className="tab text-light" to="/tally-light">Tally</NavLink>
+                        </NavItem>
+                        <NavItem>
+                            <NavLink tag={Link} className="tab text-light" to="/setup">Setup</NavLink>
                         </NavItem>
                     </ul>
                     </Collapse>

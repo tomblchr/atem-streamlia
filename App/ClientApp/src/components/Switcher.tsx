@@ -1,6 +1,6 @@
 ﻿import * as React from "react";
-import { HubConnection, HubConnectionBuilder, HubConnectionState, LogLevel } from "@microsoft/signalr";
-import { AlertTriangle, Zap } from "react-feather";
+import { HubConnection, HubConnectionBuilder, LogLevel } from "@microsoft/signalr";
+import ConnectionMonitor from "./ConnectionMonitor";
 import Inputs, { IInput } from "./Inputs";
 import Transitions from "./Transitions";
 import NextTransition from "./NextTransition";
@@ -20,10 +20,9 @@ interface ISceneDetail {
 export default function Switcher(): JSX.Element {
     const [connection, setConnection] = React.useState<HubConnection | null>(null);
     const [scene, setScene] = React.useState<ISceneDetail | null>(null);
-    const [switchConnection, setSwitchConnection] = React.useState<boolean>(false);
 
     React.useEffect(() => {
-        console.log("Creating connection...");
+        console.log("Creating signalr connection...");
 
         const newConnection: HubConnection = connection ?? new HubConnectionBuilder()
             .withUrl("/atemhub")
@@ -32,7 +31,7 @@ export default function Switcher(): JSX.Element {
             .build();
 
         setConnection(newConnection);
-    }, [connection, switchConnection]);
+    }, []);
 
     React.useEffect(() => {
         if (connection) {
@@ -44,11 +43,9 @@ export default function Switcher(): JSX.Element {
                         const msg = message as ISceneDetail;
                         console.log(`ReceiveSceneChange - ${msg.downstreamKeyOnAir}`);
                         setScene(message);
-                        setSwitchConnection(true);
                     });
                     connection.on("ReceiveConnectionStatus", message => {
                         console.log(`ReceivedConnectionStatus - ${message}`);
-                        setSwitchConnection(message);
                     });
                 })
                 .catch(e => console.log('Connection failed: ', e));
@@ -57,10 +54,7 @@ export default function Switcher(): JSX.Element {
 
     return (
         <div key="switcher">
-            <div className="float-right">
-                <span className="tab connection-status connected" title="Server Connection">{connection?.state === HubConnectionState.Connected ? <Zap /> : <AlertTriangle />}</span>
-                <span className="tab connection-status connected" title="Switch Connection">{switchConnection ? <Zap /> : <AlertTriangle />}</span>
-            </div>
+            <ConnectionMonitor connection={connection} />
             <MasterAudioMeter connection={connection} />
             <Inputs program={scene?.program} preview={scene?.preview} inputs={scene?.inputs} connection={connection} />
             <Transitions connection={connection} />

@@ -12,7 +12,7 @@ interface ITallyLightState {
     chosen: number | null;
 }
 
-function TallyLight() {
+const TallyLight = (): React.ReactElement => {
     const [connection, setConnection] = React.useState<HubConnection | null>(null);
     const [scene, setScene] = React.useState<ISceneDetail>({ program: 0, preview: 0, inputs: [] });
     const [state, setState] = React.useState<ITallyLightState>({ chosen: null });    

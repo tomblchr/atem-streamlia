@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import * as React from "react";
 import { Collapse, Container, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink } from "reactstrap";
 import { Link } from "react-router-dom";
 import "./NavMenu.css";
@@ -7,7 +7,7 @@ interface INavMenuState {
   collapsed: boolean;
 }
 
-class NavMenu extends Component<any, INavMenuState> {
+class NavMenu extends React.Component<any, INavMenuState> {
   static displayName = NavMenu.name;
 
   constructor (props: any) {
@@ -28,7 +28,7 @@ class NavMenu extends Component<any, INavMenuState> {
   render () {
     return (
       <header>
-        <Navbar className="navbar-expand-sm navbar-toggleable-sm ng-white border-bottom box-shadow mb-3" light>
+        <Navbar className="navbar-expand-sm navbar-toggleable-sm ng-white border-bottom box-shadow mb-3 navbar" light>
           <Container>
             <NavbarBrand tag={Link} to="/">SwitcherServer</NavbarBrand>
             <NavbarToggler onClick={this.toggleNavbar} className="mr-2" />
@@ -39,6 +39,9 @@ class NavMenu extends Component<any, INavMenuState> {
                 </NavItem>
                 <NavItem>
                   <NavLink tag={Link} className="text-dark" to="/tally-light">Tally</NavLink>
+                </NavItem>
+                <NavItem>
+                    <NavLink tag={Link} className="text-dark" to="/setup">Setup</NavLink>
                 </NavItem>
               </ul>
             </Collapse>
