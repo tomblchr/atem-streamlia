@@ -9,9 +9,9 @@ Use the `build.ps1` script to build from the command line.
 ## Inspirations
 
 * https://github.com/filiphanes/atem-live-controller
-** A similar concept implemented using node. Uses the [applest-atem](https://github.com/applest/node-applest-atem) library to communicate with the ATEM.
+    * A similar concept implemented using node. Uses the [applest-atem](https://github.com/applest/node-applest-atem) library to communicate with the ATEM.
 * https://github.com/LibAtem/LibAtem
-** A .NET Core library that is not shackled to the ATEM SDK.
+    * A .NET Core library not shackled to the ATEM SDK.
 
 ## Contributing
 
