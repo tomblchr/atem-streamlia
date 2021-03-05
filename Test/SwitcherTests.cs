@@ -10,25 +10,17 @@ namespace SwitcherServerTests
 {
     public class SwitcherTests : Tests
     {
-        readonly Switcher _switcher;
-
-        public SwitcherTests()
-        {
-            _switcher = new SwitcherBuilder(new MockMediator())
-                .Build();
-        }
-
         [Test]
         public void TestConnect()
         {
-            Assert.IsNotNull(_switcher);
+            Assert.IsNotNull(AtemMini);
         }
 
         [Test]
         public void TestVideoMode()
         {
             // act
-            string videoMode = _switcher.GetVideoMode();
+            string videoMode = AtemMini.GetVideoMode();
 
             // assert
             Assert.AreEqual("bmdSwitcherVideoMode1080p2997", videoMode);
@@ -38,7 +30,7 @@ namespace SwitcherServerTests
         public void TestInputs()
         {
             // act
-            var inputs = _switcher.GetInputs();
+            var inputs = AtemMini.GetInputs();
 
             // assert
             Assert.IsNotEmpty(inputs);
@@ -51,7 +43,7 @@ namespace SwitcherServerTests
         public void TestMixEffectBlocks()
         {
             // act
-            var meb = _switcher.GetMixEffectBlocks();
+            var meb = AtemMini.GetMixEffectBlocks();
 
             // assert
             Assert.IsNotEmpty(meb);
@@ -64,7 +56,7 @@ namespace SwitcherServerTests
         public void TestDownstreamKeys()
         {
             // act
-            var dk = _switcher.GetDownstreamKeys();
+            var dk = AtemMini.GetDownstreamKeys();
 
             // assert
             Assert.IsNotEmpty(dk);
@@ -77,7 +69,7 @@ namespace SwitcherServerTests
         public void TestKeys()
         {
             // act
-            var dk = _switcher.GetMixEffectBlocks().First().Keys;
+            var dk = AtemMini.GetMixEffectBlocks().First().Keys;
 
             // assert
             Assert.IsNotEmpty(dk);
@@ -90,7 +82,7 @@ namespace SwitcherServerTests
         public void TestNextTransition()
         {
             // act
-            var transition = _switcher.GetMixEffectBlocks().First().GetNextTransition();
+            var transition = AtemMini.GetMixEffectBlocks().First().GetNextTransition();
 
             // assert
             Assert.IsNotEmpty(transition.Keys);
@@ -104,18 +96,18 @@ namespace SwitcherServerTests
         public void TestTransition()
         {
             // arrange
-            var start = _switcher.GetMixEffectBlocks().First();
+            var start = AtemMini.GetMixEffectBlocks().First();
             var startProgram = start.ProgramInput.Id;
             var startPreview = start.PreviewInput.Id;
 
             // act
-            _switcher.PerformAutoTransition();
+            AtemMini.PerformAutoTransition();
 
             // wait for the transition to finish
             Thread.Sleep(3000);
 
             // assert
-            var end = _switcher.GetMixEffectBlocks().First();
+            var end = AtemMini.GetMixEffectBlocks().First();
             Assert.AreEqual(startProgram, end.PreviewInput.Id);
             Assert.AreEqual(startPreview, end.ProgramInput.Id);
         }

@@ -7,21 +7,13 @@ using System.Text;
 namespace SwitcherServerTests
 {
     [TestFixture]
-    public class FairlightAudioMixerTests
+    public class FairlightAudioMixerTests : Tests
     {
-        readonly Switcher _switcher;
-
-        public FairlightAudioMixerTests()
-        {
-            _switcher = new SwitcherBuilder(new MockMediator())
-                .Build();
-        }
-
         [Test]
         public void CanGetFairlightAudioMixerDirect()
         {
             // act
-            var result = _switcher.SwitcherDirect.GetFairlightAudioMixer();
+            var result = AtemMini.SwitcherDirect.GetFairlightAudioMixer();
 
             // assert
             Assert.IsNotNull(result);
@@ -31,7 +23,7 @@ namespace SwitcherServerTests
         public void CanGetFairlightAudioMixerProperties()
         {
             // act
-            var result = _switcher.GetFairlightAudioMixer();
+            var result = AtemMini.GetFairlightAudioMixer();
 
             // assert
             Assert.IsNotNull(result);
