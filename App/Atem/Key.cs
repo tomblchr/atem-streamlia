@@ -9,12 +9,18 @@ namespace SwitcherServer.Atem
 {
     public class Key
     {
-        private IBMDSwitcherKey _key;
+        private readonly IBMDSwitcherKey _key;
+        private readonly IBMDSwitcherKeyFlyParameters _keyFlyParameters;
+        private readonly KeyFlyParameters _flyParameters;
 
         public Key(IBMDSwitcherKey key, IMediator mediator)
         {
             _key = key;
             _key.AddCallback(new KeyCallback(mediator));
+
+            _keyFlyParameters = _key.GetKeyFlyParameters();
+            _keyFlyParameters.AddCallback(new KeyFlyParametersCallback(mediator));
+            _flyParameters = new KeyFlyParameters(_keyFlyParameters);
         }
 
         public bool OnAir
@@ -42,5 +48,8 @@ namespace SwitcherServer.Atem
                 return mask;
             }
         }
+
+        public KeyFlyParameters FlyParameters => _flyParameters;
+
     }
 }

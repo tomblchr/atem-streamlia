@@ -9,8 +9,8 @@ namespace SwitcherServer.Atem
 {
     public class MixEffectBlock
     {
-        private readonly IMediator _mediator;
         private readonly Switcher _switcher;
+        private readonly IMediator _mediator;        
         private readonly IBMDSwitcherMixEffectBlock _bmd;
         private readonly IBMDSwitcherTransitionParameters _transitionParameters;
 

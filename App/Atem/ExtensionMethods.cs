@@ -72,6 +72,13 @@ namespace SwitcherServer.Atem
             return result;
         }
 
+        public static IBMDSwitcherKeyFlyParameters GetKeyFlyParameters(this IBMDSwitcherKey o)
+        {
+            Guid g = typeof(IBMDSwitcherKeyFlyParameters).GUID;
+            Marshal.QueryInterface(Marshal.GetIUnknownForObject(o), ref g, out IntPtr ptr);
+            return (IBMDSwitcherKeyFlyParameters)Marshal.GetObjectForIUnknown(ptr);
+        }
+
         public static IEnumerable<IBMDSwitcherDownstreamKey> GetDownstreamKeys(this IBMDSwitcher o)
         {
             var result = new List<IBMDSwitcherDownstreamKey>();
@@ -110,6 +117,13 @@ namespace SwitcherServer.Atem
             Guid g = typeof(IBMDSwitcherTransitionParameters).GUID;
             Marshal.QueryInterface(Marshal.GetIUnknownForObject(m), ref g, out IntPtr ptr);
             return (IBMDSwitcherTransitionParameters)Marshal.GetObjectForIUnknown(ptr);
+        }
+
+        public static IBMDSwitcherTransitionDVEParameters GetTransitionDVEParameters(this IBMDSwitcherMixEffectBlock m)
+        {
+            Guid g = typeof(IBMDSwitcherTransitionDVEParameters).GUID;
+            Marshal.QueryInterface(Marshal.GetIUnknownForObject(m), ref g, out IntPtr ptr);
+            return (IBMDSwitcherTransitionDVEParameters)Marshal.GetObjectForIUnknown(ptr);
         }
     }
 }
