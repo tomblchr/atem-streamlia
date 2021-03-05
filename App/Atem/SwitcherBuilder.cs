@@ -13,16 +13,29 @@ namespace SwitcherServer.Atem
     {
         private string _ipaddress = "10.0.0.201";
         private readonly IServiceProvider _serviceProvider;
-        private readonly IMediator _mediator;
+        private IMediator _mediator;
+        private SwitcherConnectionKeeper _connection;
+
+        public SwitcherBuilder()
+        {
+
+        }
 
         public SwitcherBuilder(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
         }
 
-        public SwitcherBuilder(IMediator mediator)
+        public SwitcherBuilder Mediator(IMediator mediator)
         {
             _mediator = mediator;
+            return this;
+        }
+
+        public SwitcherBuilder ConnectionKeeper(SwitcherConnectionKeeper switcherConnectionKeeper)
+        {
+            _connection = switcherConnectionKeeper;
+            return this;
         }
 
         public SwitcherBuilder NetworkIP(string ipaddress)
@@ -33,11 +46,12 @@ namespace SwitcherServer.Atem
 
         public Switcher Build()
         {
-            var mediator = _mediator ?? _serviceProvider.GetRequiredService<IMediator>();
-            var logger = _serviceProvider.GetService<ILogger<SwitcherConnectionKeeper>>();
-            var connection = new SwitcherConnectionKeeper(mediator, logger);
+            var mediator = _mediator ?? _serviceProvider?.GetRequiredService<IMediator>();
+            var connection = _connection ?? _serviceProvider?.GetRequiredService<SwitcherConnectionKeeper>();
+
             var result = new Switcher(connection, mediator);
             connection.Connect(_ipaddress);
+            
             return result;
         }
     }

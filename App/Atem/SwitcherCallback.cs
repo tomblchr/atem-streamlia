@@ -23,6 +23,8 @@ namespace SwitcherServer.Atem
                 case _BMDSwitcherEventType.bmdSwitcherEventTypeDisconnected:
                     _mediator.Publish(new ConnectionChangeNotify { Connected = false });
                     break;
+                case _BMDSwitcherEventType.bmdSwitcherEventTypeTimeCodeChanged:
+                    break;
                 default:
                     _mediator.Publish(new SwitcherMessageNotify { Message = $"Switcher says: {eventType}" });
                     break;

@@ -37,6 +37,8 @@ namespace SwitcherServer
             services.AddControllersWithViews();
             services.AddTransient<AtemHubContext>();
             services.AddTransient<MessageNotificationHandler>();
+            services.AddSingleton<SwitcherConnectionKeeper>();
+
             services.AddSingleton(services => 
             {
                 return new SwitcherBuilder(services)
