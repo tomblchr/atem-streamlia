@@ -18,13 +18,16 @@ namespace SwitcherServer
     {
         readonly ILogger _logger;
 
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IWebHostEnvironment environment)
         {
             _logger = Program._loggerFactory.CreateLogger<Startup>();
             Configuration = configuration;
+            Environment = environment;
         }
 
         public IConfiguration Configuration { get; }
+
+        public IWebHostEnvironment Environment { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -36,8 +39,12 @@ namespace SwitcherServer
             services.AddMediatR(typeof(Startup));
             services.AddControllersWithViews();
             services.AddTransient<AtemHubContext>();
-            services.AddTransient<MessageNotificationHandler>();
             services.AddSingleton<SwitcherConnectionKeeper>();
+
+            if (Environment.IsDevelopment())
+            {
+                services.AddTransient<MessageNotificationHandler>();
+            }
 
             services.AddSingleton(services => 
             {
@@ -51,7 +58,6 @@ namespace SwitcherServer
                     .AllowAnyMethod()
                     .AllowAnyHeader()
                     .AllowCredentials()));
-
 
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>

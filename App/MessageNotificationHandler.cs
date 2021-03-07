@@ -20,7 +20,7 @@ namespace SwitcherServer
 
         public Task Handle(SwitcherMessageNotify notification, CancellationToken cancellationToken)
         {
-            _logger.LogInformation(notification.Message);
+            _logger.LogDebug(notification.Message);
 
             return Task.CompletedTask;
         }
