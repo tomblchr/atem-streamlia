@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 
 namespace SwitcherServer
@@ -30,11 +31,11 @@ namespace SwitcherServer
             }
             catch (Exception e)
             {
-                _logger.LogError("Application Error: ", e);
+                _logger.LogError(e, "Application Error");
             }
             finally
             {
-                _logger.LogInformation("Exiting. Have a good day.");
+                _logger.LogInformation("Done!");
             }
         }
 
@@ -50,9 +51,22 @@ namespace SwitcherServer
                     webBuilder.UseStartup<Startup>();
                     webBuilder.UseKestrel(options =>
                     {
-                        options.ListenAnyIP(5001, configure =>
+                         options.ListenAnyIP(5001, configure =>
                         {
+                            configure.Protocols = Microsoft.AspNetCore.Server.Kestrel.Core.HttpProtocols.Http1;
+#if DEBUG
+                            // will use the dotnetcore development certificates
                             configure.UseHttps();
+#else
+                            var csi = new CertificateStoreInspector(_loggerFactory.CreateLogger<CertificateStoreInspector>());
+                            var certificate = csi.GetCertificate("Root", StoreLocation.CurrentUser) 
+                                ?? csi.GetCertificate("My", StoreLocation.CurrentUser);
+
+                            if (certificate != null)
+                            {
+                                configure.UseHttps(certificate);
+                            }
+#endif
                         });
                     });
                 });
