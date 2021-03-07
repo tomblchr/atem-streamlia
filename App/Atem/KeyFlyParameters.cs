@@ -1,4 +1,5 @@
 ﻿using BMDSwitcherAPI;
+using MediatR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,9 +11,10 @@ namespace SwitcherServer.Atem
     {
         private readonly IBMDSwitcherKeyFlyParameters _parameters;
 
-        public KeyFlyParameters(IBMDSwitcherKeyFlyParameters parameters)
+        public KeyFlyParameters(IBMDSwitcherKeyFlyParameters parameters, IMediator mediator)
         {
             _parameters = parameters;
+            _parameters.AddCallback(new KeyFlyParametersCallback(this, mediator));
         }
 
         public IBMDSwitcherKeyFlyParameters Switcher => _parameters;

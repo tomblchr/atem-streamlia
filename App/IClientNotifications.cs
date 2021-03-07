@@ -31,5 +31,7 @@ namespace SwitcherServer
         Task ReceiveDownstreamKeyInTransition(bool inTransition);
 
         Task ReceiveNextTransition(NextTransition notification);
+
+        Task ReceiveKeyFlyParameters(KeyFlyParametersNotify notification);
     }
 }

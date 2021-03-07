@@ -38,5 +38,7 @@ namespace SwitcherServer
         Task SendKeyIncludedInTransition(int key, bool included);
 
         Task SendNextTransitionBackground(bool included);
+
+        Task SendRunKeyFrame(_BMDSwitcherFlyKeyFrame flyKeyFrame);
     }
 }

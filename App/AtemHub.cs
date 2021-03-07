@@ -153,5 +153,16 @@ namespace SwitcherServer
 
             await Task.CompletedTask;
         }
+
+        public async Task SendRunKeyFrame(_BMDSwitcherFlyKeyFrame flyKeyFrame)
+        {
+            _switcher.GetMixEffectBlocks().First()
+                .Keys.First()
+                .FlyParameters
+                .Switcher
+                .RunToKeyFrame(flyKeyFrame);
+
+            await Task.CompletedTask;
+        }
     }
 }

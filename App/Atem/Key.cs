@@ -19,8 +19,7 @@ namespace SwitcherServer.Atem
             _key.AddCallback(new KeyCallback(mediator));
 
             _keyFlyParameters = _key.GetKeyFlyParameters();
-            _keyFlyParameters.AddCallback(new KeyFlyParametersCallback(mediator));
-            _flyParameters = new KeyFlyParameters(_keyFlyParameters);
+            _flyParameters = new KeyFlyParameters(_keyFlyParameters, mediator);
         }
 
         public bool OnAir

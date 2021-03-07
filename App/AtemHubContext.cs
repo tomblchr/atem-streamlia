@@ -25,6 +25,7 @@ namespace SwitcherServer
         , INotificationHandler<NextTransitionNotify>
         , INotificationHandler<ConnectionChangeNotify>
         , INotificationHandler<SwitcherMessageNotify>
+        , INotificationHandler<KeyFlyParametersNotify>
     {
         private readonly Switcher _switcher;
         private readonly IHubContext<AtemHub, IClientNotifications> _hub;
@@ -39,13 +40,13 @@ namespace SwitcherServer
 
         public async Task Handle(ConnectionChangeNotify notification, CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Send 'connection status' notification");
+            _logger.LogDebug("Send 'connection status' notification");
             await _hub.Clients.All.ReceiveConnectionStatus(notification.Connected);
         }
 
         public async Task Handle(InputChangeNotify notification, CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Send 'input change' notification");
+            _logger.LogDebug("Send 'input change' notification");
             await _hub.Clients.All.ReceiveSceneChange(new SceneDetail(_switcher));
         }
 
@@ -117,6 +118,12 @@ namespace SwitcherServer
             _switcher.GetInputs();
 
             await _hub.Clients.All.ReceiveSceneChange(new SceneDetail(_switcher));
+        }
+
+        public async Task Handle(KeyFlyParametersNotify notification, CancellationToken cancellationToken)
+        {
+            _logger.LogDebug($"Key frame {notification.Destination} is " + (notification.IsRunning ? "" : " NOT ") + " in motion");
+            await _hub.Clients.All.ReceiveKeyFlyParameters(notification);
         }
     }
 }
