@@ -50,7 +50,9 @@ const NextTransition = ({ connection }: IKeyProps): React.ReactElement => {
         <h3>Next Transition</h3>
         <div className="well">
             <div style={{ display: "flex", flexDirection: "column" }}>
-                <div className="button" style={{ visibility: "hidden" }}></div>
+                <div className="button" style={{ visibility: "hidden" }}>
+                    <p>T</p>
+                </div>
                 <div className={state.includeBackground ? "button yellow" : "button"} onClick={_ => { sendBackgroundIncluded(!state.includeBackground); }}>
                     <p>BKGD</p>
                 </div>
