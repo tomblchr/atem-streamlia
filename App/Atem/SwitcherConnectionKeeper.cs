@@ -104,6 +104,11 @@ namespace SwitcherServer.Atem
             lock (_lock)
             {
                 _isConnected = false;
+
+                if (_mediator != null)
+                {
+                    _mediator.Publish(new ConnectionChangeNotify { Connected = false });
+                }
             }
         }
 
@@ -132,10 +137,6 @@ namespace SwitcherServer.Atem
         {
             lock (_lock)
             {
-                if (_mediator != null)
-                {
-                    _mediator.Publish(new ConnectionChangeNotify { Connected = false });
-                }
                 if (_switcher != null)
                 {
                     _switcher.RemoveCallback(this);
