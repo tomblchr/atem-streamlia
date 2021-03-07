@@ -84,7 +84,7 @@ namespace SwitcherServer
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime life)
         {
             if (env.IsDevelopment())
             {
@@ -122,6 +122,16 @@ namespace SwitcherServer
                     spa.UseReactDevelopmentServer(npmScript: "start");
                 }
             });
+
+            life.ApplicationStopping.Register(OnShutdown);
+        }
+
+        // This method gets called when the application starts to stop
+        public void OnShutdown()
+        {
+            _logger.LogInformation("Disconnecting...");
+
+            _logger.LogInformation("Shutdown sequence complete.");
         }
 
         string GetRootPath()
