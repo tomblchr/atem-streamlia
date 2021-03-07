@@ -12,6 +12,14 @@ body {
     user-select: none;
 }
 
+section {
+    float: left;
+}
+
+section.channels {
+    float: none;
+}
+
 code {
   color: #E01A76;
 }
