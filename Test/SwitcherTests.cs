@@ -23,7 +23,7 @@ namespace SwitcherServerTests
             string videoMode = AtemMini.GetVideoMode();
 
             // assert
-            Assert.AreEqual("bmdSwitcherVideoMode1080p2997", videoMode);
+            Assert.AreEqual("bmdSwitcherVideoMode1080p24", videoMode);
         }
 
         [Test]

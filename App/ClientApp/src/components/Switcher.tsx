@@ -9,6 +9,7 @@ import DownstreamKey from "./DownstreamKey";
 import FadeToBlack from "./FadeToBlack";
 import MasterAudioMeter from "./MasterAudioMeter";
 import KeyFrameRunner from "./KeyFrameRunner";
+import Macros from "./Macros";
 
 
 interface ISceneDetail {
@@ -62,6 +63,7 @@ export default function Switcher(): JSX.Element {
             <NextTransition connection={connection} />
             <TransitionStyle connection={connection} />
             <KeyFrameRunner connection={connection} />
+            <Macros connection={connection} />
             <DownstreamKey connection={connection} onAir={scene?.downstreamKeyOnAir ?? false} tieOn={scene?.downstreamKeyTieOn ?? false} />
             <FadeToBlack connection={connection} />
         </div>

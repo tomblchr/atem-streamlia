@@ -38,16 +38,32 @@ namespace SwitcherServer
             _logger = logger;
         }
 
+        /// <summary>
+        /// This occurs in relation to the connection between the server and the switcher
+        /// </summary>
+        /// <param name="notification"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         public async Task Handle(ConnectionChangeNotify notification, CancellationToken cancellationToken)
         {
             _logger.LogDebug("Send 'connection status' notification");
             await _hub.Clients.All.ReceiveConnectionStatus(notification.Connected);
+
+            if (notification.Connected)
+            {
+                Task.WaitAll(
+                    _hub.Clients.All.ReceiveSceneChange(new SceneDetail(_switcher)),
+                    _hub.Clients.All.ReceiveMacros(_switcher.GetMacros())
+                );
+            }
         }
 
         public async Task Handle(InputChangeNotify notification, CancellationToken cancellationToken)
         {
             _logger.LogDebug("Send 'input change' notification");
             await _hub.Clients.All.ReceiveSceneChange(new SceneDetail(_switcher));
+
+            await _hub.Clients.All.ReceiveMacros(_switcher.GetMacros());
         }
 
         public async Task Handle(MasterOutLevelNotify notification, CancellationToken token)

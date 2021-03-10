@@ -15,7 +15,7 @@ export interface IInputsProps {
     connection: HubConnection | null;
 }
 
-const Inputs = ({inputs, program, preview, connection}: IInputsProps): JSX.Element => {
+const Inputs = ({inputs, program, preview, connection}: IInputsProps): React.ReactElement => {
 
     const inputPorts = [1702392942, 1651269995, 1836082796];
 

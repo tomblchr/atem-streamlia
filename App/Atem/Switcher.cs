@@ -112,6 +112,37 @@ namespace SwitcherServer.Atem
             return _downstreamKeys;
         }
 
+        private IBMDSwitcherMacroPool _macroPool;
+        /// <summary>
+        /// Macros with a name in the system
+        /// </summary>
+        /// <remarks>
+        /// Unlike other aspects that are fixed parts of the hardware, inputs, mix blocks etc., macros are
+        /// dynamic and are retrieved on every call to this function.
+        /// </remarks>
+        /// <returns></returns>
+        public IEnumerable<Macro> GetMacros()
+        {
+            var result = new List<Macro>();
+            if (_macroPool == null)
+            {
+                _macroPool = SwitcherDirect.GetMacroPool();
+                _macroPool.AddCallback(new MacroPoolCallback(_mediator));
+            }
+            _macroPool.GetMaxCount(out uint maxCount);
+            for (uint i = 0; i < maxCount; i++)
+            {
+                _macroPool.GetName(i, out string name);
+                _macroPool.IsValid(i, out int valid);
+                if (valid == 1 && !string.IsNullOrEmpty(name))
+                {
+                    _macroPool.GetDescription(i, out string description);
+                    result.Add(new Macro { Id = i, Name = name, Description = description });
+                }
+            }
+            return result;
+        }
+
         public void PerformAutoTransition()
         {
             GetMixEffectBlocks()

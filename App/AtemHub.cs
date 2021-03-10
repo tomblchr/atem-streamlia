@@ -47,7 +47,10 @@ namespace SwitcherServer
 
             if (_switcher.IsConnected)
             {
-                await Clients.Caller.ReceiveSceneChange(new SceneDetail(_switcher));
+                Task.WaitAll(
+                    Clients.Caller.ReceiveSceneChange(new SceneDetail(_switcher)),
+                    Clients.Caller.ReceiveMacros(_switcher.GetMacros())
+                );
             }
         }
 

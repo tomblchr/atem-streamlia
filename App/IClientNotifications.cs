@@ -33,5 +33,7 @@ namespace SwitcherServer
         Task ReceiveNextTransition(NextTransition notification);
 
         Task ReceiveKeyFlyParameters(KeyFlyParametersNotify notification);
+
+        Task ReceiveMacros(IEnumerable<Macro> macros);
     }
 }
