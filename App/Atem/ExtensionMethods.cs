@@ -132,5 +132,12 @@ namespace SwitcherServer.Atem
             Marshal.QueryInterface(Marshal.GetIUnknownForObject(o), ref g, out IntPtr ptr);
             return (IBMDSwitcherMacroPool)Marshal.GetObjectForIUnknown(ptr);
         }
+
+        public static IBMDSwitcherMacroControl GetMacroControl(this IBMDSwitcher o)
+        {
+            Guid g = typeof(IBMDSwitcherMacroControl).GUID;
+            Marshal.QueryInterface(Marshal.GetIUnknownForObject(o), ref g, out IntPtr ptr);
+            return (IBMDSwitcherMacroControl)Marshal.GetObjectForIUnknown(ptr);
+        }
     }
 }

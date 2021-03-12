@@ -40,5 +40,7 @@ namespace SwitcherServer
         Task SendNextTransitionBackground(bool included);
 
         Task SendRunKeyFrame(_BMDSwitcherFlyKeyFrame flyKeyFrame);
+
+        Task SendRunMacro(uint id);
     }
 }

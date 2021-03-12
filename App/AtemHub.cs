@@ -167,5 +167,12 @@ namespace SwitcherServer
 
             await Task.CompletedTask;
         }
+
+        public async Task SendRunMacro(uint id)
+        {
+            _switcher.MacroControl.Run(id);
+
+            await Task.CompletedTask;
+        }
     }
 }

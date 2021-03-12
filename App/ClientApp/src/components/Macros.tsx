@@ -28,12 +28,19 @@ const Macros = ({ connection }: IMacroProps): React.ReactElement => {
         }
     });
 
+    const sendRunMacro = async (id: number): Promise<void> => {
+        await connection?.send("SendRunMacro", id)
+            .then(() => { console.log(`SendRunMacro ${id}`) })
+            .catch(e => console.log("SendRunMacro failed: ", e));
+    }
+
     return <section className="macro">
         <h3>Macros</h3>
         <div className="well">
             {state.macros.map((c, i) => (
                 <div key={c.id}
-                    className="button">
+                    className="button"
+                    onClick={_ => sendRunMacro(c.id)}>
                     <p title={`${c.name} - ${c.description}`}>{c.id}</p>
                 </div>
             ))}

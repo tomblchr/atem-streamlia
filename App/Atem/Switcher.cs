@@ -143,6 +143,8 @@ namespace SwitcherServer.Atem
             return result;
         }
 
+        public IBMDSwitcherMacroControl MacroControl => SwitcherDirect.GetMacroControl();
+
         public void PerformAutoTransition()
         {
             GetMixEffectBlocks()
