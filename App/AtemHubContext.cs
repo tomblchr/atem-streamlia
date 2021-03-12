@@ -131,6 +131,8 @@ namespace SwitcherServer
 
             // not the right place for this stuff but will work for now
             _switcher.GetFairlightAudioMixer();
+            _switcher.GetDownstreamKeys();
+            _switcher.GetMixEffectBlocks();
             _switcher.GetInputs();
 
             await _hub.Clients.All.ReceiveSceneChange(new SceneDetail(_switcher));
