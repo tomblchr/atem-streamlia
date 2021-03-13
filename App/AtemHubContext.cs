@@ -62,8 +62,6 @@ namespace SwitcherServer
         {
             _logger.LogDebug("Send 'input change' notification");
             await _hub.Clients.All.ReceiveSceneChange(new SceneDetail(_switcher));
-
-            await _hub.Clients.All.ReceiveMacros(_switcher.GetMacros());
         }
 
         public async Task Handle(MasterOutLevelNotify notification, CancellationToken token)
