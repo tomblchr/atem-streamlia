@@ -18,13 +18,15 @@ This project relies on a COM reference to the BMD interop DLL. Building the soft
 
 Use the `build.ps1` script to build from the command line.
 
-## Getting Going
+## Get Going
 
 1. Run the `SwitcherServer.exe` console application
 1. Open https://localhost:5001 in a browser
 1. Connect the application to the ATEM
     1. The application will first attempt to connect to the ATEM via USB.
     1. To connect the ATEM over a network use the Setup option to enter the IP address of the ATEM.
+
+![Responsive](Doc/screens.png)
 
 ## Inspirations
 
