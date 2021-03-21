@@ -6,32 +6,38 @@ interface IConnectionMonitor {
     connection: HubConnection | null;
 }
 
+interface IConnectionMonitorState {
+    switchConnection: boolean;
+    serverConnection: boolean;
+}
+
 const ConnectionMonitor = ({ connection } : IConnectionMonitor): React.ReactElement => {
 
-    const [switchConnection, setSwitchConnection] = React.useState<boolean>(false);
-    const [serverConnection, setServerConnection] = React.useState<boolean>(false);
+    const [state, setState] = React.useState<IConnectionMonitorState>({ switchConnection: false, serverConnection: false });
 
     React.useEffect(() => {
         if (connection) {
 
             console.log(`ConnectionMonitor: ${connection.state}`);
-            setServerConnection(connection?.state === HubConnectionState.Connected);
+            setState({ switchConnection: false, serverConnection: connection?.state === HubConnectionState.Connected });
 
             connection.onreconnected(id => {
                 console.log(`ConnectionMonitor connected to server: ${id}`);
-                setServerConnection(connection?.state === HubConnectionState.Connected);
+                setState({ switchConnection: false, serverConnection: connection?.state === HubConnectionState.Connected });
+            });
+            connection.on('ReceiveConnectConfirmation', message => {
+                setState({ switchConnection: true, serverConnection: true });
             });
             connection.on("ReceiveConnectionStatus", message => {
                 console.log(`ReceiveConnectionStatus - ${message}`);
-                setServerConnection(connection?.state === HubConnectionState.Connected);
-                setSwitchConnection(message);
+                setState({ switchConnection: true, serverConnection: true });
             });
         }
     }, [connection]);
 
     return <div className="float-right">
-        <span className={serverConnection ? "tab connection-status connected" : "tab connection-status"} title="Server Connection">{serverConnection ? <Zap /> : <AlertTriangle />}</span>
-        <span className={switchConnection ? "tab connection-status connected" : "tab connection-status"} title="Switch Connection">{switchConnection ? <Zap /> : <AlertTriangle />}</span>
+        <span className={state.serverConnection ? "tab connection-status connected" : "tab connection-status"} title="Server Connection">{state.serverConnection ? <Zap /> : <AlertTriangle />}</span>
+        <span className={state.switchConnection ? "tab connection-status connected" : "tab connection-status"} title="Switch Connection">{state.switchConnection ? <Zap /> : <AlertTriangle />}</span>
     </div>
 }
 
