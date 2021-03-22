@@ -9,7 +9,7 @@ This application lives along side the ATEM Software Control software and provide
 * Input Switching
 * Tally Light
 * Run Macros
-* Run betwen Key Frames
+* Run between Key Frames
 * Upstream and Downstream Keys
 
 ## Building
