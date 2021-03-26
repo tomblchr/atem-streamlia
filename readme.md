@@ -41,7 +41,7 @@ Looking for an alternative to operate your ATEM? Try these projects...
 
 ## Contributing
 
-1. Fork it ( https://github.com/tomblchr/atem-hope-full )
+1. Fork it ( https://github.com/tomblchr/atem-streamlia )
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Implement your feature
 4. Commit your changes (`git commit -am 'Add some feature'`)
