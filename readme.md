@@ -38,6 +38,8 @@ Looking for an alternative to operate your ATEM? Try these projects...
     * A .NET Core library not shackled to the ATEM SDK.
 * https://github.com/bitfocus/companion
     * Highly customizable for many types of hardware.
+* https://mixeffect.app/
+    * Feature rich iOS App that connects directly to the ATEM.
 
 ## Contributing
 
