@@ -48,10 +48,14 @@ namespace SwitcherServer
                 })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
+                    var config = BuildConfiguration(args);
+                    var port = config.GetValue<int>("HostPort", 5001);
+
                     webBuilder.UseStartup<Startup>();
+                    webBuilder.UseConfiguration(config);
                     webBuilder.UseKestrel(options =>
                     {
-                         options.ListenAnyIP(5001, configure =>
+                        options.ListenAnyIP(port, configure =>
                         {
                             configure.Protocols = Microsoft.AspNetCore.Server.Kestrel.Core.HttpProtocols.Http1;
 #if DEBUG
@@ -70,5 +74,21 @@ namespace SwitcherServer
                         });
                     });
                 });
+
+        public static IConfiguration BuildConfiguration(string[] args)
+        {
+            return new ConfigurationBuilder()
+                .SetBasePath(GetRootPath())
+                .AddJsonFile("appsettings.json", true)
+                .AddCommandLine(args)
+                .Build();
+        }
+
+        public static string GetRootPath()
+        {
+            var pathToExe = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName;
+            var pathToContentRoot = System.IO.Path.GetDirectoryName(pathToExe);
+            return pathToContentRoot;
+        }
     }
 }

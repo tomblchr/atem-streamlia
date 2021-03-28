@@ -32,8 +32,8 @@ namespace SwitcherServer
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var ip = Configuration.GetValue<string>("ipaddress");
-            _logger.LogInformation($"Connecting to ATEM at IP {ip} (use the '--ipaddress=...' command line argument or appsettings.json to set this value)");
+            var ip = Configuration.GetValue<string>("AtemIpAddress");
+            _logger.LogInformation($"Connecting to ATEM at IP {ip} (use the '--AtemIpAddress=...' command line argument or appsettings.json to set this value)");
 
             services.AddSignalR();
             services.AddMediatR(typeof(Startup));
@@ -72,9 +72,9 @@ namespace SwitcherServer
                 };
                 foreach (var folder in folders)
                 {
-                    if (System.IO.Directory.Exists(System.IO.Path.Join(GetRootPath(), folder)))
+                    if (System.IO.Directory.Exists(System.IO.Path.Join(Program.GetRootPath(), folder)))
                     {
-                        configuration.RootPath = System.IO.Path.Join(GetRootPath(), folder);
+                        configuration.RootPath = System.IO.Path.Join(Program.GetRootPath(), folder);
                         continue;
                     }
                 }
@@ -123,10 +123,15 @@ namespace SwitcherServer
                 }
             });
 
+            life.ApplicationStarted.Register(OnStarted);
             life.ApplicationStopping.Register(OnShutdown);
         }
 
-        // This method gets called when the application starts to stop
+        public void OnStarted()
+        {
+            _logger.LogInformation($"----------- Open a broswer at {NetworkInspector.GetUrl(Configuration)} ---------------");
+        }
+
         public void OnShutdown()
         {
             _logger.LogInformation("Disconnecting...");
@@ -134,11 +139,5 @@ namespace SwitcherServer
             _logger.LogInformation("Shutdown sequence complete.");
         }
 
-        string GetRootPath()
-        {
-            var pathToExe = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName;
-            var pathToContentRoot = System.IO.Path.GetDirectoryName(pathToExe);
-            return pathToContentRoot;
-        }
     }
 }
