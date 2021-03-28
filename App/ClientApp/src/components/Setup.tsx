@@ -1,14 +1,17 @@
 import * as React from "react";
 import { HubConnection, HubConnectionBuilder, LogLevel } from "@microsoft/signalr";
+import QRCode from "qrcode.react";
+import { hostURL } from "../api/atemconnection";
 import ConnectionMonitor from "./ConnectionMonitor";
 
 interface ISetupState {
     ipaddress: string;
+    host: string;
 }
 
 const Setup = (): React.ReactElement => {
     const [connection, setConnection] = React.useState<HubConnection | null>(null);
-    const [state, setState] = React.useState<ISetupState>({ ipaddress: "10.0.0.201" });
+    const [state, setState] = React.useState<ISetupState>({ ipaddress: "10.0.0.201", host: "" });
 
     React.useEffect(() => {
         console.log("Creating connection...");
@@ -19,7 +22,18 @@ const Setup = (): React.ReactElement => {
             .configureLogging(LogLevel.Information)
             .build();
 
+        const callapi = () => {
+            hostURL()
+                .then(response => {
+                    response.text().then(value => {
+                        setState({ ipaddress: state.ipaddress, host: value });
+                    });
+                });
+        };
+
         setConnection(newConnection);
+        callapi();
+
     }, []);
 
     React.useEffect(() => {
@@ -37,7 +51,7 @@ const Setup = (): React.ReactElement => {
     }, [connection]);
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setState({ ipaddress: event.target.value });
+        setState({ ipaddress: event.target.value, host: state.host });
     };
 
     const save = () => {
@@ -57,6 +71,11 @@ const Setup = (): React.ReactElement => {
                 <input type="text" className="form-control" placeholder={state.ipaddress} aria-label="ipaddress" aria-describedby="basic-addon1" onChange={ handleChange } />
             </div>
             <button type="button" className="btn btn-primary" onClick={e => { save() }}>Save</button>
+        </div>
+        <h3>Instructions</h3>
+        <div className="well">
+            <div>Open <span>{state.host}</span> in a browser to access this system. </div>
+            <QRCode value={state.host} />
         </div>
     </section>
 }

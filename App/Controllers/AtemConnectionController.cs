@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Configuration;
 using SwitcherServer.Atem;
 using System;
 using System.Collections.Generic;
@@ -22,10 +23,12 @@ namespace SwitcherServer.Controllers
     public class AtemConnectionController : ControllerBase
     {
         private readonly IBMDSwitcher _switcher;
-        
-        public AtemConnectionController(Switcher switcher)
+        private readonly IConfiguration _configuration;
+
+        public AtemConnectionController(IConfiguration configuration, Switcher switcher)
         {
             _switcher = switcher?.SwitcherDirect ?? throw new ArgumentNullException(nameof(switcher));
+            _configuration = configuration;
         }
 
         [HttpGet]
@@ -35,6 +38,13 @@ namespace SwitcherServer.Controllers
             _switcher.GetProductName(out var name);
 
             return Ok(name);
+        }
+
+        [HttpGet]
+        [Route("streamliaurl")]
+        public IActionResult GetStreamliaURL()
+        {
+            return Ok(NetworkInspector.GetUrl(_configuration));
         }
 
         [HttpGet]

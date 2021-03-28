@@ -8,6 +8,7 @@
     "jquery": "3.5.1",
     "merge": "2.1.0",
     "oidc-client": "1.9.0",
+    "qrcode.react": "^1.0.1",
     "react": "17.0.1",
     "react-bootstrap": "^1.4.0",
     "react-dom": "17.0.1",
@@ -17,6 +18,7 @@
     "reactstrap": "8.8.1"
   },
   "devDependencies": {
+    "@types/qrcode.react": "^1.0.1",
     "@types/react": "17.0.0",
     "@types/react-router": "5.1.9",
     "@types/react-router-dom": "5.1.7",
