@@ -2,7 +2,7 @@
 
 Making the ATEM Switcher accessible and conventional.
 
-This application lives along side the ATEM Software Control software and provides access to the most needed controls through a browser.
+This application lives along side the ATEM Software Control software (Windows only) and provides access to the most needed controls through a browser.
 
 ## Features
 
@@ -20,11 +20,17 @@ Use the `build.ps1` script to build from the command line.
 
 ## Get Going
 
+1. Download the [latest release](https://github.com/tomblchr/atem-streamlia/releases)
+1. Extract the archive 
 1. Run the `SwitcherServer.exe` console application
 1. Open https://localhost:5001 in a browser
 1. Connect the application to the ATEM
     1. The application will first attempt to connect to the ATEM via USB.
     1. To connect the ATEM over a network use the Setup option to enter the IP address of the ATEM.
+1. (optional)
+    1. Create a firewall rule to allow remote connections
+        * In PowerShell... `New-NetFirewallRule -DisplayName "ATEM streamlia" -Direction Inbound -LocalPort 5001 -Protocol TCP -Action Allow`
+    2. Use a browser on a network connected to device to access the address https://<ipaddress>:5001
 
 ![Responsive](Doc/screens.png)
 
