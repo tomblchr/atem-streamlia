@@ -9,9 +9,11 @@ namespace SwitcherServer
 {
     public class NetworkInspector
     {
+        public const string UNKNOWN_IP = "unknown";
+
         public static string GetUrl(IConfiguration configuration)
         {
-            string hostip = GetLocalIPv4(NetworkInterfaceType.Ethernet);
+            string hostip = GetLocalIPv4();
             int hostport = configuration.GetValue<int>("HostPort");
             string url = $"https://{hostip}";
             if (hostport != 443)
@@ -19,6 +21,22 @@ namespace SwitcherServer
                 url += $":{hostport}";
             }
             return url;
+        }
+
+        /// <summary>
+        /// Checks both wired and wireless connections for an IP address
+        /// </summary>
+        /// <returns></returns>
+        public static string GetLocalIPv4()
+        {
+            string ip = GetLocalIPv4(NetworkInterfaceType.Ethernet);
+
+            if (ip == UNKNOWN_IP)
+            {
+                return GetLocalIPv4(NetworkInterfaceType.Wireless80211);
+            }
+
+            return ip;
         }
 
         /// <summary>
@@ -37,7 +55,7 @@ namespace SwitcherServer
                 .Where(c => c.Address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
                 .FirstOrDefault();
 
-            if (addressInfo == null || addressInfo.Address == null) return "unknown";
+            if (addressInfo == null || addressInfo.Address == null) return UNKNOWN_IP;
 
             return addressInfo.Address.ToString();
         }
