@@ -27,10 +27,22 @@ namespace SwitcherServer.Controllers
 
         public AtemConnectionController(IConfiguration configuration, Switcher switcher)
         {
-            _switcher = switcher?.SwitcherDirect ?? throw new ArgumentNullException(nameof(switcher));
+            _switcher = switcher?.SwitcherDirect;
             _configuration = configuration;
         }
 
+        [HttpGet]
+        [Route("streamliaurl")]
+        public IActionResult GetStreamliaURL()
+        {
+            return Ok(NetworkInspector.GetUrl(_configuration));
+        }
+
+        /*
+         * 
+         * Moved to signalr
+         * 
+         * 
         [HttpGet]
         [Route("name")]
         public IActionResult DoSomething()
@@ -40,12 +52,7 @@ namespace SwitcherServer.Controllers
             return Ok(name);
         }
 
-        [HttpGet]
-        [Route("streamliaurl")]
-        public IActionResult GetStreamliaURL()
-        {
-            return Ok(NetworkInspector.GetUrl(_configuration));
-        }
+
 
         [HttpGet]
         [Route("videomode")]
@@ -165,5 +172,6 @@ namespace SwitcherServer.Controllers
 
             return Ok(result);
         }
+        */
     }
 }
