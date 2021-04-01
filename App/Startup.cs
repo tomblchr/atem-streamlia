@@ -41,6 +41,9 @@ namespace SwitcherServer
             services.AddTransient<AtemHubContext>();
             services.AddSingleton<SwitcherConnectionKeeper>();
 
+            services.AddSingleton<IConnectionChangeNotifyQueue, ConnectionChangeNotificationQueue>();
+            services.AddHostedService<AtemWorker>();            
+
             if (Environment.IsDevelopment())
             {
                 services.AddTransient<MessageNotificationHandler>();
@@ -79,8 +82,6 @@ namespace SwitcherServer
                     }
                 }
             });
-
-            services.AddHostedService<AtemWorker>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -45,7 +45,7 @@ namespace SwitcherServer.Atem
             {
                 if (_switcher == null || !_isConnected)
                 {
-                    _ipaddress = ipaddress;
+                    _ipaddress = string.IsNullOrEmpty(ipaddress) ? _ipaddress : ipaddress;
                     return ConnectImpl();
                 }
                 return _switcher;                
@@ -89,6 +89,7 @@ namespace SwitcherServer.Atem
                     _switcher.AddCallback(this);
                     _switcher.GetProductName(out string productName);
                     _logger.LogInformation($"Happy Days... connected to {productName}@{_ipaddress}!");
+                    _mediator.Publish(new ConnectionChangeNotify { Connected = true });
                 }
                 else
                 {
@@ -104,10 +105,10 @@ namespace SwitcherServer.Atem
             lock (_lock)
             {
                 _isConnected = false;
-
+                
                 if (_mediator != null)
                 {
-                    _mediator.Publish(new ConnectionChangeNotify { Connected = false });
+                    //_mediator.Publish(new ConnectionChangeNotify { Connected = false });
                 }
             }
         }

@@ -38,6 +38,7 @@ namespace SwitcherServer.Atem
             return this;
         }
 
+        [Obsolete]
         public SwitcherBuilder NetworkIP(string ipaddress)
         {
             _ipaddress = ipaddress;
@@ -49,10 +50,7 @@ namespace SwitcherServer.Atem
             var mediator = _mediator ?? _serviceProvider?.GetRequiredService<IMediator>();
             var connection = _connection ?? _serviceProvider?.GetRequiredService<SwitcherConnectionKeeper>();
 
-            var result = new Switcher(connection, mediator);
-            connection.Connect(_ipaddress);
-            
-            return result;
+            return new Switcher(connection, mediator);
         }
     }
 }

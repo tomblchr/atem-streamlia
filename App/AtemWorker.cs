@@ -1,12 +1,16 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using SwitcherServer.Atem;
 
 namespace SwitcherServer
@@ -15,86 +19,63 @@ namespace SwitcherServer
     /// Keep a connection to the ATEM.
     /// </summary>
     /// <remarks>
-    /// Once an initial connection to an ATEM Switcher has been established this
-    /// worker will attempt to keep the connection connected.
+    /// This service is connected to the connection change notification queue. When a disconnection
+    /// event is plucked from the queue the reconnection attempts begin. These will proceed until
+    /// the connection to the ATEM is reestablished or the application is shut down.
     /// </remarks>
-    public class AtemWorker : BackgroundService, INotificationHandler<ConnectionChangeNotify>
+    public class AtemWorker : BackgroundService
     {
         private readonly Switcher _switcher;
-        private readonly IMediator _mediator;
+        private readonly IConnectionChangeNotifyQueue _queue;
         private readonly ILogger _logger;
 
-        private bool _maintainConnection = false;
-
-        public AtemWorker(Switcher switcher, IMediator mediator, ILogger<AtemWorker> logger)
+        public AtemWorker(Switcher switcher, IConnectionChangeNotifyQueue queue, ILogger<AtemWorker> logger)
         {
             _switcher = switcher;
-            _mediator = mediator;
-            _logger = logger;
+            _queue = queue;
+            _logger = (ILogger)logger ?? NullLogger.Instance;
         }
 
-        /// <summary>
-        /// Start the worker if there is no connection
-        /// </summary>
-        /// <param name="notification"></param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        public Task Handle(ConnectionChangeNotify notification, CancellationToken cancellationToken)
-        {
-            if (notification.Connected)
-            {
-                _maintainConnection = true;
-                return Task.CompletedTask;
-            }
-
-            if (!_maintainConnection)
-            {
-                return Task.CompletedTask;
-            }
-            
-            _logger.LogWarning("Switcher is not connected");
-
-            return StartAsync(cancellationToken);
-        }
-
-        public override Task StartAsync(CancellationToken cancellationToken)
-        {
-            if (_switcher.IsConnected)
-            {
-                return Task.CompletedTask;
-            }
-
-            return base.StartAsync(cancellationToken);
-        }
-
-        protected override Task ExecuteAsync(CancellationToken stoppingToken)
+        protected async override Task ExecuteAsync(CancellationToken stoppingToken)
         {
             while (!stoppingToken.IsCancellationRequested)
             {
                 try
                 {
-                    _logger.LogInformation("Establishing connection...");
+                    var notification = await _queue.DequeueAsync(stoppingToken);
+                    if (notification == null)
+                    {
+                        continue;
+                    }
+                    while (!notification.Connected && !_switcher.IsConnected && !stoppingToken.IsCancellationRequested)
+                    {
 
-                    _switcher.Reset();
-
-                    Task.WaitAll(
-                        _mediator.Publish(new ConnectionChangeNotify { Connected = _switcher.IsConnected })
-                    );
-
-                    return Task.CompletedTask;
+                        if (!ConnectToSwitcher())
+                        {
+                            _logger.LogWarning("Connection could not be established. Try again shortly.");
+                            Thread.Sleep(3000);
+                        }
+                    }
                 }
-                catch (System.Runtime.InteropServices.COMException)
+                catch (OperationCanceledException)
+                {
+                    // this is to be expected when the system is shutting down
+                }
+                catch (Exception e)
                 {
                     // this indicates a connection could not be made and we should try again
-                    _logger.LogWarning("Connection could not be established. Will wait a while and try again shortly.");
-                    Thread.Sleep(1000);
+                    _logger.LogError(e, "Connecting to the switcher failed miserably.");
+                    Thread.Sleep(3000);
                 }
             }
-
             _logger.LogInformation("Shutting down - no need to maintain the connection anymore");
-            _maintainConnection = false;
+        }
 
-            return Task.CompletedTask;
+        bool ConnectToSwitcher()
+        {
+            _logger.LogInformation("Establishing connection...");
+            _switcher.Reset();
+            return _switcher.IsConnected;
         }
     }
 }

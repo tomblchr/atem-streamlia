@@ -30,7 +30,7 @@ const ConnectionMonitor = ({ connection } : IConnectionMonitor): React.ReactElem
             });
             connection.on("ReceiveConnectionStatus", message => {
                 console.log(`ReceiveConnectionStatus - ${message}`);
-                setState({ switchConnection: true, serverConnection: true });
+                setState({ switchConnection: message, serverConnection: true });
             });
         }
     }, [connection]);

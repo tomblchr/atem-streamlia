@@ -46,7 +46,7 @@ namespace SwitcherServer
         /// <returns></returns>
         public async Task Handle(ConnectionChangeNotify notification, CancellationToken cancellationToken)
         {
-            _logger.LogDebug("Send 'connection status' notification");
+            _logger.LogDebug($"Send 'connection status' notification. Connected: {notification.Connected}");
             await _hub.Clients.All.ReceiveConnectionStatus(notification.Connected);
 
             if (notification.Connected)

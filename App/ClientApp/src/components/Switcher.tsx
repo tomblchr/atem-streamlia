@@ -30,7 +30,7 @@ export default function Switcher(): JSX.Element {
         const newConnection: HubConnection = connection ?? new HubConnectionBuilder()
             .withUrl("/atemhub")
             .withAutomaticReconnect()
-            .configureLogging(LogLevel.Debug)
+            .configureLogging(LogLevel.None)
             .build();
 
         setConnection(newConnection);
@@ -47,9 +47,9 @@ export default function Switcher(): JSX.Element {
                         console.log(`ReceiveSceneChange - ${msg.downstreamKeyOnAir}`);
                         setScene(message);
                     });
-                    connection.on("ReceiveConnectionStatus", message => {
-                        console.log(`ReceivedConnectionStatus - ${message}`);
-                    });
+                    //connection.on("ReceiveConnectionStatus", message => {
+                    //    console.log(`ReceivedConnectionStatus - ${message}`);
+                    //});
                 })
                 .catch(e => console.log('Connection failed: ', e));
         }
