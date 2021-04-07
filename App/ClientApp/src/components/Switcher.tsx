@@ -7,7 +7,6 @@ import NextTransition from "./NextTransition";
 import TransitionStyle from "./TransitionStyle";
 import DownstreamKey from "./DownstreamKey";
 import FadeToBlack from "./FadeToBlack";
-import MasterAudioMeter from "./MasterAudioMeter";
 import KeyFrameRunner from "./KeyFrameRunner";
 import Macros from "./Macros";
 

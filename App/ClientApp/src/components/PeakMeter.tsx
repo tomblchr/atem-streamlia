@@ -48,9 +48,27 @@ const PeakMeter = ({ vertical, connection, height, width }: IPeakMeterProps): Re
         requestAnimationFrame(updateMeter);
     };
 
-    return <div style={{ backgroundColor: "black", width: "300px" }}>
+    const dBFSToY = (db: number): number => {
+        //db = -2;
+
+        // db is between -Infinity and 0dB
+        if (db < -60) return 300;
+        if (db >= -1) return 0;
+
+        const height = 300;
+
+        //const y = height * Math.log(Math.abs(db)) / Math.log(60);
+
+        const y = 300 * (Math.abs(db) / 60);
+
+        return Math.floor(y);
+    };
+
+    return <div className="audio-levels">
         {state.levels.map((c, index) => {
-            return <div key={index} style={{ marginTop: "2px", height: "10px", width: (300 - (c * -3)) + "px", backgroundColor: "green" }}> &nbsp; </div>
+            return <div key={index}
+                className="audio-level"
+                style={{ clipPath: "inset(" + dBFSToY(c) + "px 2px 0 0)" }}></div>
         })}
     </div>
     

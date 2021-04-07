@@ -15,7 +15,7 @@ const MasterAudioMeter = ({ connection }: IMasterAudioProps): React.ReactElement
 
     return <section>
         <div className="well">
-            <PeakMeter vertical={true} connection={connection} height={200} width={80} />
+            <PeakMeter vertical={true} connection={connection} height={400} width={80} />
         </div>
     </section>
 }

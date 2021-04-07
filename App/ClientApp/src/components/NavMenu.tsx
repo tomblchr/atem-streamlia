@@ -38,10 +38,13 @@ class NavMenu extends React.Component<any, INavMenuState> {
                   <NavLink tag={Link} className="text-dark" to="/">Home</NavLink>
                 </NavItem>
                 <NavItem>
+                  <NavLink tag={Link} className="text-dark" to="/audio">Audio</NavLink>
+                </NavItem>
+                <NavItem>
                   <NavLink tag={Link} className="text-dark" to="/tally-light">Tally</NavLink>
                 </NavItem>
                 <NavItem>
-                    <NavLink tag={Link} className="text-dark" to="/setup">Setup</NavLink>
+                  <NavLink tag={Link} className="text-dark" to="/setup">Setup</NavLink>
                 </NavItem>
               </ul>
             </Collapse>

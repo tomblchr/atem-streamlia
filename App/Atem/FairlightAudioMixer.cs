@@ -14,7 +14,7 @@ namespace SwitcherServer.Atem
         public FairlightAudioMixer(IBMDSwitcherFairlightAudioMixer mixer, IMediator mediator)
         {
             _mixer = mixer;
-            _mixer.SetAllLevelNotificationsEnabled(0);
+            _mixer.SetAllLevelNotificationsEnabled(1);
             _mixer.AddCallback(new FairlightAudioMixerCallback(mediator));
         }
 
