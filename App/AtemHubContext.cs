@@ -23,7 +23,6 @@ namespace SwitcherServer
         , INotificationHandler<TransitionPositionNotify>
         , INotificationHandler<DownstreamKeyAutoTransitionNotify>
         , INotificationHandler<NextTransitionNotify>
-        , INotificationHandler<ConnectionChangeNotify>
         , INotificationHandler<SwitcherMessageNotify>
         , INotificationHandler<KeyFlyParametersNotify>
     {
@@ -38,26 +37,6 @@ namespace SwitcherServer
             _logger = logger;
         }
 
-        /// <summary>
-        /// This occurs in relation to the connection between the server and the switcher
-        /// </summary>
-        /// <param name="notification"></param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        public async Task Handle(ConnectionChangeNotify notification, CancellationToken cancellationToken)
-        {
-            _logger.LogDebug($"Send 'connection status' notification. Connected: {notification.Connected}");
-            await _hub.Clients.All.ReceiveConnectionStatus(notification.Connected);
-
-            if (notification.Connected)
-            {
-                Task.WaitAll(
-                    _hub.Clients.All.ReceiveSceneChange(new SceneDetail(_switcher)),
-                    _hub.Clients.All.ReceiveMacros(_switcher.GetMacros())
-                );
-            }
-        }
-
         public async Task Handle(InputChangeNotify notification, CancellationToken cancellationToken)
         {
             _logger.LogDebug("Send 'input change' notification");
@@ -67,8 +46,8 @@ namespace SwitcherServer
         public async Task Handle(MasterOutLevelNotify notification, CancellationToken token)
         {
             // there are lots of these
-            //_logger.LogDebug($"Master Out Level: {string.Join(',', notification.Levels)}");
-            // TODO: rework this to put it into the correct place
+            _logger.LogDebug($"Master Out Level: {string.Join(',', notification.Levels)}");
+            // TODO: rework this to put this logic it into the correct place
             for (int i = 0; i < notification.Levels.Length; i++)
             {
                 if (notification.Levels[i] == double.NegativeInfinity)
@@ -126,12 +105,6 @@ namespace SwitcherServer
         public async Task Handle(SwitcherMessageNotify notification, CancellationToken cancellationToken)
         {
             _logger.LogDebug($"{notification.Message}");
-
-            // not the right place for this stuff but will work for now
-            _switcher.GetFairlightAudioMixer();
-            _switcher.GetDownstreamKeys();
-            _switcher.GetMixEffectBlocks();
-            _switcher.GetInputs();
 
             await _hub.Clients.All.ReceiveSceneChange(new SceneDetail(_switcher));
         }

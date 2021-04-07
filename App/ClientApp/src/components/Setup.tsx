@@ -66,7 +66,7 @@ const Setup = (): React.ReactElement => {
         <div className="well">
             <div className="input-group mb-3">
                 <div className="input-group-prepend">
-                    <span className="input-group-text" id="basic-addon1">IP Address:</span>
+                    <span className="input-group-text" id="basic-addon1">ATEM IP Address:</span>
                 </div>
                 <input type="text" className="form-control" placeholder={state.ipaddress} aria-label="ipaddress" aria-describedby="basic-addon1" onChange={ handleChange } />
             </div>

@@ -56,7 +56,14 @@ namespace SwitcherServer
 
         public async override Task OnDisconnectedAsync(Exception exception)
         {
-            _logger.LogError($"Client Disconnected... {exception}!");
+            if (exception == null)
+            {
+                _logger.LogInformation($"Client Disconnected... Goodbye {Context.ConnectionId}!");
+            }
+            else
+            {
+                _logger.LogError($"Client Disconnected... Goodbye {Context.ConnectionId} - {exception.Message}!");
+            }
             await base.OnDisconnectedAsync(exception);
 
         }

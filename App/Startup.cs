@@ -36,8 +36,8 @@ namespace SwitcherServer
             _logger.LogInformation($"Connecting to ATEM at IP {ip} (use the '--AtemIpAddress=...' command line argument or appsettings.json to set this value)");
 
             services.AddSignalR();
-            services.AddMediatR(typeof(Startup));
             services.AddControllersWithViews();
+            services.AddMediatR(typeof(Startup));
             services.AddTransient<AtemHubContext>();
             services.AddSingleton<SwitcherConnectionKeeper>();
 
