@@ -8,12 +8,21 @@ const Audio = (): React.ReactElement => {
     const [connection, setConnection] = React.useState<HubConnection | null>(null);
 
     React.useEffect(() => {
-        console.log("Creating connection...");
+        console.log("Creating signalr connection...");
 
-        const newConnection: HubConnection = new HubConnectionBuilder()
+        const newConnection: HubConnection = connection ?? new HubConnectionBuilder()
             .withUrl("/atemhub")
-            .withAutomaticReconnect()
-            .configureLogging(LogLevel.Debug)
+            .withAutomaticReconnect({
+                nextRetryDelayInMilliseconds: retryContext => {
+                    if (retryContext.elapsedMilliseconds < 60000) {
+                        console.log("Will try to connect to server again in 1 second");
+                        return 1000;
+                    }
+                    console.log("Will try to connect to server again in 6 seconds");
+                    return 6000;
+                }
+            })
+            .configureLogging(LogLevel.None)
             .build();
 
         setConnection(newConnection);
@@ -23,7 +32,14 @@ const Audio = (): React.ReactElement => {
     React.useEffect(() => {
         if (connection) {
             connection
-                .start();
+                .start()
+                .then(() => {
+                    console.log("Connected!");
+                    connection.onreconnected(id => {
+                        console.log(`Connection restored - ${id}`);
+                    });
+                })
+                .catch(e => console.log('Connection failed: ', e));
         }
     }, [connection]);
 

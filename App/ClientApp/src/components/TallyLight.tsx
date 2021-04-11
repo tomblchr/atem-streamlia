@@ -1,5 +1,5 @@
 ﻿import * as React from "react";
-import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
+import { HubConnection, HubConnectionBuilder, LogLevel } from "@microsoft/signalr";
 import { IInput } from "./Inputs";
 
 interface ISceneDetail {
@@ -18,11 +18,21 @@ const TallyLight = (): React.ReactElement => {
     const [state, setState] = React.useState<ITallyLightState>({ chosen: null });    
 
     React.useEffect(() => {
-        console.log("Creating connection...");
+        console.log("Creating signalr connection...");
 
-        const newConnection: HubConnection = new HubConnectionBuilder()
+        const newConnection: HubConnection = connection ?? new HubConnectionBuilder()
             .withUrl("/atemhub")
-            .withAutomaticReconnect()
+            .withAutomaticReconnect({
+                nextRetryDelayInMilliseconds: retryContext => {
+                    if (retryContext.elapsedMilliseconds < 60000) {
+                        console.log("Will try to connect to server again in 1 second");
+                        return 1000;
+                    }
+                    console.log("Will try to connect to server again in 6 seconds");
+                    return 6000;
+                }
+            })
+            .configureLogging(LogLevel.None)
             .build();
 
         setConnection(newConnection);
@@ -33,7 +43,10 @@ const TallyLight = (): React.ReactElement => {
             connection
                 .start()
                 .then(() => {
-                    console.log('Connected!');
+                    console.log("Connected!");
+                    connection.onreconnected(id => {
+                        console.log(`Connection restored - ${id}`);
+                    });
                     connection.on('ReceiveSceneChange', message => {
                         setScene(message);
                     });

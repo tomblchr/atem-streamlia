@@ -20,7 +20,10 @@ const ConnectionMonitor = ({ connection } : IConnectionMonitor): React.ReactElem
 
             console.log(`ConnectionMonitor: ${connection.state}`);
             setState({ switchConnection: false, serverConnection: connection?.state === HubConnectionState.Connected });
-
+            connection.onreconnecting(error => {
+                console.log(`Reconnecting because - ${error?.message}`);
+                setState({ serverConnection: false, switchConnection: false });
+            });
             connection.onreconnected(id => {
                 console.log(`ConnectionMonitor connected to server: ${id}`);
                 setState({ switchConnection: false, serverConnection: connection?.state === HubConnectionState.Connected });

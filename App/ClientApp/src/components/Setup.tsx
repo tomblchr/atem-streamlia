@@ -14,12 +14,21 @@ const Setup = (): React.ReactElement => {
     const [state, setState] = React.useState<ISetupState>({ ipaddress: "10.0.0.201", host: "" });
 
     React.useEffect(() => {
-        console.log("Creating connection...");
+        console.log("Creating signalr connection...");
 
-        const newConnection: HubConnection = new HubConnectionBuilder()
+        const newConnection: HubConnection = connection ?? new HubConnectionBuilder()
             .withUrl("/atemhub")
-            .withAutomaticReconnect()
-            .configureLogging(LogLevel.Information)
+            .withAutomaticReconnect({
+                nextRetryDelayInMilliseconds: retryContext => {
+                    if (retryContext.elapsedMilliseconds < 60000) {
+                        console.log("Will try to connect to server again in 1 second");
+                        return 1000;
+                    }
+                    console.log("Will try to connect to server again in 6 seconds");
+                    return 6000;
+                }
+            })
+            .configureLogging(LogLevel.None)
             .build();
 
         const callapi = () => {
