@@ -56,19 +56,25 @@ const PeakMeter = ({ vertical, connection, height, width }: IPeakMeterProps): Re
         if (db >= -1) return 0;
 
         const height = 300;
+        const dBthreshold = -60; // lowest visible dB value - below this there is no visual
 
-        //const y = height * Math.log(Math.abs(db)) / Math.log(60);
-
-        const y = 300 * (Math.abs(db) / 60);
+        // from 0 to -20dB is linear
+        // lower than -20dB is logarithmic
+        const y = db >= -60
+            ? height * (Math.abs(db) / Math.abs(dBthreshold))
+            : height * Math.log(Math.abs(db)) / Math.log(Math.abs(dBthreshold));        
 
         return Math.floor(y);
     };
 
     return <div className="audio-levels">
         {state.levels.map((c, index) => {
-            return <div key={index}
-                className="audio-level"
-                style={{ clipPath: "inset(" + dBFSToY(c) + "px 2px 0 0)" }}></div>
+            return <div>
+                <div className="audio-level-value">{c}</div>
+                <div key={index}
+                    className="audio-level"
+                    style={{ clipPath: "inset(" + dBFSToY(c) + "px 2px 0 0)" }}></div>
+            </div>
         })}
     </div>
     
