@@ -46,7 +46,7 @@ namespace SwitcherServer
         public async Task Handle(MasterOutLevelNotify notification, CancellationToken token)
         {
             // there are lots of these
-            _logger.LogDebug($"Master Out Level: {string.Join(',', notification.Levels)}");
+            // _logger.LogDebug($"Master Out Level: {string.Join(',', notification.Levels)}");
             // TODO: rework this to put this logic it into the correct place
             for (int i = 0; i < notification.Levels.Length; i++)
             {
