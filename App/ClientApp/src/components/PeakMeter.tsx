@@ -70,7 +70,7 @@ const PeakMeter = ({ vertical, connection, height, width }: IPeakMeterProps): Re
     return <div className="audio-levels">
         {state.levels.map((c, index) => {
             return <div>
-                <div className="audio-level-value">{c}</div>
+                <div key={index + "db"} className="audio-level-value">{c}</div>
                 <div key={index}
                     className="audio-level"
                     style={{ clipPath: "inset(" + dBFSToY(c) + "px 2px 0 0)" }}></div>
