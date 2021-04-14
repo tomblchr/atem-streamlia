@@ -49,6 +49,8 @@ namespace SwitcherServer
             {
                 Task.WaitAll(
                     Clients.Caller.ReceiveSceneChange(new SceneDetail(_switcher)),
+                    Clients.Caller.ReceiveNextTransition(_switcher.GetMixEffectBlocks().First().GetNextTransition()),
+                    Clients.Caller.ReceiveTransitionStyle(_switcher.GetMixEffectBlocks().First().NextTransitionStyle),
                     Clients.Caller.ReceiveMacros(_switcher.GetMacros())
                 );
             }

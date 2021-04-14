@@ -42,6 +42,7 @@ namespace SwitcherServer
 
                 Task.WaitAll(
                     _hub.Clients.All.ReceiveSceneChange(new SceneDetail(_switcher)),
+                    _hub.Clients.All.ReceiveNextTransition(_switcher.GetMixEffectBlocks().First().GetNextTransition()),
                     _hub.Clients.All.ReceiveMacros(_switcher.GetMacros())
                 );
             }

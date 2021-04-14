@@ -34,7 +34,16 @@ namespace SwitcherServer.Atem
             _fairlightAudioMixer = null;
             _downstreamKeys = null;
             _connection.Disconnect();
-            _connection.Connect(ipaddress);
+            var switcher = _connection.Connect(ipaddress);
+
+            if (switcher != null)
+            {
+                GetInputs();
+                GetMixEffectBlocks();
+                GetFairlightAudioMixer();
+                GetDownstreamKeys();
+                GetMacros();
+            }
         }
 
         public bool IsConnected

@@ -51,7 +51,7 @@ namespace SwitcherServer.Atem
 
             var result = new Switcher(connection, mediator);
 
-            //result.Reset(_ipaddress);
+            result.Reset(_ipaddress);
 
             return result;
         }
