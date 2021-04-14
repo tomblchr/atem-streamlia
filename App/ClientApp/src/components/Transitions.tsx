@@ -30,12 +30,14 @@ const Transitions = ({ connection }: ITransitionsProps): React.ReactElement => {
     React.useEffect(() => {
         if (connection) {
             connection.on("ReceiveInTransition", message => {
-                console.log(`ReceiveInTransition - ${message}`);
-                setState({ inTransition: message, position: state.position, framesRemaining: state.framesRemaining });
+                const it: boolean = message;
+                console.log(`ReceiveInTransition - ${it}`);
+                setState({ inTransition: it, position: state.position, framesRemaining: state.framesRemaining });
             });
             connection.on("ReceiveTransitionPosition", message => {
-                console.log(`ReceiveTransitionPosition - ${message}`);
-                setState({ inTransition: state.inTransition, position: message.position, framesRemaining: message.framesRemaining });
+                const it: ITransistionState = message;
+                console.log(`ReceiveTransitionPosition - ${it.position},${it.framesRemaining}`);
+                setState({ inTransition: it.inTransition || it.position > 0, position: it.position, framesRemaining: it.framesRemaining });
             });
         }
     }, [connection]);
