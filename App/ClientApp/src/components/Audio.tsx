@@ -41,6 +41,14 @@ const Audio = (): React.ReactElement => {
                 })
                 .catch(e => console.log('Connection failed: ', e));
         }
+
+        return () => {
+            // clean up
+            if (connection) {
+                connection.stop();
+            }
+        };
+
     }, [connection]);
 
     return <section className="audio">

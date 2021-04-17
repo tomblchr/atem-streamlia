@@ -28,13 +28,21 @@ const ConnectionMonitor = ({ connection } : IConnectionMonitor): React.ReactElem
                 console.log(`ConnectionMonitor connected to server: ${id}`);
                 setState({ switchConnection: false, serverConnection: connection?.state === HubConnectionState.Connected });
             });
-            connection.on('ReceiveConnectConfirmation', message => {
+            connection.on("ReceiveConnectConfirmation", message => {
                 setState({ switchConnection: true, serverConnection: true });
             });
             connection.on("ReceiveConnectionStatus", message => {
                 console.log(`ReceiveConnectionStatus - ${message}`);
                 setState({ switchConnection: message, serverConnection: true });
             });
+        }
+
+        return () => {
+            // cleanup
+            if (connection) {
+                connection.off('ReceiveConnectConfirmation');
+                connection.off("ReceiveConnectionStatus");
+            }
         }
     }, [connection]);
 

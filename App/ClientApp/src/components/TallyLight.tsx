@@ -53,6 +53,13 @@ const TallyLight = (): React.ReactElement => {
                 })
                 .catch(e => console.log('Connection failed: ', e));
         }
+
+        return () => {
+            // clean up
+            if (connection) {
+                connection.stop();
+            }
+        };
     }, [connection]);
 
     const chooseInput = (input: number): void => {
