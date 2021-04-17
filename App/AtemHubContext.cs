@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Threading.Channels;
 using System.Threading.Tasks;
 
 namespace SwitcherServer
@@ -16,7 +17,7 @@ namespace SwitcherServer
     /// </summary>
     public class AtemHubContext : 
           INotificationHandler<InputChangeNotify>
-        , INotificationHandler<MasterOutLevelNotify>
+//        , INotificationHandler<MasterOutLevelNotify>
         , INotificationHandler<InTransitionNotify>
         , INotificationHandler<FullyBlackNotify>
         , INotificationHandler<TransitionStyleNotify>
@@ -48,6 +49,7 @@ namespace SwitcherServer
             // there are lots of these
             // _logger.LogDebug($"Master Out Level: {string.Join(',', notification.Levels)}");
             // TODO: rework this to put this logic it into the correct place
+            /*
             for (int i = 0; i < notification.Levels.Length; i++)
             {
                 if (notification.Levels[i] == double.NegativeInfinity)
@@ -62,8 +64,8 @@ namespace SwitcherServer
                     notification.Peaks[i] = -120;
                 }
             }
-
-            await _hub.Clients.All.ReceiveVolume(notification);
+            */
+            await _hub.Clients.All.ReceiveVolume(notification.WithoutInfinity());
         }
 
         public async Task Handle(InTransitionNotify notification, CancellationToken cancellationToken)

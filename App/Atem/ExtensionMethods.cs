@@ -139,5 +139,34 @@ namespace SwitcherServer.Atem
             Marshal.QueryInterface(Marshal.GetIUnknownForObject(o), ref g, out IntPtr ptr);
             return (IBMDSwitcherMacroControl)Marshal.GetObjectForIUnknown(ptr);
         }
+
+        /// <summary>
+        /// Remove dB values of -infinity
+        /// </summary>
+        /// <param name="notification"></param>
+        /// <returns></returns>
+        /// <remarks>
+        /// JSON does not support infinity and -infinity as values and hence need to be removed
+        /// <seealso cref="https://stackoverflow.com/questions/1423081/json-left-out-infinity-and-nan-json-status-in-ecmascript"/>
+        /// </remarks>
+        public static MasterOutLevelNotify WithoutInfinity(this MasterOutLevelNotify notification)
+        {
+            for (int i = 0; i < notification.Levels.Length; i++)
+            {
+                if (notification.Levels[i] == double.NegativeInfinity)
+                {
+                    notification.Levels[i] = -120;
+                }
+            }
+            for (int i = 0; i < notification.Peaks.Length; i++)
+            {
+                if (notification.Peaks[i] == double.NegativeInfinity)
+                {
+                    notification.Peaks[i] = -120;
+                }
+            }
+
+            return notification;
+        }
     }
 }

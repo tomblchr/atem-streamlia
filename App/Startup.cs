@@ -42,6 +42,7 @@ namespace SwitcherServer
             services.AddSingleton<SwitcherConnectionKeeper>();
 
             services.AddSingleton<IConnectionChangeNotifyQueue, ConnectionChangeNotificationQueue>();
+            services.AddSingleton<IVolumeChangeNotificationQueue, VolumeChangeNotificationQueue>();
             services.AddHostedService<AtemWorker>();            
 
             if (Environment.IsDevelopment())

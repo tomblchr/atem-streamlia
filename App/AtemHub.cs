@@ -6,6 +6,7 @@ using SwitcherServer.Atem;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -14,11 +15,13 @@ namespace SwitcherServer
     public class AtemHub : Hub<IClientNotifications>, IOperateSwitcher
     {
         private readonly Switcher _switcher;
+        private readonly IVolumeChangeNotificationQueue _volume;
         private readonly ILogger _logger;
 
-        public AtemHub(Switcher switcher, ILogger<AtemHub> logger)
+        public AtemHub(Switcher switcher, IVolumeChangeNotificationQueue volume, ILogger<AtemHub> logger)
         {
             _switcher = switcher;
+            _volume = volume;
             _logger = logger;
         }
 
@@ -182,6 +185,27 @@ namespace SwitcherServer
             _switcher.MacroControl.Run(id);
 
             await Task.CompletedTask;
+        }
+
+        /// <summary>
+        /// Read the volume notification queue and stream details to a client
+        /// </summary>
+        /// <param name="cancellation"></param>
+        /// <returns></returns>
+        public async IAsyncEnumerable<MasterOutLevelNotify> ReceiveVolumeChange([EnumeratorCancellation] CancellationToken cancellation)
+        {
+            while (!cancellation.IsCancellationRequested)
+            {
+                cancellation.ThrowIfCancellationRequested();
+
+                //_logger.LogDebug("Check queue for volume notification");
+
+                var v = await _volume.DequeueAsync(cancellation);
+
+                //_logger.LogDebug($"Master Out Level: {string.Join(',', v.Levels)}:{string.Join(',', v.Peaks)}");
+
+                yield return v.WithoutInfinity();
+            }
         }
     }
 }
