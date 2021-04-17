@@ -14,13 +14,14 @@ This application lives along side the ATEM Software Control software (Windows on
 
 ## Building
 
-This project relies on a COM reference to the BMD interop DLL. Building the software using the .NET Framework version of MSBuild, which contains the [ResolveComReference build task](https://docs.microsoft.com/en-ca/visualstudio/msbuild/resolvecomreference-task).
+This project relies on a COM reference to the BMD interop DLL installed as part of the ATEM Software Control. Build the software using the .NET Framework version of MSBuild, which contains the [ResolveComReference build task](https://docs.microsoft.com/en-ca/visualstudio/msbuild/resolvecomreference-task).
 
 Use the `build.ps1` script to build from the command line.
 
 ## Get Going
 
-1. Download the [latest release](https://github.com/tomblchr/atem-streamlia/releases) or build from source
+1. Download and install the [ATEM Switchers](https://www.blackmagicdesign.com/support/family/atem-live-production-switchers) software
+1. Download the [latest release](https://github.com/tomblchr/atem-streamlia/releases) or build from source using the `build.ps1` PowerShell script
 1. Extract the archive 
 1. Run the `SwitcherServer.exe` console application
 1. Open https://localhost (or the address directed by the startup log messages) in a browser
