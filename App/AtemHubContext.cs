@@ -17,7 +17,6 @@ namespace SwitcherServer
     /// </summary>
     public class AtemHubContext : 
           INotificationHandler<InputChangeNotify>
-//        , INotificationHandler<MasterOutLevelNotify>
         , INotificationHandler<InTransitionNotify>
         , INotificationHandler<FullyBlackNotify>
         , INotificationHandler<TransitionStyleNotify>
@@ -42,30 +41,6 @@ namespace SwitcherServer
         {
             _logger.LogDebug("Send 'input change' notification");
             await _hub.Clients.All.ReceiveSceneChange(new SceneDetail(_switcher));
-        }
-
-        public async Task Handle(MasterOutLevelNotify notification, CancellationToken token)
-        {
-            // there are lots of these
-            // _logger.LogDebug($"Master Out Level: {string.Join(',', notification.Levels)}");
-            // TODO: rework this to put this logic it into the correct place
-            /*
-            for (int i = 0; i < notification.Levels.Length; i++)
-            {
-                if (notification.Levels[i] == double.NegativeInfinity)
-                {
-                    notification.Levels[i] = -120;
-                }
-            }
-            for (int i = 0; i < notification.Peaks.Length; i++)
-            {
-                if (notification.Peaks[i] == double.NegativeInfinity)
-                {
-                    notification.Peaks[i] = -120;
-                }
-            }
-            */
-            await _hub.Clients.All.ReceiveVolume(notification.WithoutInfinity());
         }
 
         public async Task Handle(InTransitionNotify notification, CancellationToken cancellationToken)

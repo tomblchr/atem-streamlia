@@ -10,12 +10,36 @@ namespace SwitcherServer.Atem
     public class FairlightAudioMixer
     {
         private readonly IBMDSwitcherFairlightAudioMixer _mixer;
+        private readonly IMediator _mediator;
 
         public FairlightAudioMixer(IBMDSwitcherFairlightAudioMixer mixer, IMediator mediator)
         {
             _mixer = mixer;
+            _mediator = mediator;
+
+            Init();
+        }
+
+        void Init()
+        {
             _mixer.SetAllLevelNotificationsEnabled(1);
-            _mixer.AddCallback(new FairlightAudioMixerCallback(mediator));
+
+            if (_fairlightAudioMixerInputs == null)
+            {
+                var inputs = _mixer.GetFairlightAudioMixerInputs();
+                _fairlightAudioMixerInputs = inputs.Select(c => new FairlightAudioMixerInput(c, _mediator)).ToList();
+            }
+
+            _mixer.AddCallback(new FairlightAudioMixerCallback(_mediator));
+        }
+
+        private IEnumerable<FairlightAudioMixerInput> _fairlightAudioMixerInputs;
+        public IEnumerable<FairlightAudioMixerInput> Inputs
+        {
+            get
+            {
+                return _fairlightAudioMixerInputs;
+            }
         }
 
         public bool MasterOutFollowFadeToBlack

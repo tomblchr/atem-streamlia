@@ -27,7 +27,7 @@ namespace SwitcherServer.Atem
             var l = BlackMagicDesignSdk.ConvertDoubleArray(numLevels, ref levels);
             var p = BlackMagicDesignSdk.ConvertDoubleArray(numPeakLevels, ref peakLevels);
 
-            _mediator.Publish(new MasterOutLevelNotify { Levels = l, Peaks = p });
+            _mediator.Publish(new MasterOutLevelNotify(numLevels, l, numPeakLevels, p));
         }
     }
 }

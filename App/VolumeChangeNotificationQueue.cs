@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace SwitcherServer
 {
-    public class VolumeChangeNotificationQueue : NotificationQueue<MasterOutLevelNotify>, IVolumeChangeNotificationQueue
+    public class VolumeChangeNotificationQueue : NotificationQueue<VolumeLevelNotify>, IVolumeChangeNotificationQueue
     {
         public VolumeChangeNotificationQueue(ILogger<VolumeChangeNotificationQueue> logger)
         {

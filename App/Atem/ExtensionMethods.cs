@@ -112,6 +112,48 @@ namespace SwitcherServer.Atem
             return (IBMDSwitcherFairlightAudioMixer)Marshal.GetObjectForIUnknown(ptr);
         }
 
+        public static IEnumerable<IBMDSwitcherFairlightAudioInput> GetFairlightAudioMixerInputs(this IBMDSwitcherFairlightAudioMixer o)
+        {
+            var result = new List<IBMDSwitcherFairlightAudioInput>();
+
+            if (o == null)
+            {
+                return result;
+            }
+
+            Guid g = typeof(IBMDSwitcherFairlightAudioInputIterator).GUID;
+            o.CreateIterator(ref g, out IntPtr ptr);
+            var iterator = (IBMDSwitcherFairlightAudioInputIterator)Marshal.GetObjectForIUnknown(ptr);
+            iterator.Next(out IBMDSwitcherFairlightAudioInput input);
+            while (input != null)
+            {
+                result.Add(input);
+                iterator.Next(out input);
+            }
+            return result;
+        }
+
+        public static IEnumerable<IBMDSwitcherFairlightAudioSource> GetFairlightAudioMixerInputSources(this IBMDSwitcherFairlightAudioInput o)
+        {
+            var result = new List<IBMDSwitcherFairlightAudioSource>();
+
+            if (o == null)
+            {
+                return result;
+            }
+
+            Guid g = typeof(IBMDSwitcherFairlightAudioSourceIterator).GUID;
+            o.CreateIterator(ref g, out IntPtr ptr);
+            var iterator = (IBMDSwitcherFairlightAudioSourceIterator)Marshal.GetObjectForIUnknown(ptr);
+            iterator.Next(out IBMDSwitcherFairlightAudioSource input);
+            while (input != null)
+            {
+                result.Add(input);
+                iterator.Next(out input);
+            }
+            return result;
+        }
+
         public static IBMDSwitcherTransitionParameters GetTransitionParameters(this IBMDSwitcherMixEffectBlock m)
         {
             Guid g = typeof(IBMDSwitcherTransitionParameters).GUID;
@@ -149,7 +191,7 @@ namespace SwitcherServer.Atem
         /// JSON does not support infinity and -infinity as values and hence need to be removed
         /// <seealso cref="https://stackoverflow.com/questions/1423081/json-left-out-infinity-and-nan-json-status-in-ecmascript"/>
         /// </remarks>
-        public static MasterOutLevelNotify WithoutInfinity(this MasterOutLevelNotify notification)
+        public static VolumeLevelNotify WithoutInfinity(this VolumeLevelNotify notification)
         {
             for (int i = 0; i < notification.Levels.Length; i++)
             {

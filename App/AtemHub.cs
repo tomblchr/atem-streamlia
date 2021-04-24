@@ -192,7 +192,7 @@ namespace SwitcherServer
         /// </summary>
         /// <param name="cancellation"></param>
         /// <returns></returns>
-        public async IAsyncEnumerable<MasterOutLevelNotify> ReceiveVolumeChange([EnumeratorCancellation] CancellationToken cancellation)
+        public async IAsyncEnumerable<VolumeLevelNotify> ReceiveVolumeChange([EnumeratorCancellation] CancellationToken cancellation)
         {
             while (!cancellation.IsCancellationRequested)
             {
