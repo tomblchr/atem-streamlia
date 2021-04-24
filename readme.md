@@ -21,8 +21,7 @@ Use the `build.ps1` script to build from the command line.
 ## Get Going
 
 1. Download and install the [ATEM Switchers](https://www.blackmagicdesign.com/support/family/atem-live-production-switchers) software
-1. Download the [latest release](https://github.com/tomblchr/atem-streamlia/releases) or build from source using the `build.ps1` PowerShell script
-1. Extract the archive 
+1. Download the [latest release](https://github.com/tomblchr/atem-streamlia/releases) and extract the archive or build from source using the `build.ps1` PowerShell script
 1. Run the `SwitcherServer.exe` console application
 1. Open https://localhost (or the address directed by the startup log messages) in a browser
     * The browser may show a security warning saying "Your connection is not private". This is because of the self-signed SSL certificate. 
