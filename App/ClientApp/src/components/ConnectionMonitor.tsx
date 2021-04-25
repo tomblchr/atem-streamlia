@@ -1,6 +1,6 @@
 import * as React from "react";
 import { HubConnection, HubConnectionState, LogLevel } from "@microsoft/signalr";
-import { AlertTriangle, Zap } from "react-feather";
+import { AlertTriangle, Camera, Zap, Server, Radio, StopCircle, Sliders } from "react-feather";
 
 interface IConnectionMonitor {
     connection: HubConnection | null;
@@ -11,9 +11,14 @@ interface IConnectionMonitorState {
     serverConnection: boolean;
 }
 
+interface IStreamingState {
+    isStreaming: boolean;
+}
+
 const ConnectionMonitor = ({ connection } : IConnectionMonitor): React.ReactElement => {
 
     const [state, setState] = React.useState<IConnectionMonitorState>({ switchConnection: false, serverConnection: false });
+    const [streaming, setStreaming] = React.useState<IStreamingState>({ isStreaming: false });
 
     React.useEffect(() => {
         if (connection) {
@@ -35,20 +40,26 @@ const ConnectionMonitor = ({ connection } : IConnectionMonitor): React.ReactElem
                 console.log(`ReceiveConnectionStatus - ${message}`);
                 setState({ switchConnection: message, serverConnection: true });
             });
+            connection.on("ReceiveStreamingStatus", message => {
+                console.log(`ReceiveStreamingStatus - ${message}`);
+                setStreaming({ isStreaming: message });
+            })
         }
 
         return () => {
             // cleanup
             if (connection) {
-                connection.off('ReceiveConnectConfirmation');
+                connection.off("ReceiveConnectConfirmation");
                 connection.off("ReceiveConnectionStatus");
+                connection.off("ReceiveStreamingStatus");
             }
         }
     }, [connection]);
 
     return <div className="float-right">
-        <span className={state.serverConnection ? "tab connection-status connected" : "tab connection-status"} title="Server Connection">{state.serverConnection ? <Zap /> : <AlertTriangle />}</span>
-        <span className={state.switchConnection ? "tab connection-status connected" : "tab connection-status"} title="Switch Connection">{state.switchConnection ? <Zap /> : <AlertTriangle />}</span>
+        <span className={state.serverConnection ? "tab connection-status connected" : "tab connection-status"} title="Server Connection">{state.serverConnection ? <Server /> : <AlertTriangle />}</span>
+        <span className={state.switchConnection ? "tab connection-status connected" : "tab connection-status"} title="Switch Connection">{state.switchConnection ? <Sliders /> : <AlertTriangle />}</span>
+        <span className={streaming.isStreaming ? "tab connection-status connected" : "tab connection-status"} title="Streaming">{streaming.isStreaming ? <Radio /> : <StopCircle />}</span>
     </div>
 }
 
