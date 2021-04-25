@@ -1,6 +1,6 @@
 import * as React from "react";
 import { HubConnection, HubConnectionBuilder, LogLevel } from "@microsoft/signalr";
-import QRCode from "qrcode.react";
+import QRCode, { displayName } from "qrcode.react";
 import { hostURL } from "../api/atemconnection";
 import ConnectionMonitor from "./ConnectionMonitor";
 
@@ -76,6 +76,17 @@ const Setup = (): React.ReactElement => {
         }
     };
 
+    const goLive = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (connection) {
+            if (event.target.checked) {
+                connection.send("SendStartStreaming");
+            }
+            else {
+                connection.send("SendStopStreaming");
+            }
+        }
+    }
+
     return <section className="setup">
         <ConnectionMonitor connection={connection} />
         <h3>Setup</h3>
@@ -88,10 +99,19 @@ const Setup = (): React.ReactElement => {
             </div>
             <button type="button" className="btn btn-primary" onClick={e => { save() }}>Save</button>
         </div>
-        <h3>Instructions</h3>
+        <h3>Streaming</h3>
         <div className="well">
-            <div>Open <span>{state.host}</span> in a browser to access this system. </div>
-            <QRCode value={state.host} />
+            <div className="custom-control custom-switch">
+                <input type="checkbox" className="custom-control-input" id="customSwitch1" onChange={ goLive } />
+                <label className="custom-control-label" htmlFor="customSwitch1">Enable the live stream</label>
+            </div>
+        </div>
+        <h3>Instructions</h3>
+        <div className="well" style={{ display: "block" }}>
+            <p>Open <span>{state.host}</span> in a browser to access this system. </p>
+            <div>
+                <QRCode value={state.host} />
+            </div>
         </div>
     </section>
 }
