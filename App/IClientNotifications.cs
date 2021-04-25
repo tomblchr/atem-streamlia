@@ -35,5 +35,7 @@ namespace SwitcherServer
         Task ReceiveKeyFlyParameters(KeyFlyParametersNotify notification);
 
         Task ReceiveMacros(IEnumerable<Macro> macros);
+
+        Task ReceiveStreamingStatus(bool isStreaming);
     }
 }

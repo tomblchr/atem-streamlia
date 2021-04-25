@@ -43,6 +43,7 @@ namespace SwitcherServer.Atem
                 GetFairlightAudioMixer();
                 GetDownstreamKeys();
                 GetMacros();
+                GetStreamRTMP();
             }
         }
 
@@ -153,6 +154,17 @@ namespace SwitcherServer.Atem
         }
 
         public IBMDSwitcherMacroControl MacroControl => SwitcherDirect.GetMacroControl();
+
+        private StreamRTMP _streamRTMP;
+        public StreamRTMP GetStreamRTMP()
+        {
+            if (_streamRTMP == null)
+            {
+                _streamRTMP = new StreamRTMP(SwitcherDirect.GetStreamRTMP(), _mediator);
+            }
+
+            return _streamRTMP;
+        }
 
         public void PerformAutoTransition()
         {
