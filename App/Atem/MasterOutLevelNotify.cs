@@ -6,10 +6,12 @@ using System.Threading.Tasks;
 
 namespace SwitcherServer.Atem
 {
-    public class MasterOutLevelNotify : INotification
+    public class MasterOutLevelNotify : VolumeLevelNotify, INotification
     {
-        public double[] Levels { get; set; }
+        public MasterOutLevelNotify(uint numLevels, double[] levels, uint numPeakLevels, double[] peakLevels) 
+            : base(0, 0, numLevels, levels, numPeakLevels, peakLevels)
+        {
 
-        public double[] Peaks { get; set; }
+        }
     }
 }

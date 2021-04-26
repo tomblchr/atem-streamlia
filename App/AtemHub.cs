@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using SwitcherServer.Atem;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
@@ -192,15 +193,27 @@ namespace SwitcherServer
         /// </summary>
         /// <param name="cancellation"></param>
         /// <returns></returns>
-        public async IAsyncEnumerable<MasterOutLevelNotify> ReceiveVolumeChange([EnumeratorCancellation] CancellationToken cancellation)
+        public async IAsyncEnumerable<VolumeLevelNotify> ReceiveVolumeChange([EnumeratorCancellation] CancellationToken cancellation)
         {
+            int counter = 0;
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
             while (!cancellation.IsCancellationRequested)
             {
                 cancellation.ThrowIfCancellationRequested();
 
                 //_logger.LogDebug("Check queue for volume notification");
 
+                if (sw.ElapsedMilliseconds >= 10000)
+                {
+                    _logger.LogDebug($"{counter} volume messages sent in the last 10 seconds");
+                    counter = 0;
+                    sw.Restart();
+                }
+
                 var v = await _volume.DequeueAsync(cancellation);
+
+                counter++;
 
                 //_logger.LogDebug($"Master Out Level: {string.Join(',', v.Levels)}:{string.Join(',', v.Peaks)}");
 

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SwitcherServer
 {
-    public interface IVolumeChangeNotificationQueue : INotificationQueue<MasterOutLevelNotify>
+    public interface IVolumeChangeNotificationQueue : INotificationQueue<VolumeLevelNotify>
     {
 
     }
