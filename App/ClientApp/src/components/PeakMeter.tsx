@@ -26,48 +26,44 @@ interface IIndexedPeakMetersState {
 const PeakMeter = ({ vertical, connection, height, width }: IPeakMeterProps): React.ReactElement<IPeakMeterProps> => {
 
     const inputs: number[] = [0, 1, 2, 3, 4, 1301, 1302];
+    const startVolume: IPeakMetersState = { inputId: 0, sourceId: 0, levels: [-30, -30], peaks: [0, 0] };
 
     const init: IIndexedPeakMetersState = {
-        0: { inputId: 0, sourceId: 0, levels: [-30, -30], peaks: [0, 0] },
-        1: { inputId: 1, sourceId: 0, levels: [-20, -20], peaks: [0, 0] },
-        2: { inputId: 2, sourceId: 0, levels: [0, 0], peaks: [0, 0] },
-        3: { inputId: 3, sourceId: 0, levels: [0, 0], peaks: [0, 0] },
-        4: { inputId: 4, sourceId: 0, levels: [0, 0], peaks: [0, 0] },
-        1301: { inputId: 1301, sourceId: 0, levels: [0, 0], peaks: [0, 0] },
-        1302: { inputId: 1302, sourceId: 0, levels: [0, 0], peaks: [0, 0] }
+        0: { inputId: 0, sourceId: 0, levels: [-120, -120], peaks: [0, 0] },
+        1: { inputId: 1, sourceId: 0, levels: [-120, -120], peaks: [0, 0] },
+        2: { inputId: 2, sourceId: 0, levels: [-120, -120], peaks: [0, 0] },
+        3: { inputId: 3, sourceId: 0, levels: [-120, -120], peaks: [0, 0] },
+        4: { inputId: 4, sourceId: 0, levels: [-120, -120], peaks: [0, 0] },
+        1301: { inputId: 1301, sourceId: 0, levels: [-120, -120], peaks: [0, 0] },
+        1302: { inputId: 1302, sourceId: 0, levels: [-120, -120], peaks: [0, 0] }
     };
 
     var [state, setState] = React.useState<IIndexedPeakMetersState>(init);
-    var volume = React.useRef<IPeakMetersState>({ inputId: 0, sourceId: 0, levels: [-30, -30], peaks: [0, 0] });
+    var next = React.useRef<IIndexedPeakMetersState>(init);
     var isMounted = React.useRef<boolean>(false);
 
     React.useEffect(() => {
         isMounted.current = true;
         if (connection) {
             console.log("Audio connection established");
-            connection.on("ReceiveVolume", volumeMessageHandler);
-            setTimeout(() => connection.stream("ReceiveVolumeChange")
-                    .subscribe({
-                        next: (message) => {
-                            //console.log("Volume message received");
-                            volumeMessageHandler(message);
-                        },
-                        complete: () => {
-                            console.log("Volume stream completed");
-                        },
-                        error: (err) => {
-                            console.error(err);
-                        }
-                    }), 5000);
+            setTimeout(() => connection
+                .stream("ReceiveVolumeChange")
+                .subscribe({
+                    next: (message) => {
+                        volumeMessageHandler(message);
+                    },
+                    complete: () => {
+                        console.log("Volume stream completed");
+                    },
+                    error: (err) => {
+                        console.error(err);
+                    }
+                }), 3000);
         } else {
             console.log("No audio connection to ATEM");
         }
 
         return () => {
-            // cleanup function
-            if (connection) {
-                connection.off("ReceiveVolume");
-            }
             isMounted.current = false;
         }
 
@@ -76,13 +72,9 @@ const PeakMeter = ({ vertical, connection, height, width }: IPeakMeterProps): Re
     const volumeMessageHandler = (message: IPeakMetersState): void => {
         if (isMounted.current) {
             try {
-                //console.log(`${message.inputId} - ${message.levels[0]},${message.levels[1]}`);
-                
-                //volume.current[message.inputId] = message;
-
-                volume.current = message;
-                //console.log(`${o.inputId} - ${o.levels[0]},${o.levels[1]}`);
-
+                const current: IIndexedPeakMetersState = { ...next.current };
+                current[message.inputId] = message;
+                next.current = current;
                 requestAnimationFrame(updateMeter);
             }
             catch (e) {
@@ -91,12 +83,11 @@ const PeakMeter = ({ vertical, connection, height, width }: IPeakMeterProps): Re
         }
     };
 
+    // volume can be received at hundreds of messages per second
+    // only update the screen at the animation rate of the browser
     const updateMeter: FrameRequestCallback = (time: number): void => {
         if (isMounted.current) {
-            const newState: IIndexedPeakMetersState = { ...state };
-            newState[volume.current.inputId] = volume.current;
-            setState(newState);
-            requestAnimationFrame(updateMeter);
+            setState(next.current);
         }
     };
 
@@ -120,12 +111,13 @@ const PeakMeter = ({ vertical, connection, height, width }: IPeakMeterProps): Re
         return Math.floor(y);
     };
 
-    return <div className="audio-levels">
+    return <div className="audio-levels">    
         {inputs.map((s, indexOuter) => {
             return <React.Fragment key={`rf${indexOuter}`}>
                 {state[s].levels.map((c, index) => {
                     return <div key={`br${indexOuter}${index}`}>
-                        <div key={`db${indexOuter}${index}`} className="audio-level-value">{state[s].levels[index]}</div>
+                        <div key={`db${indexOuter}${index}`}
+                            className="audio-level-value">{Math.round(state[s].peaks[index])}</div>
                         <div key={`lv${indexOuter}${index}`}
                             className="audio-level"
                             style={{ clipPath: "inset(" + dBFSToY(c) + "px 2px 0 0)" }}></div>
@@ -134,7 +126,6 @@ const PeakMeter = ({ vertical, connection, height, width }: IPeakMeterProps): Re
             </React.Fragment>
         })}
     </div>
-    
   };
   
   export default PeakMeter;

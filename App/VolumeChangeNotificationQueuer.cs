@@ -27,14 +27,6 @@ namespace SwitcherServer
 
         public Task Handle(VolumeLevelNotify notification, CancellationToken cancellationToken)
         {
-            if (notification.InputId == 0)
-            {
-                _logger.LogDebug($"Master Volume Out Level: {string.Join(',', notification.Levels)}:{string.Join(',', notification.Peaks)}");
-            }
-            else
-            {
-                _logger.LogDebug($"Input Volume Level ({notification.InputId},{notification.SourceId}): {string.Join(',', notification.Levels)}:{string.Join(',', notification.Peaks)}");
-            }
 
             _queue.QueueNotification(notification);
 
