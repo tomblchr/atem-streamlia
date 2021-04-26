@@ -1,5 +1,6 @@
 ﻿import * as React from "react";
 import { HubConnection, HubConnectionBuilder, LogLevel } from "@microsoft/signalr";
+import ConnectionMonitor from "./ConnectionMonitor";
 import { IInput } from "./Inputs";
 
 interface ISceneDetail {
@@ -71,6 +72,7 @@ const TallyLight = (): React.ReactElement => {
 
     return (
         <section className="channels">
+            <ConnectionMonitor connection={connection} />
             <div className={isLive ? "well tally active" : "well tally"}>
                 <p>Camera {isLive ? "LIVE!" : isPreview ? "PREVIEW!" : "Off" }</p>
             </div>

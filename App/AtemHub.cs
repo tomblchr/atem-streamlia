@@ -38,6 +38,18 @@ namespace SwitcherServer
             await Task.CompletedTask;
         }
 
+        public async Task SendStartStreaming()
+        {
+            _switcher.GetStreamRTMP().Start();
+            await Task.CompletedTask;
+        }
+
+        public async Task SendStopStreaming()
+        {
+            _switcher.GetStreamRTMP().Stop();
+            await Task.CompletedTask;
+        }
+
         public async override Task OnConnectedAsync()
         {
             _logger.LogInformation($"Client Connected... Welcome {Context.ConnectionId}!");
@@ -55,6 +67,7 @@ namespace SwitcherServer
                     Clients.Caller.ReceiveSceneChange(new SceneDetail(_switcher)),
                     Clients.Caller.ReceiveNextTransition(_switcher.GetMixEffectBlocks().First().GetNextTransition()),
                     Clients.Caller.ReceiveTransitionStyle(_switcher.GetMixEffectBlocks().First().NextTransitionStyle),
+                    Clients.Caller.ReceiveStreamingStatus(_switcher.GetStreamRTMP().IsStreaming),
                     Clients.Caller.ReceiveMacros(_switcher.GetMacros())
                 );
             }

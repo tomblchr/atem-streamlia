@@ -74,9 +74,7 @@ namespace SwitcherServer.Atem
 
         public static IBMDSwitcherKeyFlyParameters GetKeyFlyParameters(this IBMDSwitcherKey o)
         {
-            Guid g = typeof(IBMDSwitcherKeyFlyParameters).GUID;
-            Marshal.QueryInterface(Marshal.GetIUnknownForObject(o), ref g, out IntPtr ptr);
-            return (IBMDSwitcherKeyFlyParameters)Marshal.GetObjectForIUnknown(ptr);
+            return QueryInterface<IBMDSwitcherKey, IBMDSwitcherKeyFlyParameters>.GetObject(o);
         }
 
         public static IEnumerable<IBMDSwitcherDownstreamKey> GetDownstreamKeys(this IBMDSwitcher o)
@@ -107,9 +105,7 @@ namespace SwitcherServer.Atem
         /// <returns></returns>
         public static IBMDSwitcherFairlightAudioMixer GetFairlightAudioMixer(this IBMDSwitcher o)
         {
-            Guid g = typeof(IBMDSwitcherFairlightAudioMixer).GUID;
-            Marshal.QueryInterface(Marshal.GetIUnknownForObject(o), ref g, out IntPtr ptr);
-            return (IBMDSwitcherFairlightAudioMixer)Marshal.GetObjectForIUnknown(ptr);
+            return QueryInterface<IBMDSwitcher, IBMDSwitcherFairlightAudioMixer>.GetObject(o);
         }
 
         public static IEnumerable<IBMDSwitcherFairlightAudioInput> GetFairlightAudioMixerInputs(this IBMDSwitcherFairlightAudioMixer o)
@@ -156,30 +152,27 @@ namespace SwitcherServer.Atem
 
         public static IBMDSwitcherTransitionParameters GetTransitionParameters(this IBMDSwitcherMixEffectBlock m)
         {
-            Guid g = typeof(IBMDSwitcherTransitionParameters).GUID;
-            Marshal.QueryInterface(Marshal.GetIUnknownForObject(m), ref g, out IntPtr ptr);
-            return (IBMDSwitcherTransitionParameters)Marshal.GetObjectForIUnknown(ptr);
+            return QueryInterface<IBMDSwitcherMixEffectBlock, IBMDSwitcherTransitionParameters>.GetObject(m);
         }
 
         public static IBMDSwitcherTransitionDVEParameters GetTransitionDVEParameters(this IBMDSwitcherMixEffectBlock m)
         {
-            Guid g = typeof(IBMDSwitcherTransitionDVEParameters).GUID;
-            Marshal.QueryInterface(Marshal.GetIUnknownForObject(m), ref g, out IntPtr ptr);
-            return (IBMDSwitcherTransitionDVEParameters)Marshal.GetObjectForIUnknown(ptr);
+            return QueryInterface<IBMDSwitcherMixEffectBlock, IBMDSwitcherTransitionDVEParameters>.GetObject(m);
         }
 
         public static IBMDSwitcherMacroPool GetMacroPool(this IBMDSwitcher o)
         {
-            Guid g = typeof(IBMDSwitcherMacroPool).GUID;
-            Marshal.QueryInterface(Marshal.GetIUnknownForObject(o), ref g, out IntPtr ptr);
-            return (IBMDSwitcherMacroPool)Marshal.GetObjectForIUnknown(ptr);
+            return QueryInterface<IBMDSwitcher, IBMDSwitcherMacroPool>.GetObject(o);
         }
 
         public static IBMDSwitcherMacroControl GetMacroControl(this IBMDSwitcher o)
         {
-            Guid g = typeof(IBMDSwitcherMacroControl).GUID;
-            Marshal.QueryInterface(Marshal.GetIUnknownForObject(o), ref g, out IntPtr ptr);
-            return (IBMDSwitcherMacroControl)Marshal.GetObjectForIUnknown(ptr);
+            return QueryInterface<IBMDSwitcher, IBMDSwitcherMacroControl>.GetObject(o);
+        }
+
+        public static IBMDSwitcherStreamRTMP GetStreamRTMP(this IBMDSwitcher o)
+        {
+            return QueryInterface<IBMDSwitcher, IBMDSwitcherStreamRTMP>.GetObject(o);
         }
 
         /// <summary>
@@ -209,6 +202,22 @@ namespace SwitcherServer.Atem
             }
 
             return notification;
+        }
+    }
+
+    static class QueryInterface<Input, Output>
+    {
+        public static Output GetObject(Input o)
+        {
+            Guid g = typeof(Output).GUID;
+            Marshal.QueryInterface(Marshal.GetIUnknownForObject(o), ref g, out IntPtr ptr);
+
+            if (ptr == IntPtr.Zero)
+            {
+                return default(Output);
+            }
+
+            return (Output)Marshal.GetObjectForIUnknown(ptr);
         }
     }
 }
