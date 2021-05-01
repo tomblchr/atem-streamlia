@@ -10,6 +10,7 @@ export interface IPeakMeterProps {
     connection: HubConnection | null;
 }
 
+// message format from server
 interface IPeakMetersState {
     inputId: number;
     sourceId: number;
@@ -21,11 +22,17 @@ interface IIndexedPeakMetersState {
     [key: number]: IPeakMetersState;
 }
 
+interface IAudioMixerInput {
+    inputId: number;
+    name: string;
+}
+
 // inspired  by https://css-tricks.com/using-requestanimationframe-with-react-hooks/
 
 const PeakMeter = ({ vertical, connection, height, width }: IPeakMeterProps): React.ReactElement<IPeakMeterProps> => {
 
-    const inputs: number[] = [0, 1, 2, 3, 4, 1301, 1302];
+    const inputs: IAudioMixerInput[] = [{ inputId: 0, name: "Master" }, { inputId: 1, name: "CAM1" }, { inputId: 2, name: "CAM2" }, { inputId: 3, name: "CAM3" }, { inputId: 4, name: "CAM4" }, { inputId: 1301, name: "Mic 1" }, { inputId: 1302, name: "Mic 2" }];
+    const dBthreshold = -60; // lowest visible dB value - below this there is no visual
     const startVolume: IPeakMetersState = { inputId: 0, sourceId: 0, levels: [-30, -30], peaks: [0, 0] };
 
     const init: IIndexedPeakMetersState = {
@@ -58,7 +65,7 @@ const PeakMeter = ({ vertical, connection, height, width }: IPeakMeterProps): Re
                     error: (err) => {
                         console.error(err);
                     }
-                }), 3000);
+                }), 4000);
         } else {
             console.log("No audio connection to ATEM");
         }
@@ -95,11 +102,10 @@ const PeakMeter = ({ vertical, connection, height, width }: IPeakMeterProps): Re
         //db = -20;
 
         // db is between -Infinity and 0dB
-        if (db < -60) return 300;
+        if (db < dBthreshold) return 300;
         if (db >= -1) return 0;
 
         const height = 300;
-        const dBthreshold = -60; // lowest visible dB value - below this there is no visual
 
         // from 0 to -20dB is linear
         // lower than -20dB is logarithmic
@@ -111,19 +117,36 @@ const PeakMeter = ({ vertical, connection, height, width }: IPeakMeterProps): Re
         return Math.floor(y);
     };
 
-    return <div className="audio-levels">    
+    const CreateTicks = (): JSX.Element => {
+        const numTicks = 6;
+        const height = 300;
+        var divs: JSX.Element[] = [];        
+        for (var i = 0; i < numTicks; i++) {
+            divs.push(<div className="audio-tick">
+                {i * (dBthreshold / numTicks)}
+            </div>);
+        }
+
+        return <div className="audio-ticks">{divs}</div>
+    };
+
+    return <div className="audio-meters">
         {inputs.map((s, indexOuter) => {
-            return <React.Fragment key={`rf${indexOuter}`}>
-                {state[s].levels.map((c, index) => {
+            return <div key={`rf${indexOuter}`} className="audio-input">
+                <div key={`name${indexOuter}`} className="audio-input-name">{s.name}</div>
+                <div className="audio-levels">
+                    {state[s.inputId].levels.map((c, index) => {
                     return <div key={`br${indexOuter}${index}`}>
                         <div key={`db${indexOuter}${index}`}
-                            className="audio-level-value">{Math.round(state[s].peaks[index])}</div>
+                            className="audio-level-value">{Math.round(state[s.inputId].peaks[index])}</div>
+                        <CreateTicks />
                         <div key={`lv${indexOuter}${index}`}
                             className="audio-level"
                             style={{ clipPath: "inset(" + dBFSToY(c) + "px 2px 0 0)" }}></div>
                     </div>
                 })}
-            </React.Fragment>
+                </div>
+            </div>
         })}
     </div>
   };

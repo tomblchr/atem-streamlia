@@ -14,7 +14,7 @@ interface IMasterAudioState {
 const MasterAudioMeter = ({ connection }: IMasterAudioProps): React.ReactElement<IMasterAudioProps> => {
 
     return <div>
-        <h3>Master</h3>
+        <h3>dB</h3>
         <div>
             <PeakMeter vertical={true} connection={connection} height={400} width={80} />
         </div>

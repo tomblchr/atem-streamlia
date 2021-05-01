@@ -48,19 +48,39 @@ code {
     height: 3rem;
 }
 
+.audio-meters {
+    display: flex;
+    background-color: #222;
+    width: 600px;
+    height: 360px;
+}
+
 .audio-levels {
     display: flex;
-    background-color: black;
-    width: 300px;
-    height: 320px;
-    vertical-align: bottom;
+    border: 1px solid #1C1C1C;
+    background-color: #1F1F1F;
+    border-radius: 5px;
+    padding: 5px;
+    margin: 5px;
+}
+
+.audio-input {
+    display: flex;
+    flex-direction: column;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.audio-input-name {
+    align-self: center;    
+    height: 20px;
 }
 
 .audio-level {
     align-self: flex-end;
     background: linear-gradient(to top, green 0% 62%, yellow 66% 82%, red 86% 100%);
-    color: white;
     margin-left: 2px;
+    margin-right: 2px;
     width: 18px;
     height: 300px;
     vertical-align: bottom;
@@ -82,5 +102,16 @@ code {
     background-image: linear-gradient(to bottom, black 2px, transparent 1px);
     background-repeat: repeat-y;
     background-size: 100% 4px;    
-    
+}
+
+.audio-ticks {
+    color: dimgrey;
+    font-size: 8px;
+    align-self: flex-end;
+    float: left;
+    padding-left: 4px;
+}
+
+.audio-tick {
+    height: 50px;
 }
