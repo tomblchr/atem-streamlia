@@ -46,6 +46,8 @@ namespace SwitcherServer
                 _hub.Clients.All.ReceiveSceneChange(new SceneDetail(_switcher)),
                 _hub.Clients.All.ReceiveStreamingStatus(_switcher.GetStreamRTMP().IsStreaming)
             );
+
+            await Task.CompletedTask;
         }
 
         public async Task Handle(InTransitionNotify notification, CancellationToken cancellationToken)
