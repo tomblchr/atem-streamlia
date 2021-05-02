@@ -25,15 +25,23 @@ interface IIndexedPeakMetersState {
 interface IAudioMixerInput {
     inputId: number;
     name: string;
+    isActive: boolean;
 }
 
 // inspired  by https://css-tricks.com/using-requestanimationframe-with-react-hooks/
 
 const PeakMeter = ({ vertical, connection, height, width }: IPeakMeterProps): React.ReactElement<IPeakMeterProps> => {
 
-    const inputs: IAudioMixerInput[] = [{ inputId: 0, name: "Master" }, { inputId: 1, name: "CAM1" }, { inputId: 2, name: "CAM2" }, { inputId: 3, name: "CAM3" }, { inputId: 4, name: "CAM4" }, { inputId: 1301, name: "Mic 1" }, { inputId: 1302, name: "Mic 2" }];
     const dBthreshold = -60; // lowest visible dB value - below this there is no visual
-    const startVolume: IPeakMetersState = { inputId: 0, sourceId: 0, levels: [-30, -30], peaks: [0, 0] };
+
+    const inputs: IAudioMixerInput[] = [
+        { inputId: 0, name: "Master", isActive: true },
+        { inputId: 1, name: "CAM1", isActive: true },
+        { inputId: 2, name: "CAM2", isActive: true },
+        { inputId: 3, name: "CAM3", isActive: true },
+        { inputId: 4, name: "CAM4", isActive: true },
+        { inputId: 1301, name: "Mic 1", isActive: true },
+        { inputId: 1302, name: "Mic 2", isActive: true }];
 
     const init: IIndexedPeakMetersState = {
         0: { inputId: 0, sourceId: 0, levels: [-120, -120], peaks: [0, 0] },
@@ -46,6 +54,7 @@ const PeakMeter = ({ vertical, connection, height, width }: IPeakMeterProps): Re
     };
 
     var [state, setState] = React.useState<IIndexedPeakMetersState>(init);
+
     var next = React.useRef<IIndexedPeakMetersState>(init);
     var isMounted = React.useRef<boolean>(false);
 
@@ -99,7 +108,6 @@ const PeakMeter = ({ vertical, connection, height, width }: IPeakMeterProps): Re
     };
 
     const dBFSToY = (db: number): number => {
-        //db = -20;
 
         // db is between -Infinity and 0dB
         if (db < dBthreshold) return 300;
@@ -110,16 +118,16 @@ const PeakMeter = ({ vertical, connection, height, width }: IPeakMeterProps): Re
         // from 0 to -20dB is linear
         // lower than -20dB is logarithmic
         // cutover is at 100px
-        const y = db >= -60
+        const y = db >= dBthreshold
             ? height * (Math.abs(db) / Math.abs(dBthreshold))
-            : height * Math.log(Math.abs(db)) / Math.log(Math.abs(dBthreshold));        
+            : height * Math.log(Math.abs(db)) / Math.log(Math.abs(dBthreshold)); // not true - always uses linear atm    
 
         return Math.floor(y);
     };
 
     const CreateTicks = (): JSX.Element => {
         const numTicks = 6;
-        const height = 300;
+        
         var divs: JSX.Element[] = [];        
         for (var i = 0; i < numTicks; i++) {
             divs.push(<div className="audio-tick">
