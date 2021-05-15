@@ -60,6 +60,7 @@ namespace SwitcherServer
                 catch (OperationCanceledException)
                 {
                     // this is to be expected when the system is shutting down
+                    _logger.LogInformation("Shutting down - no need to maintain the connection anymore.");
                 }
                 catch (Exception e)
                 {
@@ -68,7 +69,7 @@ namespace SwitcherServer
                     Thread.Sleep(3000);
                 }
             }
-            _logger.LogInformation("Shutting down - no need to maintain the connection anymore");
+            _logger.LogInformation("Connection is closed.");
         }
 
         bool ConnectToSwitcher()

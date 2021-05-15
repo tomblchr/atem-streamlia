@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SwitcherServer.Atem
 {
-    public class FairlightAudioMixerInput : IHasId
+    public class FairlightAudioMixerInput : IHasId, IDisposable
     {
         private readonly IBMDSwitcherFairlightAudioInput _input;
         private readonly IMediator _mediator;
@@ -27,6 +27,12 @@ namespace SwitcherServer.Atem
                 var v = _input.GetFairlightAudioMixerInputSources();
                 _sources = v.Select(c => new FairlightAudioMixerInputSource(this, c, _mediator)).ToList();
             }
+        }
+
+        public void Dispose()
+        {
+            _sources?.ToList().ForEach(c => c.Dispose());
+            _sources = null;
         }
 
         public long Id

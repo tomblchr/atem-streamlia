@@ -126,7 +126,7 @@ namespace SwitcherServer
             });
 
             life.ApplicationStarted.Register(OnStarted);
-            life.ApplicationStopping.Register(OnShutdown);
+            life.ApplicationStopping.Register(OnShutdown, app.ApplicationServices);
         }
 
         public void OnStarted()
@@ -134,9 +134,18 @@ namespace SwitcherServer
             _logger.LogInformation($"----------- Open a broswer at {NetworkInspector.GetUrl(Configuration)} ---------------");
         }
 
-        public void OnShutdown()
+        public void OnShutdown(object state)
         {
             _logger.LogInformation("Disconnecting...");
+
+            if (state == null || !(state is IServiceProvider))
+            {
+                return;
+            }
+
+            var services = state as IServiceProvider;
+            var switcher = services.GetRequiredService<Switcher>();
+            switcher.Dispose();
 
             _logger.LogInformation("Shutdown sequence complete.");
         }
