@@ -2,7 +2,7 @@
 
 Making the ATEM Switcher accessible and conventional.
 
-This application lives along side the ATEM Software Control software (Windows only) and provides access to the most needed controls through a browser.
+This application lives along side the ATEM Software Control software (Windows only) and provides access to the most needed controls through a browser. [Brief demonstration](https://www.youtube.com/watch?v=8qGKA9M4bH4).
 
 ## Features
 

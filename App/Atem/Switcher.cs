@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SwitcherServer.Atem
 {
-    public class Switcher
+    public class Switcher : IDisposable
     {
         readonly ISwitcherConnection _connection;
         private readonly IMediator _mediator;
@@ -172,6 +172,15 @@ namespace SwitcherServer.Atem
                 .First()
                 .Switcher
                 .PerformAutoTransition();
+        }
+
+        /// <summary>
+        /// Disconnect from the switcher
+        /// </summary>
+        public void Dispose()
+        {
+            _fairlightAudioMixer?.Dispose();
+            _fairlightAudioMixer = null;
         }
     }
 }

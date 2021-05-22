@@ -7,10 +7,12 @@ using System.Threading.Tasks;
 
 namespace SwitcherServer.Atem
 {
-    public class FairlightAudioMixer
+    public class FairlightAudioMixer : IDisposable
     {
         private readonly IBMDSwitcherFairlightAudioMixer _mixer;
         private readonly IMediator _mediator;
+        private readonly IBMDSwitcherFairlightAudioMixerCallback _callback;
+        private bool _hasCallback = false;
 
         public FairlightAudioMixer(IBMDSwitcherFairlightAudioMixer mixer, IMediator mediator)
         {
@@ -18,6 +20,10 @@ namespace SwitcherServer.Atem
             _mediator = mediator;
 
             Init();
+
+            _callback = new FairlightAudioMixerCallback(_mediator);
+            _mixer.AddCallback(_callback);
+            _hasCallback = true;
         }
 
         void Init()
@@ -29,8 +35,17 @@ namespace SwitcherServer.Atem
                 var inputs = _mixer.GetFairlightAudioMixerInputs();
                 _fairlightAudioMixerInputs = inputs.Select(c => new FairlightAudioMixerInput(c, _mediator)).ToList();
             }
+        }
 
-            _mixer.AddCallback(new FairlightAudioMixerCallback(_mediator));
+        public void Dispose()
+        {
+            if (_hasCallback)
+            {
+                _mixer.RemoveCallback(_callback);
+                _hasCallback = false;
+            }
+            _fairlightAudioMixerInputs?.ToList().ForEach(c => c.Dispose());
+            _fairlightAudioMixerInputs = null;
         }
 
         private IEnumerable<FairlightAudioMixerInput> _fairlightAudioMixerInputs;
