@@ -5,21 +5,40 @@ import { Home } from './components/Home';
 import Audio from './components/Audio';
 import Setup from './components/Setup';
 import TallyLight from './components/TallyLight';
+import ServerHubConnection from './components/ServerHubConnection';
 
 import "./global.css";
 import "./custom.css";
+import Switcher from './components/Switcher';
 
-export default class App extends React.Component {
-  static displayName = App.name;
+const App = (): JSX.Element => {
 
-  render () {
-      return (
-          <Layout>
-              <Route exact path='/' component={Home} />
-              <Route path='/audio' component={Audio} />
-              <Route path='/tally-light' component={TallyLight} />
-              <Route path='/setup' component={Setup} />
-          </Layout>
-      );
-  }
-}
+    const [server, setServer] = React.useState<ServerHubConnection | null>(null);
+
+    React.useEffect(() => {
+        console.log("Creating signalr connection...");
+        const newConnection: ServerHubConnection = server ?? new ServerHubConnection();
+        setServer(newConnection);
+    }, []);
+
+
+    return (
+        <Layout>
+            <Route exact path='/'>
+                <Switcher server={server} />
+            </Route>
+            <Route path='/audio'>
+                <Audio server={server} />
+            </Route>
+            <Route path='/tally-light'>
+                <TallyLight server={server} />
+            </Route>
+            <Route path='/setup'>
+                <Setup server={server} />
+            </Route>
+        </Layout>
+    );
+
+};
+
+export default App;

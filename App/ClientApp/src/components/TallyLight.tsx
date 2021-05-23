@@ -1,5 +1,5 @@
 ﻿import * as React from "react";
-import { HubConnection, HubConnectionBuilder, LogLevel } from "@microsoft/signalr";
+import IConnectToServer from "./IConnectToServer";
 import ConnectionMonitor from "./ConnectionMonitor";
 import { IInput } from "./Inputs";
 
@@ -13,42 +13,18 @@ interface ITallyLightState {
     chosen: number | null;
 }
 
-const TallyLight = (): React.ReactElement => {
-    const [connection, setConnection] = React.useState<HubConnection | null>(null);
+const TallyLight = (props: IConnectToServer): React.ReactElement<IConnectToServer> => {
+
     const [scene, setScene] = React.useState<ISceneDetail>({ program: 0, preview: 0, inputs: [] });
     const [state, setState] = React.useState<ITallyLightState>({ chosen: null });    
 
     React.useEffect(() => {
-        console.log("Creating signalr connection...");
-
-        const newConnection: HubConnection = connection ?? new HubConnectionBuilder()
-            .withUrl("/atemhub")
-            .withAutomaticReconnect({
-                nextRetryDelayInMilliseconds: retryContext => {
-                    if (retryContext.elapsedMilliseconds < 60000) {
-                        console.log("Will try to connect to server again in 1 second");
-                        return 1000;
-                    }
-                    console.log("Will try to connect to server again in 6 seconds");
-                    return 6000;
-                }
-            })
-            .configureLogging(LogLevel.None)
-            .build();
-
-        setConnection(newConnection);
-    }, []);
-
-    React.useEffect(() => {
-        if (connection) {
-            connection
+        if (props && props?.server?.connection) {
+            props.server.connection
                 .start()
                 .then(() => {
                     console.log("Connected!");
-                    connection.onreconnected(id => {
-                        console.log(`Connection restored - ${id}`);
-                    });
-                    connection.on('ReceiveSceneChange', message => {
+                    props?.server?.connection.on('ReceiveSceneChange', message => {
                         setScene(message);
                     });
                 })
@@ -57,11 +33,11 @@ const TallyLight = (): React.ReactElement => {
 
         return () => {
             // clean up
-            if (connection) {
-                connection.stop();
+            if (props?.server?.connection) {
+                props?.server?.connection.off("ReceiveSceneChange");
             }
         };
-    }, [connection]);
+    }, [props.server]);
 
     const chooseInput = (input: number): void => {
         setState({ chosen: input });
@@ -72,7 +48,7 @@ const TallyLight = (): React.ReactElement => {
 
     return (
         <section className="channels">
-            <ConnectionMonitor connection={connection} />
+            <ConnectionMonitor connection={props?.server?.connection ?? null} />
             <div className={isLive ? "well tally active" : "well tally"}>
                 <p>Camera {isLive ? "LIVE!" : isPreview ? "PREVIEW!" : "Off" }</p>
             </div>

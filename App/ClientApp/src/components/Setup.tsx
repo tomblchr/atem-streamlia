@@ -3,34 +3,19 @@ import { HubConnection, HubConnectionBuilder, LogLevel } from "@microsoft/signal
 import QRCode, { displayName } from "qrcode.react";
 import { hostURL } from "../api/atemconnection";
 import ConnectionMonitor from "./ConnectionMonitor";
+import IConnectToServer from "./IConnectToServer";
 
 interface ISetupState {
     ipaddress: string;
     host: string;
 }
 
-const Setup = (): React.ReactElement => {
-    const [connection, setConnection] = React.useState<HubConnection | null>(null);
+const Setup = (props: IConnectToServer): React.ReactElement<IConnectToServer> => {
+    
     const [state, setState] = React.useState<ISetupState>({ ipaddress: "10.0.0.201", host: "" });
 
     React.useEffect(() => {
-        console.log("Creating signalr connection...");
-
-        const newConnection: HubConnection = connection ?? new HubConnectionBuilder()
-            .withUrl("/atemhub")
-            .withAutomaticReconnect({
-                nextRetryDelayInMilliseconds: retryContext => {
-                    if (retryContext.elapsedMilliseconds < 60000) {
-                        console.log("Will try to connect to server again in 1 second");
-                        return 1000;
-                    }
-                    console.log("Will try to connect to server again in 6 seconds");
-                    return 6000;
-                }
-            })
-            .configureLogging(LogLevel.None)
-            .build();
-
+    
         const callapi = () => {
             hostURL()
                 .then(response => {
@@ -40,12 +25,14 @@ const Setup = (): React.ReactElement => {
                 });
         };
 
-        setConnection(newConnection);
         callapi();
 
     }, []);
 
     React.useEffect(() => {
+
+        const connection = props.server?.connection;
+
         if (connection) {
             connection
                 .start()
@@ -61,34 +48,34 @@ const Setup = (): React.ReactElement => {
         return () => {
             // clean up
             if (connection) {
-                connection.stop();
+                connection.off("ReceiveConnectConfirmation");
             }
         };
-    }, [connection]);
+    }, [props?.server?.connection]);
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setState({ ipaddress: event.target.value, host: state.host });
     };
 
     const save = () => {
-        if (connection) {
-            connection.send("SendConnect", state.ipaddress);
+        if (props?.server?.connection) {
+            props?.server?.connection.send("SendConnect", state.ipaddress);
         }
     };
 
     const goLive = (event: React.ChangeEvent<HTMLInputElement>) => {
-        if (connection) {
+        if (props?.server?.connection) {
             if (event.target.checked) {
-                connection.send("SendStartStreaming");
+                props?.server?.connection.send("SendStartStreaming");
             }
             else {
-                connection.send("SendStopStreaming");
+                props.server.connection.send("SendStopStreaming");
             }
         }
     }
 
     return <section className="setup">
-        <ConnectionMonitor connection={connection} />
+        <ConnectionMonitor connection={props?.server?.connection ?? null} />
         <h3>Setup</h3>
         <div className="well">
             <div className="input-group mb-3">

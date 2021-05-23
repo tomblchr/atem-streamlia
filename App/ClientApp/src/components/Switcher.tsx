@@ -9,6 +9,8 @@ import DownstreamKey from "./DownstreamKey";
 import FadeToBlack from "./FadeToBlack";
 import KeyFrameRunner from "./KeyFrameRunner";
 import Macros from "./Macros";
+import IConnectToServer from "./IConnectToServer";
+import { SwitchProps } from "react-router";
 
 
 interface ISceneDetail {
@@ -19,43 +21,22 @@ interface ISceneDetail {
     downstreamKeyTieOn: boolean;
 }
 
-export default function Switcher(): JSX.Element {
-    const [connection, setConnection] = React.useState<HubConnection | null>(null);
+const Switcher = (props: IConnectToServer): React.ReactElement<IConnectToServer> => {
+
     const [scene, setScene] = React.useState<ISceneDetail | null>(null);
 
     React.useEffect(() => {
-        console.log("Creating signalr connection...");
-
-        const newConnection: HubConnection = connection ?? new HubConnectionBuilder()
-            .withUrl("/atemhub")
-            .withAutomaticReconnect({
-                nextRetryDelayInMilliseconds: retryContext => {
-                    if (retryContext.elapsedMilliseconds < 60000) {
-                        console.log("Will try to connect to server again in 1 second");
-                        return 1000;
-                    }
-                    console.log("Will try to connect to server again in 6 seconds");
-                    return 6000;
-                }
-            })
-            .configureLogging(LogLevel.None)
-            .build();
-
-        setConnection(newConnection);
-    }, []);
-
-    React.useEffect(() => {
-        if (connection) {
-            connection
+        if (props?.server?.connection) {
+            props?.server?.connection
                 .start()
                 .then(() => {
                     console.log("Connected!");
-                    connection.on("ReceiveSceneChange", message => {
+                    props?.server?.connection.on("ReceiveSceneChange", message => {
                         const msg = message as ISceneDetail;
                         console.log(`ReceiveSceneChange - ${msg.downstreamKeyOnAir}`);
                         setScene(message);
                     });
-                    connection.onreconnected(id => {
+                    props?.server?.connection.onreconnected(id => {
                         console.log(`Connection restored - ${id}`);
                     });
                 })
@@ -64,23 +45,25 @@ export default function Switcher(): JSX.Element {
 
         return () => {
             // clean up
-            if (connection) {
-                connection.stop();
+            if (props?.server?.connection) {
+                props?.server?.connection.stop();
             }
         };
-    }, [connection]);
+    }, [props?.server?.connection]);
 
     return (
         <div key="switcher">
-            <ConnectionMonitor connection={connection} />
-            <Inputs program={scene?.program} preview={scene?.preview} inputs={scene?.inputs} connection={connection} />
-            <Transitions connection={connection} />
-            <NextTransition connection={connection} />
-            <TransitionStyle connection={connection} />
-            <KeyFrameRunner connection={connection} />
-            <Macros connection={connection} />
-            <DownstreamKey connection={connection} onAir={scene?.downstreamKeyOnAir ?? false} tieOn={scene?.downstreamKeyTieOn ?? false} />
-            <FadeToBlack connection={connection} />
+            <ConnectionMonitor connection={props?.server?.connection ?? null} />
+            <Inputs program={scene?.program} preview={scene?.preview} inputs={scene?.inputs} connection={props?.server?.connection ?? null} />
+            <Transitions connection={props?.server?.connection ?? null} />
+            <NextTransition connection={props?.server?.connection ?? null} />
+            <TransitionStyle connection={props?.server?.connection ?? null} />
+            <KeyFrameRunner connection={props?.server?.connection ?? null} />
+            <Macros connection={props?.server?.connection ?? null} />
+            <DownstreamKey connection={props?.server?.connection ?? null} onAir={scene?.downstreamKeyOnAir ?? false} tieOn={scene?.downstreamKeyTieOn ?? false} />
+            <FadeToBlack connection={props?.server?.connection ?? null} />
         </div>
     )
 }
+
+export default Switcher;
