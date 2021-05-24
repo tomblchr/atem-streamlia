@@ -3,14 +3,29 @@ import { HubConnection, HubConnectionBuilder, LogLevel } from "@microsoft/signal
 import ConnectionMonitor from "./ConnectionMonitor";
 import MasterAudioMeter from "./MasterAudioMeter";
 import IConnectToServer from "./IConnectToServer";
+import ServerHubConnection from "./ServerHubConnection";
 
-const Audio = (props: IConnectToServer): React.ReactElement<IConnectToServer> => {
+const Audio = (): React.ReactElement => {
+
+    const [connection, setConnection] = React.useState<IConnectToServer>(null);
+
+    React.useEffect(() => {
+        const newConnection = new ServerHubConnection();
+
+        setConnection({ server: newConnection });
+
+        return () => {
+            // clean up
+            newConnection.connection.stop();
+        };
+
+    }, []);
 
     return <section className="audio">
-        <ConnectionMonitor connection={props?.server?.connection ?? null} />
+        <ConnectionMonitor connection={connection?.server?.connection ?? null} />
         <h3>Audio</h3>
         <div className="well">
-            <MasterAudioMeter connection={props?.server?.connection ?? null} />
+            <MasterAudioMeter connection={connection?.server?.connection ?? null} />
         </div>
     </section>
 }

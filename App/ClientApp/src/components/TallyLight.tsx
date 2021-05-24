@@ -2,6 +2,7 @@
 import IConnectToServer from "./IConnectToServer";
 import ConnectionMonitor from "./ConnectionMonitor";
 import { IInput } from "./Inputs";
+import ServerHubConnection from "./ServerHubConnection";
 
 interface ISceneDetail {
     program: number;
@@ -13,31 +14,29 @@ interface ITallyLightState {
     chosen: number | null;
 }
 
-const TallyLight = (props: IConnectToServer): React.ReactElement<IConnectToServer> => {
+const TallyLight = (): React.ReactElement => {
 
     const [scene, setScene] = React.useState<ISceneDetail>({ program: 0, preview: 0, inputs: [] });
-    const [state, setState] = React.useState<ITallyLightState>({ chosen: null });    
+    const [state, setState] = React.useState<ITallyLightState>({ chosen: null });
+
+    const [connection, setConnection] = React.useState<IConnectToServer>(null);
 
     React.useEffect(() => {
-        if (props && props?.server?.connection) {
-            props.server.connection
-                .start()
-                .then(() => {
-                    console.log("Connected!");
-                    props?.server?.connection.on('ReceiveSceneChange', message => {
-                        setScene(message);
-                    });
-                })
-                .catch(e => console.log('Connection failed: ', e));
-        }
+        const newConnection = new ServerHubConnection();
+
+        newConnection.connection.on('ReceiveSceneChange', message => {
+            setScene(message);
+        });
+
+        setConnection({ server: newConnection });
 
         return () => {
             // clean up
-            if (props?.server?.connection) {
-                props?.server?.connection.off("ReceiveSceneChange");
-            }
+            newConnection.connection.off("ReceiveSceneChange");
+            newConnection.connection.stop();
         };
-    }, [props.server]);
+
+    }, []);
 
     const chooseInput = (input: number): void => {
         setState({ chosen: input });
@@ -48,7 +47,7 @@ const TallyLight = (props: IConnectToServer): React.ReactElement<IConnectToServe
 
     return (
         <section className="channels">
-            <ConnectionMonitor connection={props?.server?.connection ?? null} />
+            <ConnectionMonitor connection={connection?.server?.connection ?? null} />
             <div className={isLive ? "well tally active" : "well tally"}>
                 <p>Camera {isLive ? "LIVE!" : isPreview ? "PREVIEW!" : "Off" }</p>
             </div>

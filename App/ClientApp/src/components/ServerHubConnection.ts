@@ -1,5 +1,5 @@
 ﻿import * as React from "react";
-import { HubConnection, HubConnectionBuilder, LogLevel } from "@microsoft/signalr";
+import { HubConnection, HubConnectionBuilder, HubConnectionState, LogLevel } from "@microsoft/signalr";
 
 class ServerHubConnection {
 
@@ -11,10 +11,10 @@ class ServerHubConnection {
             .withAutomaticReconnect({
                 nextRetryDelayInMilliseconds: retryContext => {
                     if (retryContext.elapsedMilliseconds < 60000) {
-                        console.log("Will try to connect to server again in 1 second");
+                        console.log("Try to connect to server again in 1 second");
                         return 1000;
                     }
-                    console.log("Will try to connect to server again in 6 seconds");
+                    console.log("Try to connect to server again in 6 seconds");
                     return 6000;
                 }
             })
@@ -22,6 +22,15 @@ class ServerHubConnection {
             .build();
 
         this.connection = newConnection;
+
+        this.connection.start().then(() => {
+            console.log("Request healthcheck");
+            this.connection?.send("SendHealthCheckRequest");
+        });
+
+        this.connection.onreconnected(id => {
+            console.log(`Connection restored - ${id}`);
+        });
     }
 }
 

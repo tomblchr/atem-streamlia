@@ -43,7 +43,7 @@ const ConnectionMonitor = ({ connection } : IConnectionMonitor): React.ReactElem
             connection.on("ReceiveStreamingStatus", message => {
                 console.log(`ReceiveStreamingStatus - ${message}`);
                 setStreaming({ isStreaming: message });
-            })
+            });
         }
 
         return () => {

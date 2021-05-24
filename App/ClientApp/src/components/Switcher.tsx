@@ -11,6 +11,7 @@ import KeyFrameRunner from "./KeyFrameRunner";
 import Macros from "./Macros";
 import IConnectToServer from "./IConnectToServer";
 import { SwitchProps } from "react-router";
+import ServerHubConnection from "./ServerHubConnection";
 
 
 interface ISceneDetail {
@@ -21,47 +22,41 @@ interface ISceneDetail {
     downstreamKeyTieOn: boolean;
 }
 
-const Switcher = (props: IConnectToServer): React.ReactElement<IConnectToServer> => {
+const Switcher = (): React.ReactElement => {
 
     const [scene, setScene] = React.useState<ISceneDetail | null>(null);
 
+    const [connection, setConnection] = React.useState<IConnectToServer>(null);
+
     React.useEffect(() => {
-        if (props?.server?.connection) {
-            props?.server?.connection
-                .start()
-                .then(() => {
-                    console.log("Connected!");
-                    props?.server?.connection.on("ReceiveSceneChange", message => {
-                        const msg = message as ISceneDetail;
-                        console.log(`ReceiveSceneChange - ${msg.downstreamKeyOnAir}`);
-                        setScene(message);
-                    });
-                    props?.server?.connection.onreconnected(id => {
-                        console.log(`Connection restored - ${id}`);
-                    });
-                })
-                .catch(e => console.log('Connection failed: ', e));
-        }
+        const newConnection = new ServerHubConnection();
+
+        newConnection.connection.on("ReceiveSceneChange", message => {
+            const msg = message as ISceneDetail;
+            console.log(`ReceiveSceneChange - ${msg.downstreamKeyOnAir}`);
+            setScene(message);
+        });
+
+        setConnection({ server: newConnection });
 
         return () => {
             // clean up
-            if (props?.server?.connection) {
-                props?.server?.connection.stop();
-            }
+            newConnection.connection.stop();
         };
-    }, [props?.server?.connection]);
+
+    }, []);
 
     return (
         <div key="switcher">
-            <ConnectionMonitor connection={props?.server?.connection ?? null} />
-            <Inputs program={scene?.program} preview={scene?.preview} inputs={scene?.inputs} connection={props?.server?.connection ?? null} />
-            <Transitions connection={props?.server?.connection ?? null} />
-            <NextTransition connection={props?.server?.connection ?? null} />
-            <TransitionStyle connection={props?.server?.connection ?? null} />
-            <KeyFrameRunner connection={props?.server?.connection ?? null} />
-            <Macros connection={props?.server?.connection ?? null} />
-            <DownstreamKey connection={props?.server?.connection ?? null} onAir={scene?.downstreamKeyOnAir ?? false} tieOn={scene?.downstreamKeyTieOn ?? false} />
-            <FadeToBlack connection={props?.server?.connection ?? null} />
+            <ConnectionMonitor connection={connection?.server?.connection} />
+            <Inputs program={scene?.program} preview={scene?.preview} inputs={scene?.inputs} connection={connection?.server?.connection} />
+            <Transitions connection={connection?.server?.connection} />
+            <NextTransition connection={connection?.server?.connection} />
+            <TransitionStyle connection={connection?.server?.connection} />
+            <KeyFrameRunner connection={connection?.server?.connection} />
+            <Macros connection={connection?.server?.connection} />
+            <DownstreamKey connection={connection?.server?.connection} onAir={scene?.downstreamKeyOnAir ?? false} tieOn={scene?.downstreamKeyTieOn ?? false} />
+            <FadeToBlack connection={connection?.server?.connection} />
         </div>
     )
 }
