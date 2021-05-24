@@ -26,7 +26,7 @@ const Switcher = (): React.ReactElement => {
 
     const [scene, setScene] = React.useState<ISceneDetail | null>(null);
 
-    const [connection, setConnection] = React.useState<IConnectToServer>(null);
+    const [connection, setConnection] = React.useState<IConnectToServer>({ server: null});
 
     React.useEffect(() => {
         const newConnection = new ServerHubConnection();
@@ -48,15 +48,15 @@ const Switcher = (): React.ReactElement => {
 
     return (
         <div key="switcher">
-            <ConnectionMonitor connection={connection?.server?.connection} />
-            <Inputs program={scene?.program} preview={scene?.preview} inputs={scene?.inputs} connection={connection?.server?.connection} />
-            <Transitions connection={connection?.server?.connection} />
-            <NextTransition connection={connection?.server?.connection} />
-            <TransitionStyle connection={connection?.server?.connection} />
-            <KeyFrameRunner connection={connection?.server?.connection} />
-            <Macros connection={connection?.server?.connection} />
-            <DownstreamKey connection={connection?.server?.connection} onAir={scene?.downstreamKeyOnAir ?? false} tieOn={scene?.downstreamKeyTieOn ?? false} />
-            <FadeToBlack connection={connection?.server?.connection} />
+            <ConnectionMonitor connection={connection?.server?.connection ?? null} />
+            <Inputs program={scene?.program} preview={scene?.preview} inputs={scene?.inputs} connection={connection?.server?.connection ?? null} />
+            <Transitions connection={connection?.server?.connection ?? null} />
+            <NextTransition connection={connection?.server?.connection ?? null} />
+            <TransitionStyle connection={connection?.server?.connection ?? null} />
+            <KeyFrameRunner connection={connection?.server?.connection ?? null} />
+            <Macros connection={connection?.server?.connection ?? null} />
+            <DownstreamKey connection={connection?.server?.connection ?? null} onAir={scene?.downstreamKeyOnAir ?? false} tieOn={scene?.downstreamKeyTieOn ?? false} />
+            <FadeToBlack connection={connection?.server?.connection ?? null} />
         </div>
     )
 }

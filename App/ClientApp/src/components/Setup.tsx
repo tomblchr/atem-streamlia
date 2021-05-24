@@ -15,7 +15,7 @@ const Setup = (): React.ReactElement => {
     
     const [state, setState] = React.useState<ISetupState>({ ipaddress: "10.0.0.201", host: "" });
 
-    const [connection, setConnection] = React.useState<IConnectToServer>(null);
+    const [connection, setConnection] = React.useState<IConnectToServer>({ server: null});
 
     React.useEffect(() => {
         const newConnection = new ServerHubConnection();
@@ -66,7 +66,7 @@ const Setup = (): React.ReactElement => {
     }
 
     return <section className="setup">
-        <ConnectionMonitor connection={connection?.server?.connection} />
+        <ConnectionMonitor connection={connection?.server?.connection ?? null} />
         <h3>Setup</h3>
         <div className="well">
             <div className="input-group mb-3">

@@ -7,7 +7,7 @@ import ServerHubConnection from "./ServerHubConnection";
 
 const Audio = (): React.ReactElement => {
 
-    const [connection, setConnection] = React.useState<IConnectToServer>(null);
+    const [connection, setConnection] = React.useState<IConnectToServer>({ server: null});
 
     React.useEffect(() => {
         const newConnection = new ServerHubConnection();

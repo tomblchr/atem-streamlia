@@ -28,6 +28,11 @@ interface IAudioMixerInput {
     isActive: boolean;
 }
 
+interface ICreateTickProps {
+    keyprefix: string;
+}
+
+
 // inspired  by https://css-tricks.com/using-requestanimationframe-with-react-hooks/
 
 const PeakMeter = ({ vertical, connection, height, width }: IPeakMeterProps): React.ReactElement<IPeakMeterProps> => {
@@ -125,7 +130,7 @@ const PeakMeter = ({ vertical, connection, height, width }: IPeakMeterProps): Re
         return Math.floor(y);
     };
 
-    const CreateTicks = ({ keyprefix }): JSX.Element => {
+    const CreateTicks = ({ keyprefix }: ICreateTickProps): JSX.Element => {
         const numTicks = 6;
         
         var divs: JSX.Element[] = [];        

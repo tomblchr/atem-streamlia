@@ -19,7 +19,7 @@ const TallyLight = (): React.ReactElement => {
     const [scene, setScene] = React.useState<ISceneDetail>({ program: 0, preview: 0, inputs: [] });
     const [state, setState] = React.useState<ITallyLightState>({ chosen: null });
 
-    const [connection, setConnection] = React.useState<IConnectToServer>(null);
+    const [connection, setConnection] = React.useState<IConnectToServer>({ server: null});
 
     React.useEffect(() => {
         const newConnection = new ServerHubConnection();
