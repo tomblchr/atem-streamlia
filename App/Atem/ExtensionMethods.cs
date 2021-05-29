@@ -186,6 +186,8 @@ namespace SwitcherServer.Atem
         /// </remarks>
         public static VolumeLevelNotify WithoutInfinity(this VolumeLevelNotify notification)
         {
+            if (notification == null) return null;
+
             for (int i = 0; i < notification.Levels.Length; i++)
             {
                 if (notification.Levels[i] == double.NegativeInfinity)

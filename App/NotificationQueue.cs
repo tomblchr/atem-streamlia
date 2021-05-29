@@ -10,6 +10,7 @@ namespace SwitcherServer
 {
     public abstract class NotificationQueue<T> : INotificationQueue<T> where T : INotification
     {
+        const int MAX_QUEUE_LENGTH = 1000;
         private SemaphoreSlim _signal = new SemaphoreSlim(0);
         private ConcurrentQueue<T> _notifications = new ConcurrentQueue<T>();
 
@@ -19,7 +20,7 @@ namespace SwitcherServer
             {
                 throw new ArgumentNullException(nameof(notification));
             }
-
+            RestrictQueueLength();
             _notifications.Enqueue(notification);
             _signal.Release();
         }
@@ -29,6 +30,18 @@ namespace SwitcherServer
             await _signal.WaitAsync(cancellationToken);
             _notifications.TryDequeue(out var notification);
             return notification;
+        }
+
+        void RestrictQueueLength()
+        {
+            while (_notifications.Count >= MAX_QUEUE_LENGTH)
+            {
+                // do not 
+                if (!_notifications.TryDequeue(out _))
+                {
+                    break;
+                }
+            }
         }
     }
 }
