@@ -1,8 +1,10 @@
 import * as React from "react";
-import { HubConnection, HubConnectionBuilder, LogLevel } from "@microsoft/signalr";
+import { HubConnection, HubConnectionBuilder, HubConnectionState, LogLevel } from "@microsoft/signalr";
 import QRCode, { displayName } from "qrcode.react";
 import { hostURL } from "../api/atemconnection";
 import ConnectionMonitor from "./ConnectionMonitor";
+import IConnectToServer from "./IConnectToServer";
+import ServerHubConnection from "./ServerHubConnection";
 
 interface ISetupState {
     ipaddress: string;
@@ -10,27 +12,25 @@ interface ISetupState {
 }
 
 const Setup = (): React.ReactElement => {
-    const [connection, setConnection] = React.useState<HubConnection | null>(null);
+    
     const [state, setState] = React.useState<ISetupState>({ ipaddress: "10.0.0.201", host: "" });
 
+    const [connection, setConnection] = React.useState<IConnectToServer>({ server: null});
+
     React.useEffect(() => {
-        console.log("Creating signalr connection...");
+        const newConnection = new ServerHubConnection();
 
-        const newConnection: HubConnection = connection ?? new HubConnectionBuilder()
-            .withUrl("/atemhub")
-            .withAutomaticReconnect({
-                nextRetryDelayInMilliseconds: retryContext => {
-                    if (retryContext.elapsedMilliseconds < 60000) {
-                        console.log("Will try to connect to server again in 1 second");
-                        return 1000;
-                    }
-                    console.log("Will try to connect to server again in 6 seconds");
-                    return 6000;
-                }
-            })
-            .configureLogging(LogLevel.None)
-            .build();
+        setConnection({ server: newConnection });
 
+        return () => {
+            // clean up
+            newConnection.connection.stop();
+        };
+
+    }, []);
+
+    React.useEffect(() => {
+    
         const callapi = () => {
             hostURL()
                 .then(response => {
@@ -40,55 +40,33 @@ const Setup = (): React.ReactElement => {
                 });
         };
 
-        setConnection(newConnection);
         callapi();
 
     }, []);
-
-    React.useEffect(() => {
-        if (connection) {
-            connection
-                .start()
-                .then(() => {
-                    console.log("Connection started. Waiting for response from server...");
-                    connection.on('ReceiveConnectConfirmation', message => {
-                        console.log(message);
-                    });
-                })
-                .catch(e => console.log('Connection failed: ', e));
-        }
-
-        return () => {
-            // clean up
-            if (connection) {
-                connection.stop();
-            }
-        };
-    }, [connection]);
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setState({ ipaddress: event.target.value, host: state.host });
     };
 
     const save = () => {
-        if (connection) {
-            connection.send("SendConnect", state.ipaddress);
+        if (connection?.server?.connection) {
+            connection?.server?.connection.send("SendConnect", state.ipaddress);
         }
     };
 
     const goLive = (event: React.ChangeEvent<HTMLInputElement>) => {
-        if (connection) {
+        if (connection?.server?.connection) {
             if (event.target.checked) {
-                connection.send("SendStartStreaming");
+                connection?.server?.connection.send("SendStartStreaming");
             }
             else {
-                connection.send("SendStopStreaming");
+                connection.server.connection.send("SendStopStreaming");
             }
         }
     }
 
     return <section className="setup">
-        <ConnectionMonitor connection={connection} />
+        <ConnectionMonitor connection={connection?.server?.connection ?? null} />
         <h3>Setup</h3>
         <div className="well">
             <div className="input-group mb-3">

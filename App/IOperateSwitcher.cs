@@ -13,6 +13,8 @@ namespace SwitcherServer
     {
         Task SendConnect(string ipaddress);
 
+        Task SendHealthCheckRequest();
+
         Task SendSceneChange();
 
         Task SendProgramChange(long input);

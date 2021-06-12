@@ -2,60 +2,30 @@
 import { HubConnection, HubConnectionBuilder, LogLevel } from "@microsoft/signalr";
 import ConnectionMonitor from "./ConnectionMonitor";
 import MasterAudioMeter from "./MasterAudioMeter";
+import IConnectToServer from "./IConnectToServer";
+import ServerHubConnection from "./ServerHubConnection";
 
 const Audio = (): React.ReactElement => {
 
-    const [connection, setConnection] = React.useState<HubConnection | null>(null);
+    const [connection, setConnection] = React.useState<IConnectToServer>({ server: null});
 
     React.useEffect(() => {
-        console.log("Creating signalr connection...");
+        const newConnection = new ServerHubConnection();
 
-        const newConnection: HubConnection = connection ?? new HubConnectionBuilder()
-            .withUrl("/atemhub")
-            .withAutomaticReconnect({
-                nextRetryDelayInMilliseconds: retryContext => {
-                    if (retryContext.elapsedMilliseconds < 60000) {
-                        console.log("Will try to connect to server again in 1 second");
-                        return 1000;
-                    }
-                    console.log("Will try to connect to server again in 6 seconds");
-                    return 6000;
-                }
-            })
-            .configureLogging(LogLevel.None)
-            .build();
-
-        setConnection(newConnection);
-
-    }, []);
-
-    React.useEffect(() => {
-        if (connection) {
-            connection
-                .start()
-                .then(() => {
-                    console.log("Connected!");
-                    connection.onreconnected(id => {
-                        console.log(`Connection restored - ${id}`);
-                    });
-                })
-                .catch(e => console.log('Connection failed: ', e));
-        }
+        setConnection({ server: newConnection });
 
         return () => {
             // clean up
-            if (connection) {
-                connection.stop();
-            }
+            newConnection.connection.stop();
         };
 
-    }, [connection]);
+    }, []);
 
     return <section className="audio">
-        <ConnectionMonitor connection={connection} />
+        <ConnectionMonitor connection={connection?.server?.connection ?? null} />
         <h3>Audio</h3>
         <div className="well">
-            <MasterAudioMeter connection={connection} />
+            <MasterAudioMeter connection={connection?.server?.connection ?? null} />
         </div>
     </section>
 }

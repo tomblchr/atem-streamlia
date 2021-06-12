@@ -73,6 +73,12 @@ namespace SwitcherServer
             }
         }
 
+        public async Task SendHealthCheckRequest()
+        {
+            await Clients.Caller.ReceiveConnectConfirmation("Connected to server!");
+            await Clients.Caller.ReceiveConnectionStatus(_switcher.IsConnected);
+        }
+
         public async override Task OnDisconnectedAsync(Exception exception)
         {
             if (exception == null)

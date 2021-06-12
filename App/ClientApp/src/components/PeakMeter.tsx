@@ -28,6 +28,11 @@ interface IAudioMixerInput {
     isActive: boolean;
 }
 
+interface ICreateTickProps {
+    keyprefix: string;
+}
+
+
 // inspired  by https://css-tricks.com/using-requestanimationframe-with-react-hooks/
 
 const PeakMeter = ({ vertical, connection, height, width }: IPeakMeterProps): React.ReactElement<IPeakMeterProps> => {
@@ -125,14 +130,12 @@ const PeakMeter = ({ vertical, connection, height, width }: IPeakMeterProps): Re
         return Math.floor(y);
     };
 
-    const CreateTicks = (): JSX.Element => {
+    const CreateTicks = ({ keyprefix }: ICreateTickProps): JSX.Element => {
         const numTicks = 6;
         
         var divs: JSX.Element[] = [];        
         for (var i = 0; i < numTicks; i++) {
-            divs.push(<div className="audio-tick">
-                {i * (dBthreshold / numTicks)}
-            </div>);
+            divs.push(<div key={`${keyprefix}${i}` } className="audio-tick">{i * (dBthreshold / numTicks)}</div>);
         }
 
         return <div className="audio-ticks">{divs}</div>
@@ -147,7 +150,7 @@ const PeakMeter = ({ vertical, connection, height, width }: IPeakMeterProps): Re
                     return <div key={`br${indexOuter}${index}`}>
                         <div key={`db${indexOuter}${index}`}
                             className="audio-level-value">{Math.round(state[s.inputId].peaks[index])}</div>
-                        <CreateTicks />
+                        <CreateTicks keyprefix={`tk${indexOuter}${index}`} />
                         <div key={`lv${indexOuter}${index}`}
                             className="audio-level"
                             style={{ clipPath: "inset(" + dBFSToY(c) + "px 2px 0 0)" }}></div>

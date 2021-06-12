@@ -1,7 +1,8 @@
 ﻿import * as React from "react";
-import { HubConnection, HubConnectionBuilder, LogLevel } from "@microsoft/signalr";
+import IConnectToServer from "./IConnectToServer";
 import ConnectionMonitor from "./ConnectionMonitor";
 import { IInput } from "./Inputs";
+import ServerHubConnection from "./ServerHubConnection";
 
 interface ISceneDetail {
     program: number;
@@ -14,54 +15,28 @@ interface ITallyLightState {
 }
 
 const TallyLight = (): React.ReactElement => {
-    const [connection, setConnection] = React.useState<HubConnection | null>(null);
+
     const [scene, setScene] = React.useState<ISceneDetail>({ program: 0, preview: 0, inputs: [] });
-    const [state, setState] = React.useState<ITallyLightState>({ chosen: null });    
+    const [state, setState] = React.useState<ITallyLightState>({ chosen: null });
+
+    const [connection, setConnection] = React.useState<IConnectToServer>({ server: null});
 
     React.useEffect(() => {
-        console.log("Creating signalr connection...");
+        const newConnection = new ServerHubConnection();
 
-        const newConnection: HubConnection = connection ?? new HubConnectionBuilder()
-            .withUrl("/atemhub")
-            .withAutomaticReconnect({
-                nextRetryDelayInMilliseconds: retryContext => {
-                    if (retryContext.elapsedMilliseconds < 60000) {
-                        console.log("Will try to connect to server again in 1 second");
-                        return 1000;
-                    }
-                    console.log("Will try to connect to server again in 6 seconds");
-                    return 6000;
-                }
-            })
-            .configureLogging(LogLevel.None)
-            .build();
+        newConnection.connection.on('ReceiveSceneChange', message => {
+            setScene(message);
+        });
 
-        setConnection(newConnection);
-    }, []);
-
-    React.useEffect(() => {
-        if (connection) {
-            connection
-                .start()
-                .then(() => {
-                    console.log("Connected!");
-                    connection.onreconnected(id => {
-                        console.log(`Connection restored - ${id}`);
-                    });
-                    connection.on('ReceiveSceneChange', message => {
-                        setScene(message);
-                    });
-                })
-                .catch(e => console.log('Connection failed: ', e));
-        }
+        setConnection({ server: newConnection });
 
         return () => {
             // clean up
-            if (connection) {
-                connection.stop();
-            }
+            newConnection.connection.off("ReceiveSceneChange");
+            newConnection.connection.stop();
         };
-    }, [connection]);
+
+    }, []);
 
     const chooseInput = (input: number): void => {
         setState({ chosen: input });
@@ -72,7 +47,7 @@ const TallyLight = (): React.ReactElement => {
 
     return (
         <section className="channels">
-            <ConnectionMonitor connection={connection} />
+            <ConnectionMonitor connection={connection?.server?.connection ?? null} />
             <div className={isLive ? "well tally active" : "well tally"}>
                 <p>Camera {isLive ? "LIVE!" : isPreview ? "PREVIEW!" : "Off" }</p>
             </div>
