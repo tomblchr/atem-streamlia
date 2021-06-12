@@ -18,15 +18,22 @@ class ServerHubConnection {
                     return 6000;
                 }
             })
-            .configureLogging(LogLevel.None)
+            .configureLogging(LogLevel.Information)
             .build();
 
         this.connection = newConnection;
 
-        this.connection.start().then(() => {
-            console.log("Request healthcheck");
-            this.connection?.send("SendHealthCheckRequest");
-        });
+        console.log("Starting the signalr server connection");
+
+        this.connection
+            .start()
+            .then(() => {
+                console.log("Request healthcheck");
+                this.connection?.send("SendHealthCheckRequest");
+            })
+            .catch((err) => {
+                console.error(`Unable to start signalr connection - ${err}`);
+            });
 
         this.connection.onreconnected(id => {
             console.log(`Connection restored - ${id}`);
