@@ -5,14 +5,38 @@ import Audio from './components/Audio';
 import Setup from './components/Setup';
 import Switcher from './components/Switcher';
 import TallyLight from './components/TallyLight';
+import ReactPlayer from 'react-player';
 
 import "./global.css";
 import "./custom.css";
 
+interface IAppState {
+    livestreamUrl: string
+    livestreamEnabled: boolean
+}
+
 const App = (): JSX.Element => {
+
+    const [state, setState] = React.useState<IAppState>({ livestreamUrl: "", livestreamEnabled: false });
+
+    const handleLivestreamUrlChange = (value: string) => {
+        setState({ livestreamUrl: value, livestreamEnabled: state.livestreamEnabled });
+    }
+
+    const handleLivestreamEnabledChange = (value: boolean) => {
+        setState({ livestreamUrl: state.livestreamUrl, livestreamEnabled: value });
+    }
 
     return (
         <Layout>
+            {state.livestreamEnabled &&
+                <section className='video-player'>
+                    <h3>Livestream Preview (Delayed)</h3>
+                    <div className="well">
+                        <ReactPlayer url={state.livestreamUrl} muted={true} playing={true} controls={true} width='400px' height='225px' />
+                    </div>
+                </section>
+            }
             <Route exact path='/'>
                 <Switcher />
             </Route>
@@ -23,7 +47,10 @@ const App = (): JSX.Element => {
                 <TallyLight />
             </Route>
             <Route path='/setup'>
-                <Setup />
+                <Setup livestreamUrl={state.livestreamUrl}
+                    liveStreamEnabled={state.livestreamEnabled}
+                    onLivestreamUrlChange={handleLivestreamUrlChange}
+                    onLivestreamEnabledChange={handleLivestreamEnabledChange} />
             </Route>
         </Layout>
     );

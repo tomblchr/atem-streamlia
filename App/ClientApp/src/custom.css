@@ -115,3 +115,8 @@ code {
 .audio-tick {
     height: 50px;
 }
+
+.video-player {
+    float: right;
+    z-index: 100;
+}

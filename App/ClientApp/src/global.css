@@ -108,6 +108,14 @@ section h3 {
 	z-index: 0;
 }
 
+.well-column {
+	flex-direction: column;
+}
+
+.well-column > div {
+	margin-top: 10px;
+}
+
 .well.tally {
 	padding: 50px;
 	width: 100%;
