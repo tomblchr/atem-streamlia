@@ -91,7 +91,7 @@ const PeakMeter = ({ vertical, connection, height, width }: IPeakMeterProps): Re
     }, [connection]);
 
     const volumeMessageHandler = (message: IPeakMetersState): void => {
-        if (isMounted.current) {
+        if (message && isMounted.current) {
             try {
                 const current: IIndexedPeakMetersState = { ...next.current };
                 current[message.inputId] = message;
