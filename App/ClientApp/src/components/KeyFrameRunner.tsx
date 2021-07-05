@@ -19,7 +19,7 @@ enum FlyKeyFrame {
 }
 
 export interface IKeyFrameRunnerProps {
-    connection: HubConnection | null;
+    connection: HubConnection | undefined;
 }
 
 interface IKeyFrameRunnerState {
@@ -32,11 +32,16 @@ const KeyFrameRunner = ({ connection }: IKeyFrameRunnerProps): React.ReactElemen
     const [state, setState] = React.useState<IKeyFrameRunnerState>({ isRunning: false, destination: 0 });
 
     React.useEffect(() => {
-        if (connection) {
-            connection.on("ReceiveKeyFlyParameters", message => {
-                setState(message);
-            });
+        
+        connection?.on("ReceiveKeyFlyParameters", message => {
+            setState(message);
+        });
+
+        return () => {
+            // clean-up
+            connection?.off("ReceiveKeyFlyParameters");
         }
+
     }, [connection]);
 
     const sendRunKeyFrame = async (keyFrame: FlyKeyFrame): Promise<void> => {

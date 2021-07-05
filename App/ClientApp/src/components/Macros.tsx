@@ -2,7 +2,7 @@
 import { HubConnection } from "@microsoft/signalr";
 
 interface IMacroProps {
-    connection: HubConnection | null;
+    connection: HubConnection | undefined;
 }
 
 interface IMacro {
@@ -20,13 +20,17 @@ const Macros = ({ connection }: IMacroProps): React.ReactElement => {
     const [state, setState] = React.useState<IMacroState>({ macros: [] });
 
     React.useEffect(() => {
-        if (connection) {
-            connection.on("ReceiveMacros", message => {
-                console.log(`ReceiveMacros - ${message}`);
-                setState({ macros: message });
-            });
+        
+        connection?.on("ReceiveMacros", message => {
+            console.log(`ReceiveMacros - ${message}`);
+            setState({ macros: message });
+        });
+        
+        return () => {
+            connection?.off("ReceiveMacros");
         }
-    });
+
+    }, [connection]);
 
     const sendRunMacro = async (id: number): Promise<void> => {
         await connection?.send("SendRunMacro", id)

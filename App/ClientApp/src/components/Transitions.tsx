@@ -2,7 +2,7 @@
 import { HubConnection } from "@microsoft/signalr";
 
 export interface ITransitionsProps {
-    connection: HubConnection | null;
+    connection: HubConnection | undefined;
 }
 
 interface ITransistionState {
@@ -28,17 +28,21 @@ const Transitions = ({ connection }: ITransitionsProps): React.ReactElement => {
     };
 
     React.useEffect(() => {
-        if (connection) {
-            connection.on("ReceiveInTransition", message => {
-                const it: boolean = message;
-                console.log(`ReceiveInTransition - ${it}`);
-                setState({ inTransition: it, position: state.position, framesRemaining: state.framesRemaining });
-            });
-            connection.on("ReceiveTransitionPosition", message => {
-                const it: ITransistionState = message;
-                console.log(`ReceiveTransitionPosition - ${it.position},${it.framesRemaining}`);
-                setState({ inTransition: it.inTransition || it.position > 0, position: it.position, framesRemaining: it.framesRemaining });
-            });
+
+        connection?.on("ReceiveInTransition", message => {
+            const it: boolean = message;
+            console.log(`ReceiveInTransition - ${it}`);
+            setState({ inTransition: it, position: state.position, framesRemaining: state.framesRemaining });
+        });
+        connection?.on("ReceiveTransitionPosition", message => {
+            const it: ITransistionState = message;
+            console.log(`ReceiveTransitionPosition - ${it.position},${it.framesRemaining}`);
+            setState({ inTransition: it.inTransition || it.position > 0, position: it.position, framesRemaining: it.framesRemaining });
+        });
+
+        return () => {
+            connection?.off("ReceiveInTransition");
+            connection?.off("ReceiveTransitionPosition");
         }
     }, [connection]);
 

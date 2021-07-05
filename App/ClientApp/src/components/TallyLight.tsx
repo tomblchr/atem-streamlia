@@ -1,6 +1,4 @@
 ﻿import * as React from "react";
-import IConnectToServer from "./IConnectToServer";
-import ConnectionMonitor from "./ConnectionMonitor";
 import { IInput } from "./Inputs";
 import ServerHubConnection from "./ServerHubConnection";
 
@@ -10,33 +8,31 @@ interface ISceneDetail {
     inputs: IInput[];
 }
 
+interface ITallyLightProps {
+    server: ServerHubConnection | undefined;
+}
+
 interface ITallyLightState {
     chosen: number | null;
 }
 
-const TallyLight = (): React.ReactElement => {
+const TallyLight = ({ server }: ITallyLightProps): React.ReactElement => {
 
     const [scene, setScene] = React.useState<ISceneDetail>({ program: 0, preview: 0, inputs: [] });
     const [state, setState] = React.useState<ITallyLightState>({ chosen: null });
 
-    const [connection, setConnection] = React.useState<IConnectToServer>({ server: null});
-
     React.useEffect(() => {
-        const newConnection = new ServerHubConnection();
 
-        newConnection.connection.on('ReceiveSceneChange', message => {
+        server?.connection.on("ReceiveSceneChange", message => {
             setScene(message);
         });
 
-        setConnection({ server: newConnection });
-
         return () => {
             // clean up
-            newConnection.connection.off("ReceiveSceneChange");
-            newConnection.connection.stop();
+            server?.connection.off("ReceiveSceneChange");
         };
 
-    }, []);
+    }, [server]);
 
     const chooseInput = (input: number): void => {
         setState({ chosen: input });
@@ -47,7 +43,6 @@ const TallyLight = (): React.ReactElement => {
 
     return (
         <section className="channels">
-            <ConnectionMonitor connection={connection?.server?.connection ?? null} />
             <div className={isLive ? "well tally active" : "well tally"}>
                 <p>Camera {isLive ? "LIVE!" : isPreview ? "PREVIEW!" : "Off" }</p>
             </div>

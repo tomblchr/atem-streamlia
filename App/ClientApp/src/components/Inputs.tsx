@@ -12,7 +12,7 @@ export interface IInputsProps {
     inputs: IInput[] | undefined;
     program: number | undefined;
     preview: number | undefined;
-    connection: HubConnection | null;
+    connection: HubConnection | undefined;
 }
 
 const Inputs = ({inputs, program, preview, connection}: IInputsProps): React.ReactElement => {

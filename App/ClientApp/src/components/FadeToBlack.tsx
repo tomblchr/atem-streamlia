@@ -2,7 +2,7 @@
 import { HubConnection } from "@microsoft/signalr";
 
 export interface ITransitionsProps {
-    connection: HubConnection | null;
+    connection: HubConnection | undefined;
 }
 
 interface IFadeToBlackState {
@@ -21,12 +21,17 @@ const FadeToBlack = ({connection} : ITransitionsProps): React.ReactElement => {
     };
 
     React.useEffect(() => {
-        if (connection) {
-            connection.on("ReceiveIsFadeToBlack", message => {
-                console.log(`ReceiveIsFadeToBlack - ${message}`);
-                setState(message);
-            });
+        
+        connection?.on("ReceiveIsFadeToBlack", message => {
+            console.log(`ReceiveIsFadeToBlack - ${message}`);
+            setState(message);
+        });
+
+        return () => {
+            // clean-up
+            connection?.off("ReceiveIsFadeToBlack");
         }
+
     }, [connection]);    
 
     return <section className="fade-to-black">

@@ -1,9 +1,9 @@
 ﻿import * as React from "react";
-import { HubConnection } from "@microsoft/signalr";
 import PeakMeter from "./PeakMeter";
+import ServerHubConnection from "./ServerHubConnection";
 
 export interface IMasterAudioProps {
-    connection: HubConnection | null;
+    connection: ServerHubConnection | undefined;
 }
 
 interface IMasterAudioState {
@@ -16,7 +16,7 @@ const MasterAudioMeter = ({ connection }: IMasterAudioProps): React.ReactElement
     return <div>
         <h3>dB</h3>
         <div>
-            <PeakMeter vertical={true} connection={connection} height={400} width={80} />
+            <PeakMeter vertical={true} connection={connection?.connection} height={400} width={80} />
         </div>
     </div>
 }

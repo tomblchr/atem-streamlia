@@ -1,34 +1,52 @@
 import * as React from 'react';
 import { Route } from 'react-router';
 import { Layout } from './components/Layout';
+import ReactPlayer from 'react-player';
+
 import Audio from './components/Audio';
 import Setup from './components/Setup';
 import Switcher from './components/Switcher';
 import TallyLight from './components/TallyLight';
-import ReactPlayer from 'react-player';
+
+import ServerHubConnection from './components/ServerHubConnection';
 
 import "./global.css";
 import "./custom.css";
+import ConnectionMonitor from './components/ConnectionMonitor';
 
 interface IAppState {
-    livestreamUrl: string
-    livestreamEnabled: boolean
+    livestreamUrl: string;
+    livestreamEnabled: boolean;
+    server: ServerHubConnection | undefined;
 }
 
 const App = (): JSX.Element => {
 
-    const [state, setState] = React.useState<IAppState>({ livestreamUrl: "", livestreamEnabled: false });
+    const [state, setState] = React.useState<IAppState>({ livestreamUrl: "", livestreamEnabled: false, server: undefined });
+
+    React.useEffect(() => {
+        const newConnection = new ServerHubConnection();
+
+        setState({ ...state, server: newConnection });
+
+        return () => {
+            // clean up
+            newConnection.connection.stop();
+        };
+
+    }, []);
 
     const handleLivestreamUrlChange = (value: string) => {
-        setState({ livestreamUrl: value, livestreamEnabled: state.livestreamEnabled });
+        setState({...state, livestreamUrl: value });
     }
 
     const handleLivestreamEnabledChange = (value: boolean) => {
-        setState({ livestreamUrl: state.livestreamUrl, livestreamEnabled: value });
+        setState({ ...state, livestreamEnabled: value });
     }
 
     return (
         <Layout>
+            <ConnectionMonitor connection={state.server?.connection} />
             {state.livestreamEnabled &&
                 <section className='video-player'>
                     <h3>Livestream Preview (Delayed)</h3>
@@ -38,16 +56,17 @@ const App = (): JSX.Element => {
                 </section>
             }
             <Route exact path='/'>
-                <Switcher />
+                <Switcher server={state.server} onLivestreamUrlChange={handleLivestreamUrlChange} />
             </Route>
             <Route path='/audio'>
-                <Audio />
+                <Audio server={state.server} />
             </Route>
             <Route path='/tally-light'>
-                <TallyLight />
+                <TallyLight server={state.server} />
             </Route>
             <Route path='/setup'>
-                <Setup livestreamUrl={state.livestreamUrl}
+                <Setup server={state.server}
+                    livestreamUrl={state.livestreamUrl}
                     liveStreamEnabled={state.livestreamEnabled}
                     onLivestreamUrlChange={handleLivestreamUrlChange}
                     onLivestreamEnabledChange={handleLivestreamEnabledChange} />

@@ -1,6 +1,4 @@
 ﻿import * as React from "react";
-import { HubConnection, HubConnectionBuilder, LogLevel } from "@microsoft/signalr";
-import ConnectionMonitor from "./ConnectionMonitor";
 import Inputs, { IInput } from "./Inputs";
 import Transitions from "./Transitions";
 import NextTransition from "./NextTransition";
@@ -9,10 +7,12 @@ import DownstreamKey from "./DownstreamKey";
 import FadeToBlack from "./FadeToBlack";
 import KeyFrameRunner from "./KeyFrameRunner";
 import Macros from "./Macros";
-import IConnectToServer from "./IConnectToServer";
-import { SwitchProps } from "react-router";
 import ServerHubConnection from "./ServerHubConnection";
 
+interface ISwitcherProps {
+    onLivestreamUrlChange: Function;
+    server: ServerHubConnection | undefined;
+}
 
 interface ISceneDetail {
     program: number;
@@ -22,41 +22,41 @@ interface ISceneDetail {
     downstreamKeyTieOn: boolean;
 }
 
-const Switcher = (): React.ReactElement => {
+const Switcher = ({ server, onLivestreamUrlChange }: ISwitcherProps): React.ReactElement => {
 
-    const [scene, setScene] = React.useState<ISceneDetail | null>(null);
+    const [scene, setScene] = React.useState<ISceneDetail | undefined>();
 
-    const [connection, setConnection] = React.useState<IConnectToServer>({ server: null});
+    //const [connection, setConnection] = React.useState<IConnectToServer>({ server: null});
 
     React.useEffect(() => {
-        const newConnection = new ServerHubConnection();
 
-        newConnection.connection.on("ReceiveSceneChange", message => {
+        server?.connection.on("ReceiveSceneChange", message => {
             const msg = message as ISceneDetail;
             console.log(`ReceiveSceneChange - ${msg.downstreamKeyOnAir}`);
             setScene(message);
         });
-
-        setConnection({ server: newConnection });
+        server?.connection.on("ReceiveLivestreamPreviewUrl", message => {
+            console.log(`ReceiveLivestreamPreviewUrl - ${message}`);
+            onLivestreamUrlChange(message);
+        });
 
         return () => {
-            // clean up
-            newConnection.connection.stop();
+            server?.connection.off("ReceiveSceneChange");
+            server?.connection.off("ReceiveLivestreamPreviewUrl");
         };
 
-    }, []);
+    }, [server]);
 
     return (
         <div key="switcher">
-            <ConnectionMonitor connection={connection?.server?.connection ?? null} />
-            <Inputs program={scene?.program} preview={scene?.preview} inputs={scene?.inputs} connection={connection?.server?.connection ?? null} />
-            <Transitions connection={connection?.server?.connection ?? null} />
-            <NextTransition connection={connection?.server?.connection ?? null} />
-            <TransitionStyle connection={connection?.server?.connection ?? null} />
-            <KeyFrameRunner connection={connection?.server?.connection ?? null} />
-            <Macros connection={connection?.server?.connection ?? null} />
-            <DownstreamKey connection={connection?.server?.connection ?? null} onAir={scene?.downstreamKeyOnAir ?? false} tieOn={scene?.downstreamKeyTieOn ?? false} />
-            <FadeToBlack connection={connection?.server?.connection ?? null} />
+            <Inputs program={scene?.program} preview={scene?.preview} inputs={scene?.inputs} connection={server?.connection} />
+            <Transitions connection={server?.connection} />
+            <NextTransition connection={server?.connection} />
+            <TransitionStyle connection={server?.connection} />
+            <KeyFrameRunner connection={server?.connection} />
+            <Macros connection={server?.connection} />
+            <DownstreamKey connection={server?.connection} onAir={scene?.downstreamKeyOnAir ?? false} tieOn={scene?.downstreamKeyTieOn ?? false} />
+            <FadeToBlack connection={server?.connection} />
         </div>
     )
 }

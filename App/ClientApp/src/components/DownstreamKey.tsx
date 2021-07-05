@@ -4,7 +4,7 @@ import { HubConnection } from "@microsoft/signalr";
 export interface IDownstreamKeyProps {
     onAir: boolean;
     tieOn: boolean;
-    connection: HubConnection | null;
+    connection: HubConnection | undefined;
 }
 
 interface IDownstreamKeyState {
@@ -34,15 +34,20 @@ const DownstreamKey = ({onAir, tieOn, connection }: IDownstreamKeyProps): React.
     };
 
     React.useEffect(() => {
-        if (connection) {
-            connection.on("ReceiveDownstreamKeyInTransition", message => {
-                console.log(`ReceiveDownstreamKeyInTransition - ${message}`);
-                setState({ inTransition: message });
-            });
-            connection.on("ReceiveTransitionPosition", message => {
-                //console.log(`ReceiveTransitionPosition - ${message}`);
-                //setState({ inTransition: state.inTransition, position: message.position, framesRemaining: message.framesRemaining });
-            });
+
+        connection?.on("ReceiveDownstreamKeyInTransition", message => {
+            console.log(`ReceiveDownstreamKeyInTransition - ${message}`);
+            setState({ inTransition: message });
+        });
+        connection?.on("ReceiveTransitionPosition", message => {
+            //console.log(`ReceiveTransitionPosition - ${message}`);
+            //setState({ inTransition: state.inTransition, position: message.position, framesRemaining: message.framesRemaining });
+        });
+
+        return () => {
+            // clean-up
+            connection?.off("ReceiveDownstreamKeyInTransition");
+            connection?.off("ReceiveTransitionPosition");
         }
     }, [connection]);
 

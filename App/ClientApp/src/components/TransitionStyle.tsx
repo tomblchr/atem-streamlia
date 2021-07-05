@@ -2,7 +2,7 @@
 import { HubConnection } from "@microsoft/signalr";
 
 export interface ITransitionStyleProps {
-    connection: HubConnection | null;
+    connection: HubConnection | undefined;
 }
 
 enum SwitcherTransitionStyle {
@@ -22,12 +22,16 @@ const TransitionStyle = ({ connection }: ITransitionStyleProps): React.ReactElem
     const [state, setState] = React.useState<ITransitionStyleState>({ current: SwitcherTransitionStyle.None });
 
     React.useEffect(() => {
-        if (connection) {
-            connection.on("ReceiveTransitionStyle", message => {
-                console.log(`ReceiveTransitionStyle - ${message}`);
-                setState({ current: message });
-            });
+        
+        connection?.on("ReceiveTransitionStyle", message => {
+            console.log(`ReceiveTransitionStyle - ${message}`);
+            setState({ current: message });
+        });
+
+        return () => {
+            connection?.off("ReceiveTransitionStyle");
         }
+
     }, [connection]);   
 
     const sendTransitionStyle = async (transition: SwitcherTransitionStyle): Promise<void> => {

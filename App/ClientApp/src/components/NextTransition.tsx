@@ -2,7 +2,7 @@
 import { HubConnection } from "@microsoft/signalr";
 
 export interface IKeyProps {
-    connection: HubConnection | null;
+    connection: HubConnection | undefined;
 }
 
 interface IKeyState {
@@ -21,11 +21,15 @@ const NextTransition = ({ connection }: IKeyProps): React.ReactElement => {
     const [state, setState] = React.useState<INextTransitionState>({ includeBackground: false, keys: [{ key: 2, onAir: false, included: false }] });
 
     React.useEffect(() => {
-        if (connection) {
-            connection.on("ReceiveNextTransition", message => {
-                setState(message);
-            });
+        
+        connection?.on("ReceiveNextTransition", message => {
+            setState(message);
+        });
+
+        return () => {
+            connection?.off("ReceiveNextTransition");
         }
+
     }, [connection]);
     
     const sendBackgroundIncluded = (includeBackground: boolean): void => {

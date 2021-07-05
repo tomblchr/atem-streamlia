@@ -7,7 +7,7 @@ export interface IPeakMeterProps {
     vertical: boolean;
     height: number;
     width: number;
-    connection: HubConnection | null;
+    connection: HubConnection | undefined;
 }
 
 // message format from server

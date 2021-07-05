@@ -3,7 +3,7 @@ import { HubConnection, HubConnectionState, LogLevel } from "@microsoft/signalr"
 import { AlertTriangle, Camera, Zap, Server, Radio, StopCircle, Sliders } from "react-feather";
 
 interface IConnectionMonitor {
-    connection: HubConnection | null;
+    connection: HubConnection | undefined;
 }
 
 interface IConnectionMonitorState {

@@ -16,25 +16,26 @@ interface ISetupProps {
     liveStreamEnabled: boolean;
     onLivestreamUrlChange: Function;
     onLivestreamEnabledChange: Function;
+    server: ServerHubConnection | undefined;
 }
 
-const Setup = ({ livestreamUrl, liveStreamEnabled, onLivestreamUrlChange, onLivestreamEnabledChange }: ISetupProps): React.ReactElement => {
+const Setup = ({ server, livestreamUrl, liveStreamEnabled, onLivestreamUrlChange, onLivestreamEnabledChange }: ISetupProps): React.ReactElement => {
     
     const [state, setState] = React.useState<ISetupState>({ ipaddress: "10.0.0.201", host: "" });
 
-    const [connection, setConnection] = React.useState<IConnectToServer>({ server: null});
-
     React.useEffect(() => {
-        const newConnection = new ServerHubConnection();
 
-        setConnection({ server: newConnection });
+        server?.connection.on("ReceiveLivestreamPreviewUrl", message => {
+            console.log(`ReceiveLivestreamPreviewUrl - ${message}`);
+            onLivestreamUrlChange(message);
+        });
 
         return () => {
             // clean up
-            newConnection.connection.stop();
+            server?.connection.off("ReceiveLivestreamPreviewUrl");
         };
 
-    }, []);
+    }, [server]);
 
     React.useEffect(() => {
     
@@ -57,6 +58,7 @@ const Setup = ({ livestreamUrl, liveStreamEnabled, onLivestreamUrlChange, onLive
 
     const handleLivestreamUrlChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         onLivestreamUrlChange(event.target.value);
+        server?.connection.send("SendLivestreamPreviewUrl", event.target.value);
     }
 
     const handleLivestreamEnabledChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -64,24 +66,22 @@ const Setup = ({ livestreamUrl, liveStreamEnabled, onLivestreamUrlChange, onLive
     }
 
     const save = () => {
-        if (connection?.server?.connection) {
-            connection?.server?.connection.send("SendConnect", state.ipaddress);
-        }
+        server?.connection.send("SendConnect", state.ipaddress);
     };
 
     const goLive = (event: React.ChangeEvent<HTMLInputElement>) => {
-        if (connection?.server?.connection) {
+        if (server?.connection) {
             if (event.target.checked) {
-                connection?.server?.connection.send("SendStartStreaming");
+                server?.connection.send("SendStartStreaming");
             }
             else {
-                connection.server.connection.send("SendStopStreaming");
+                server.connection.send("SendStopStreaming");
             }
         }
     }
 
     return <section className="setup">
-        <ConnectionMonitor connection={connection?.server?.connection ?? null} />
+        <ConnectionMonitor connection={server?.connection} />
         <h3>Setup</h3>
         <div className="well">
             <div className="input-group mb-3">
