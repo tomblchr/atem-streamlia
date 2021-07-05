@@ -19,6 +19,9 @@ namespace SwitcherServer
         private readonly IVolumeChangeNotificationQueue _volume;
         private readonly ILogger _logger;
 
+        private static SemaphoreSlim _lock = new SemaphoreSlim(1, 1);
+        private static string _livestreamPreviewUrl;
+
         public AtemHub(Switcher switcher, IVolumeChangeNotificationQueue volume, ILogger<AtemHub> logger)
         {
             _switcher = switcher;
@@ -65,6 +68,7 @@ namespace SwitcherServer
             {
                 Task.WaitAll(
                     Clients.Caller.ReceiveSceneChange(new SceneDetail(_switcher)),
+                    Clients.Caller.ReceiveLivestreamPreviewUrl(_livestreamPreviewUrl),
                     Clients.Caller.ReceiveNextTransition(_switcher.GetMixEffectBlocks().First().GetNextTransition()),
                     Clients.Caller.ReceiveTransitionStyle(_switcher.GetMixEffectBlocks().First().NextTransitionStyle),
                     Clients.Caller.ReceiveStreamingStatus(_switcher.GetStreamRTMP().IsStreaming),
@@ -205,6 +209,24 @@ namespace SwitcherServer
             _switcher.MacroControl.Run(id);
 
             await Task.CompletedTask;
+        }
+
+        public async Task SendLivestreamPreviewUrl(string value)
+        {
+            _lock.Wait();
+            try
+            {
+                _livestreamPreviewUrl = value;
+
+                // relay the livestream preview URL to all clients, including the caller
+                await Clients.All.ReceiveLivestreamPreviewUrl(_livestreamPreviewUrl);
+                await Task.CompletedTask;
+            }
+            finally
+            {
+                _lock.Release();
+            }
+            
         }
 
         /// <summary>

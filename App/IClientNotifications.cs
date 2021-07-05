@@ -1,4 +1,5 @@
 ﻿using BMDSwitcherAPI;
+using Microsoft.Extensions.Primitives;
 using SwitcherServer.Atem;
 using System;
 using System.Collections.Generic;
@@ -37,5 +38,7 @@ namespace SwitcherServer
         Task ReceiveMacros(IEnumerable<Macro> macros);
 
         Task ReceiveStreamingStatus(bool isStreaming);
+
+        Task ReceiveLivestreamPreviewUrl(string value);
     }
 }
