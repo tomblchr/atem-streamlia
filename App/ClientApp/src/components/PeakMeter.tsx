@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as CSS from "csstype";
 import { Framer, SkipBack } from "react-feather";
-import { HubConnection, HubConnectionState } from "@microsoft/signalr";
+import { HubConnection, HubConnectionState, ISubscription } from "@microsoft/signalr";
 
 export interface IPeakMeterProps {
     vertical: boolean;
@@ -62,30 +62,26 @@ const PeakMeter = ({ vertical, connection, height, width }: IPeakMeterProps): Re
 
     var next = React.useRef<IIndexedPeakMetersState>(init);
     var isMounted = React.useRef<boolean>(false);
-
+    
     React.useEffect(() => {
+
         isMounted.current = true;
-        if (connection) {
-            console.log("Audio connection established");
-            setTimeout(() => connection
-                .stream("ReceiveVolumeChange")
-                .subscribe({
-                    next: (message) => {
-                        volumeMessageHandler(message);
-                    },
-                    complete: () => {
-                        console.log("Volume stream completed");
-                    },
-                    error: (err) => {
-                        console.error(err);
-                    }
-                }), 4000);
-        } else {
-            console.log("No audio connection to ATEM");
-        }
+
+        const subscription = connection?.stream("ReceiveVolumeChange").subscribe({
+            next: (message) => {
+                volumeMessageHandler(message);
+            },
+            complete: () => {
+                console.log("Volume stream completed");
+            },
+            error: (err) => {
+                console.error(err);
+            }
+        });
 
         return () => {
             isMounted.current = false;
+            subscription?.dispose();
         }
 
     }, [connection]);
