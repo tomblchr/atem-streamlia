@@ -27,6 +27,8 @@ const TallyLight = ({ server }: ITallyLightProps): React.ReactElement => {
             setScene(message);
         });
 
+        server?.connection.send("SendSceneChange");
+
         return () => {
             // clean up
             server?.connection.off("ReceiveSceneChange");

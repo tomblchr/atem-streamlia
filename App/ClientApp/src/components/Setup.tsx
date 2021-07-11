@@ -81,7 +81,6 @@ const Setup = ({ server, livestreamUrl, liveStreamEnabled, onLivestreamUrlChange
     }
 
     return <section className="setup">
-        <ConnectionMonitor connection={server?.connection} />
         <h3>Setup</h3>
         <div className="well">
             <div className="input-group mb-3">

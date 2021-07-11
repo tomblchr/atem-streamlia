@@ -43,6 +43,8 @@ namespace SwitcherServer
 
         Task SendRunKeyFrame(_BMDSwitcherFlyKeyFrame flyKeyFrame);
 
+        Task SendMacros();
+
         Task SendRunMacro(uint id);
 
         Task SendLivestreamPreviewUrl(string value);

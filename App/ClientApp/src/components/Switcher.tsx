@@ -8,6 +8,7 @@ import FadeToBlack from "./FadeToBlack";
 import KeyFrameRunner from "./KeyFrameRunner";
 import Macros from "./Macros";
 import ServerHubConnection from "./ServerHubConnection";
+import { HubConnectionState } from "@microsoft/signalr";
 
 interface ISwitcherProps {
     onLivestreamUrlChange: Function;
@@ -39,6 +40,11 @@ const Switcher = ({ server, onLivestreamUrlChange }: ISwitcherProps): React.Reac
             console.log(`ReceiveLivestreamPreviewUrl - ${message}`);
             onLivestreamUrlChange(message);
         });
+
+        if (server?.connection.state === HubConnectionState.Connected) {
+            server?.connection.send("SendSceneChange");
+            server?.connection.send("SendMacros");
+        }
 
         return () => {
             server?.connection.off("ReceiveSceneChange");
