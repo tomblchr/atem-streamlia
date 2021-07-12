@@ -20,9 +20,16 @@ namespace SwitcherServer
             {
                 throw new ArgumentNullException(nameof(notification));
             }
-            RestrictQueueLength();
-            _notifications.Enqueue(notification);
-            _signal.Release();
+ 
+            try
+            {
+                RestrictQueueLength();
+                _notifications.Enqueue(notification);
+            }
+            finally
+            {
+                _signal.Release();
+            }
         }
 
         public async Task<T> DequeueAsync(CancellationToken cancellationToken)
@@ -36,8 +43,7 @@ namespace SwitcherServer
         {
             while (_notifications.Count >= MAX_QUEUE_LENGTH)
             {
-                // do not 
-                if (!_notifications.TryDequeue(out _))
+                if (!_notifications.TryDequeue(out var _))
                 {
                     break;
                 }

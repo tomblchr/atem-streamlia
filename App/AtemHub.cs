@@ -204,6 +204,11 @@ namespace SwitcherServer
             await Task.CompletedTask;
         }
 
+        public async Task SendMacros()
+        {
+            await Clients.Caller.ReceiveMacros(_switcher.GetMacros());
+        }
+
         public async Task SendRunMacro(uint id)
         {
             _switcher.MacroControl.Run(id);
@@ -226,7 +231,6 @@ namespace SwitcherServer
             {
                 _lock.Release();
             }
-            
         }
 
         /// <summary>
@@ -236,29 +240,19 @@ namespace SwitcherServer
         /// <returns></returns>
         public async IAsyncEnumerable<VolumeLevelNotify> ReceiveVolumeChange([EnumeratorCancellation] CancellationToken cancellation)
         {
-            int counter = 0;
-            Stopwatch sw = new Stopwatch();
-            sw.Start();
-            while (!cancellation.IsCancellationRequested)
+            _logger.LogDebug($"Start volume notification streaming for client {Context.ConnectionId}");
+            try
             {
-                cancellation.ThrowIfCancellationRequested();
-
-                //_logger.LogDebug("Check queue for volume notification");
-
-                if (sw.ElapsedMilliseconds >= 10000)
+                while (!cancellation.IsCancellationRequested)
                 {
-                    _logger.LogDebug($"{counter} volume messages sent in the last 10 seconds");
-                    counter = 0;
-                    sw.Restart();
+                    cancellation.ThrowIfCancellationRequested();
+                    var v = await _volume.DequeueAsync(cancellation);
+                    yield return v.WithoutInfinity();
                 }
-
-                var v = await _volume.DequeueAsync(cancellation);
-
-                counter++;
-
-                //_logger.LogDebug($"Master Out Level: {string.Join(',', v.Levels)}:{string.Join(',', v.Peaks)}");
-
-                yield return v.WithoutInfinity();
+            }
+            finally
+            {
+                _logger.LogDebug($"Ending volume notification streaming for client {Context.ConnectionId}");
             }
         }
     }
