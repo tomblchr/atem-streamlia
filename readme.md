@@ -11,6 +11,7 @@ This application lives along side the ATEM Software Control software (Windows on
 * Run Macros
 * Run between Key Frames
 * Upstream and Downstream Keys
+* Livestream Preview
 
 ## Building
 
