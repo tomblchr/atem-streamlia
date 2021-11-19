@@ -6,7 +6,7 @@ const path = require("path");
 module.exports = {
     entry: "./src/index.tsx",
     output: {
-        path: path.resolve(__dirname, "public"),
+        path: path.resolve(__dirname, "build"),
         filename: "[name].[chunkhash].js",
         publicPath: "/"
     },
@@ -22,7 +22,14 @@ module.exports = {
             {
                 test: /\.css$/,
                 use: [MiniCssExtractPlugin.loader, "css-loader"]
-            }
+            },
+            {
+                test: /\.(js)$/,
+                exclude: /node_modules/,
+                use: {
+                    loader: 'babel-loader'
+                }
+            },
         ]
     },
     plugins: [
