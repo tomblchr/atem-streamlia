@@ -22,3 +22,6 @@
 
 # except build/, which is used as an MSBuild target.
 !**/packages/build/
+
+# macos
+.DS_Store
