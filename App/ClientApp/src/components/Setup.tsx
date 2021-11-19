@@ -93,23 +93,23 @@ const Setup = ({ server, livestreamUrl, liveStreamEnabled, onLivestreamUrlChange
         </div>
         <h3>Streaming</h3>
         <div className="well well-column">
-            <div className="custom-control custom-switch">
-                <input type="checkbox" className="custom-control-input" id="customSwitch1" onChange={goLive} />
-                <label className="custom-control-label" htmlFor="customSwitch1">Enable the livestream</label>
+            <div className="form-check form-switch">
+                <input className="form-check-input" type="checkbox" role="switch" id="customSwitch1" onChange={goLive} />
+                <label className="form-check-label" htmlFor="customSwitch1"> Enable Livestream</label>
             </div>
-
-            <div className="custom-control custom-switch">
-                <input type="checkbox" className="custom-control-input" id="customSwitch2" checked={liveStreamEnabled} onChange={handleLivestreamEnabledChange} />
-                <label className="custom-control-label" htmlFor="customSwitch2">Enable livestream preview</label>
-            </div>
-
+        </div>
+        <h3>Preview</h3>
+        <div className="well well-column">
             <div className="input-group mb-3">
                 <div className="input-group-prepend">
                     <span className="input-group-text" id="basic-addon1">Livestream URL:</span>
                 </div>
                 <input type="text" className="form-control" placeholder={livestreamUrl} aria-label="livestreamurl" aria-describedby="basic-addon1" onChange={handleLivestreamUrlChange} />
             </div>
-
+            <div className="form-check form-switch">
+                <input className="form-check-input" type="checkbox" role="switch" id="customSwitch2" checked={liveStreamEnabled} onChange={handleLivestreamEnabledChange} />
+                <label className="form-check-label" htmlFor="customSwitch2"> Enable Livestream Preview</label>
+            </div>
         </div>
         <h3>Instructions</h3>
         <div className="well" style={{ display: "block" }}>
