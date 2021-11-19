@@ -1,4 +1,4 @@
-﻿export async function apiTransition(): Promise<Response> {
+export async function apiTransition(): Promise<Response> {
     const options: RequestInit = {
         method: "POST"
     };

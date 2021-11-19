@@ -1,5 +1,4 @@
-﻿import * as React from "react";
-import { HubConnection, HubConnectionBuilder, HubConnectionState, LogLevel } from "@microsoft/signalr";
+import { HubConnection, HubConnectionBuilder, LogLevel } from "@microsoft/signalr";
 
 class ServerHubConnection {
 

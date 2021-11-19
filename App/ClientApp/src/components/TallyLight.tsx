@@ -1,4 +1,4 @@
-﻿import * as React from "react";
+import * as React from "react";
 import { IInput } from "./Inputs";
 import ServerHubConnection from "./ServerHubConnection";
 

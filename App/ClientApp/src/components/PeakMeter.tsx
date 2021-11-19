@@ -1,7 +1,5 @@
 import * as React from "react";
-import * as CSS from "csstype";
-import { Framer, SkipBack } from "react-feather";
-import { HubConnection, HubConnectionState, ISubscription } from "@microsoft/signalr";
+import { HubConnection } from "@microsoft/signalr";
 
 export interface IPeakMeterProps {
     vertical: boolean;

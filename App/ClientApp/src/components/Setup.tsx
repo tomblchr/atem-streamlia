@@ -1,9 +1,6 @@
 import * as React from "react";
-import { HubConnection, HubConnectionBuilder, HubConnectionState, LogLevel } from "@microsoft/signalr";
-import QRCode, { displayName } from "qrcode.react";
+import QRCode from "qrcode.react";
 import { hostURL } from "../api/atemconnection";
-import ConnectionMonitor from "./ConnectionMonitor";
-import IConnectToServer from "./IConnectToServer";
 import ServerHubConnection from "./ServerHubConnection";
 
 interface ISetupState {

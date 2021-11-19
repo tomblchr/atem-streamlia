@@ -1,4 +1,4 @@
-﻿import * as React from "react";
+import * as React from "react";
 import Inputs, { IInput } from "./Inputs";
 import Transitions from "./Transitions";
 import NextTransition from "./NextTransition";

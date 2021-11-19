@@ -1,6 +1,6 @@
 import * as React from "react";
-import { HubConnection, HubConnectionState, LogLevel } from "@microsoft/signalr";
-import { AlertTriangle, Camera, Zap, Server, Radio, StopCircle, Sliders } from "react-feather";
+import { HubConnection, HubConnectionState } from "@microsoft/signalr";
+import { AlertTriangle, Server, Radio, StopCircle, Sliders } from "react-feather";
 
 interface IConnectionMonitor {
     connection: HubConnection | undefined;
