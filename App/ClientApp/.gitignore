@@ -23,5 +23,6 @@ yarn-error.log*
 *.js
 *.js.map
 
-# keep scripts
+# keep build scripts
 !/scripts/*.js
+!/config/**/*.js
