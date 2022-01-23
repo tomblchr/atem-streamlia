@@ -175,6 +175,11 @@ namespace SwitcherServer.Atem
             return QueryInterface<IBMDSwitcher, IBMDSwitcherStreamRTMP>.GetObject(o);
         }
 
+        public static IBMDSwitcherRecordAV GetRecordAV(this IBMDSwitcher o)
+        {
+            return QueryInterface<IBMDSwitcher, IBMDSwitcherRecordAV>.GetObject(o);
+        }
+
         /// <summary>
         /// Remove dB values of -infinity
         /// </summary>

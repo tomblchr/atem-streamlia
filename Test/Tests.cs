@@ -23,7 +23,8 @@ namespace SwitcherServerTests
             _switcher = new SwitcherBuilder()
                 .Mediator(new MockMediator())
                 .ConnectionKeeper(new SwitcherConnectionKeeper(new MockMediator(), null))
-                .NetworkIP("10.0.0.201")
+                //.NetworkIP("10.0.0.201")
+                .NetworkIP("192.168.0.218")
                 .Build();
         }
 
