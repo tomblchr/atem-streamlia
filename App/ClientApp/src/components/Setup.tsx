@@ -2,8 +2,10 @@ import * as React from "react";
 import QRCode from "qrcode.react";
 import { hostURL } from "../api/atemconnection";
 import ServerHubConnection from "./ServerHubConnection";
+import { HubConnectionState } from "@microsoft/signalr";
 
 interface ISetupState {
+    // IP address of ATEM
     ipaddress: string;
     host: string;
 }
@@ -35,22 +37,28 @@ const Setup = ({ server, livestreamUrl, liveStreamEnabled, onLivestreamUrlChange
     }, [server]);
 
     React.useEffect(() => {
-    
-        const callapi = () => {
-            hostURL()
-                .then(response => {
-                    response.text().then(value => {
-                        setState({ ipaddress: state.ipaddress, host: value });
-                    });
-                });
-        };
-
         callapi();
-
     }, []);  
 
+    const callapi = (h?: string) => {
+        hostURL(h)
+            .then(response => {
+                response.text().then(value => {
+                    //alert(value);
+                    //setState({ ipaddress: state.ipaddress, host: value });
+                });
+            })
+            .catch(reason => {
+                console.error(reason);
+            });
+    };
+
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setState({ ipaddress: event.target.value, host: state.host });
+        if (event.target.dataset.field === "ipaddress") {
+            setState({ ipaddress: event.target.value, host: state.host });
+        } else if (event.target.dataset.field === "hostipaddress") {
+            setState({ ipaddress: state.ipaddress, host: event.target.value });
+        }
     };
 
     const handleLivestreamUrlChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -63,7 +71,14 @@ const Setup = ({ server, livestreamUrl, liveStreamEnabled, onLivestreamUrlChange
     }
 
     const save = () => {
-        server?.connection.send("SendConnect", state.ipaddress);
+
+        callapi(state.host);
+        
+        if (server?.connection && server.connection.state === HubConnectionState.Connected) {
+            server?.connection.send("SendConnect", state.ipaddress);
+        } else {
+            alert(`No server connection ${state.ipaddress} - ${state.host}`);
+        }
     };
 
     const goLive = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -84,7 +99,13 @@ const Setup = ({ server, livestreamUrl, liveStreamEnabled, onLivestreamUrlChange
                 <div className="input-group-prepend">
                     <span className="input-group-text" id="basic-addon1">ATEM IP Address:</span>
                 </div>
-                <input type="text" className="form-control" placeholder={state.ipaddress} aria-label="ipaddress" aria-describedby="basic-addon1" onChange={handleChange} />
+                <input type="text" data-field="ipaddress" className="form-control" placeholder={state.ipaddress} aria-label="ipaddress" aria-describedby="basic-addon1" onChange={handleChange} />
+            </div>
+            <div className="input-group mb-3">
+                <div className="input-group-prepend">
+                    <span className="input-group-text" id="basic-addon2">Host Agent IP Address:</span>
+                </div>
+                <input type="text" data-field="hostipaddress" className="form-control" placeholder={state.host} aria-label="hostipaddress" aria-describedby="basic-addon2" onChange={handleChange} />
             </div>
             <button type="button" className="btn btn-primary" onClick={e => { save() }}>Save</button>
         </div>
@@ -110,9 +131,9 @@ const Setup = ({ server, livestreamUrl, liveStreamEnabled, onLivestreamUrlChange
         </div>
         <h3>Instructions</h3>
         <div className="well" style={{ display: "block" }}>
-            <p>Open <span>{state.host}</span> in a browser to access this system. </p>
+            <p>Open <a href="https://atem.streamlia.com">https://atem.streamlia.com</a> in a browser to access this system (obviously you have done that already, which is why you are here!). </p>
             <div>
-                <QRCode value={state.host} />
+                <QRCode value="https://atem.streamlia.com" />
             </div>
         </div>
     </section>

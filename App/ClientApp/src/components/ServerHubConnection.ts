@@ -6,7 +6,7 @@ class ServerHubConnection {
 
     public constructor() {
         const newConnection: HubConnection = new HubConnectionBuilder()
-            .withUrl("/atemhub")
+            .withUrl("https://10.0.0.171/atemhub")
             .withAutomaticReconnect({
                 nextRetryDelayInMilliseconds: retryContext => {
                     if (retryContext.elapsedMilliseconds < 60000) {
