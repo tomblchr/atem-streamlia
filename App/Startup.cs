@@ -61,7 +61,9 @@ namespace SwitcherServer
                 .AddPolicy("CorsPolicy", builder => builder
                     .AllowAnyMethod()
                     .AllowAnyHeader()
-                    .AllowCredentials()));
+                    .WithOrigins("http://localhost:3000", "https://atem.streamlia.com")
+                    .AllowCredentials()                                                  // needed for signalr
+                    ));
 
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
