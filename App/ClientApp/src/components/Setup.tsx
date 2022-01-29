@@ -6,8 +6,8 @@ import { HubConnectionState } from "@microsoft/signalr";
 
 interface ISetupState {
     // IP address of ATEM
-    ipaddress: string;
-    host: string;
+    atemIpAddress: string;
+    hostAgentIpAddress: string;
 }
 
 interface ISetupProps {
@@ -15,12 +15,13 @@ interface ISetupProps {
     liveStreamEnabled: boolean;
     onLivestreamUrlChange: Function;
     onLivestreamEnabledChange: Function;
+    onHostAgentNetworkLocationChange: Function;
     server: ServerHubConnection | undefined;
 }
 
-const Setup = ({ server, livestreamUrl, liveStreamEnabled, onLivestreamUrlChange, onLivestreamEnabledChange }: ISetupProps): React.ReactElement => {
+const Setup = ({ server, livestreamUrl, liveStreamEnabled, onLivestreamUrlChange, onLivestreamEnabledChange, onHostAgentNetworkLocationChange }: ISetupProps): React.ReactElement => {
     
-    const [state, setState] = React.useState<ISetupState>({ ipaddress: "10.0.0.201", host: "" });
+    const [state, setState] = React.useState<ISetupState>({ atemIpAddress: "10.0.0.201", hostAgentIpAddress: "localhost" });
 
     React.useEffect(() => {
 
@@ -37,15 +38,19 @@ const Setup = ({ server, livestreamUrl, liveStreamEnabled, onLivestreamUrlChange
     }, [server]);
 
     React.useEffect(() => {
-        callapi();
+        callapi(state.hostAgentIpAddress);
     }, []);  
 
-    const callapi = (h?: string) => {
+    const callapi = (h: string) => {
+        if (window.location.host === "atem.streamlia.com") {
+            console.log("Centrally hosted");
+            return;
+        }
         hostURL(h)
             .then(response => {
                 response.text().then(value => {
                     //alert(value);
-                    //setState({ ipaddress: state.ipaddress, host: value });
+                    setState({ atemIpAddress: state.atemIpAddress, hostAgentIpAddress: value });
                 });
             })
             .catch(reason => {
@@ -55,9 +60,9 @@ const Setup = ({ server, livestreamUrl, liveStreamEnabled, onLivestreamUrlChange
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.dataset.field === "ipaddress") {
-            setState({ ipaddress: event.target.value, host: state.host });
+            setState({ atemIpAddress: event.target.value, hostAgentIpAddress: state.hostAgentIpAddress });
         } else if (event.target.dataset.field === "hostipaddress") {
-            setState({ ipaddress: state.ipaddress, host: event.target.value });
+            setState({ atemIpAddress: state.atemIpAddress, hostAgentIpAddress: event.target.value });
         }
     };
 
@@ -72,12 +77,13 @@ const Setup = ({ server, livestreamUrl, liveStreamEnabled, onLivestreamUrlChange
 
     const save = () => {
 
-        callapi(state.host);
-        
+        onHostAgentNetworkLocationChange(state.hostAgentIpAddress);
+        callapi(state.hostAgentIpAddress);
+
         if (server?.connection && server.connection.state === HubConnectionState.Connected) {
-            server?.connection.send("SendConnect", state.ipaddress);
+            server?.connection.send("SendConnect", state.atemIpAddress);
         } else {
-            alert(`No server connection ${state.ipaddress} - ${state.host}`);
+            console.error(`No server connection ${state.atemIpAddress} - ${state.hostAgentIpAddress}`);
         }
     };
 
@@ -99,13 +105,13 @@ const Setup = ({ server, livestreamUrl, liveStreamEnabled, onLivestreamUrlChange
                 <div className="input-group-prepend">
                     <span className="input-group-text" id="basic-addon1">ATEM IP Address:</span>
                 </div>
-                <input type="text" data-field="ipaddress" className="form-control" placeholder={state.ipaddress} aria-label="ipaddress" aria-describedby="basic-addon1" onChange={handleChange} />
+                <input type="text" data-field="ipaddress" className="form-control" placeholder={state.atemIpAddress} aria-label="ipaddress" aria-describedby="basic-addon1" onChange={handleChange} />
             </div>
             <div className="input-group mb-3">
                 <div className="input-group-prepend">
                     <span className="input-group-text" id="basic-addon2">Host Agent IP Address:</span>
                 </div>
-                <input type="text" data-field="hostipaddress" className="form-control" placeholder={state.host} aria-label="hostipaddress" aria-describedby="basic-addon2" onChange={handleChange} />
+                <input type="text" data-field="hostipaddress" className="form-control" placeholder={state.hostAgentIpAddress} aria-label="hostipaddress" aria-describedby="basic-addon2" onChange={handleChange} />
             </div>
             <button type="button" className="btn btn-primary" onClick={e => { save() }}>Save</button>
         </div>

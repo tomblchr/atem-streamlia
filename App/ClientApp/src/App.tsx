@@ -17,15 +17,17 @@ import ConnectionMonitor from './components/ConnectionMonitor';
 interface IAppState {
     livestreamUrl: string;
     livestreamEnabled: boolean;
+    hostAgentNetworkLocation: string;
     server: ServerHubConnection | undefined;
 }
 
 const App = (): JSX.Element => {
 
-    const [state, setState] = React.useState<IAppState>({ livestreamUrl: "", livestreamEnabled: false, server: undefined });
+    const [state, setState] = React.useState<IAppState>({ livestreamUrl: "", livestreamEnabled: false, server: undefined, hostAgentNetworkLocation: "10.0.0.171" });
 
     React.useEffect(() => {
-        const newConnection = new ServerHubConnection();
+        
+        const newConnection = new ServerHubConnection(state.hostAgentNetworkLocation);
 
         setState({ ...state, server: newConnection });
 
@@ -34,7 +36,7 @@ const App = (): JSX.Element => {
             newConnection.connection.stop();
         };
 
-    }, []);
+    }, [state.hostAgentNetworkLocation]);
 
     const handleLivestreamUrlChange = (value: string) => {
         setState({...state, livestreamUrl: value });
@@ -42,6 +44,10 @@ const App = (): JSX.Element => {
 
     const handleLivestreamEnabledChange = (value: boolean) => {
         setState({ ...state, livestreamEnabled: value });
+    }
+
+    const handleHostAgentNetworkLocationChange = (value: string) => {
+        setState({...state, hostAgentNetworkLocation: value});
     }
 
     return (
@@ -69,7 +75,8 @@ const App = (): JSX.Element => {
                     livestreamUrl={state.livestreamUrl}
                     liveStreamEnabled={state.livestreamEnabled}
                     onLivestreamUrlChange={handleLivestreamUrlChange}
-                    onLivestreamEnabledChange={handleLivestreamEnabledChange} />
+                    onLivestreamEnabledChange={handleLivestreamEnabledChange}
+                    onHostAgentNetworkLocationChange={handleHostAgentNetworkLocationChange} />
             </Route>
         </Layout>
     );
