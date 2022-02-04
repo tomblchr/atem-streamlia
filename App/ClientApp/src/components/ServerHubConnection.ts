@@ -48,7 +48,7 @@ class ServerHubConnection {
 
     getValidUrl(hostname: string, path: string): string {
         try {
-            let urlToTry = `https://${hostname}${path}`;
+            let urlToTry = `http://${hostname}${path}`;
             new URL(urlToTry);
             return urlToTry;
         }
