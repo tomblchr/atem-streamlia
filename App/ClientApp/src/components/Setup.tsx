@@ -53,7 +53,6 @@ const Setup = ({ server, livestreamUrl, liveStreamEnabled, onLivestreamUrlChange
                 });
             })
             .catch(reason => {
-                window.open(h);
                 console.error(reason);
             });
     };

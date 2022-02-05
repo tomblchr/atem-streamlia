@@ -1,4 +1,4 @@
-import { HubConnection, HubConnectionBuilder, LogLevel } from "@microsoft/signalr";
+import { HttpTransportType, HubConnection, HubConnectionBuilder, LogLevel } from "@microsoft/signalr";
 
 class ServerHubConnection {
 
@@ -41,6 +41,7 @@ class ServerHubConnection {
             })
             .catch((err) => {
                 console.error(`Unable to start signalr connection - ${err}`);
+                window.open(url);
             });
 
         this.connection.onreconnected(id => {
