@@ -49,11 +49,11 @@ const Setup = ({ server, livestreamUrl, liveStreamEnabled, onLivestreamUrlChange
         hostURL(h)
             .then(response => {
                 response.text().then(value => {
-                    //alert(value);
                     setState({ atemIpAddress: state.atemIpAddress, hostAgentIpAddress: value });
                 });
             })
             .catch(reason => {
+                window.open(h);
                 console.error(reason);
             });
     };
