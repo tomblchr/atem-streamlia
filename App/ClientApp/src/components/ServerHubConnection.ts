@@ -10,6 +10,8 @@ class ServerHubConnection {
         if (hostname && hostname !== "localhost" && hostname !== "") {
             // localhost here means the client appis being served up by the agent/backend service
             url = this.getValidUrl(hostname, url);
+
+            console.info(`Connection to ${url}...`);
         }
 
         const newConnection: HubConnection = new HubConnectionBuilder()
@@ -48,7 +50,7 @@ class ServerHubConnection {
 
     getValidUrl(hostname: string, path: string): string {
         try {
-            let urlToTry = `http://${hostname}${path}`;
+            let urlToTry = `https://${hostname}${path}`;
             new URL(urlToTry);
             return urlToTry;
         }
