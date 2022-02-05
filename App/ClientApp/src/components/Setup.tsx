@@ -15,13 +15,14 @@ interface ISetupProps {
     liveStreamEnabled: boolean;
     onLivestreamUrlChange: Function;
     onLivestreamEnabledChange: Function;
+    hostAgentNetworkLocation: string;
     onHostAgentNetworkLocationChange: Function;
     server: ServerHubConnection | undefined;
 }
 
-const Setup = ({ server, livestreamUrl, liveStreamEnabled, onLivestreamUrlChange, onLivestreamEnabledChange, onHostAgentNetworkLocationChange }: ISetupProps): React.ReactElement => {
+const Setup = ({ server, livestreamUrl, liveStreamEnabled, hostAgentNetworkLocation, onLivestreamUrlChange, onLivestreamEnabledChange, onHostAgentNetworkLocationChange }: ISetupProps): React.ReactElement => {
     
-    const [state, setState] = React.useState<ISetupState>({ atemIpAddress: "10.0.0.201", hostAgentIpAddress: "localhost" });
+    const [state, setState] = React.useState<ISetupState>({ atemIpAddress: "10.0.0.201", hostAgentIpAddress: hostAgentNetworkLocation });
 
     React.useEffect(() => {
 
@@ -35,7 +36,7 @@ const Setup = ({ server, livestreamUrl, liveStreamEnabled, onLivestreamUrlChange
             server?.connection.off("ReceiveLivestreamPreviewUrl");
         };
 
-    }, [server]);
+    }, [server, onLivestreamUrlChange]);
 
     React.useEffect(() => {
         callapi(state.hostAgentIpAddress);
@@ -49,7 +50,7 @@ const Setup = ({ server, livestreamUrl, liveStreamEnabled, onLivestreamUrlChange
         hostURL(h)
             .then(response => {
                 response.text().then(value => {
-                    setState({ atemIpAddress: state.atemIpAddress, hostAgentIpAddress: value });
+                    setState({ ...state, atemIpAddress: state.atemIpAddress });
                 });
             })
             .catch(reason => {
@@ -102,16 +103,16 @@ const Setup = ({ server, livestreamUrl, liveStreamEnabled, onLivestreamUrlChange
         <div className="well">
             <div className="input-group mb-3">
                 <div className="input-group-prepend">
-                    <span className="input-group-text" id="basic-addon1">ATEM IP Address:</span>
-                </div>
-                <input type="text" data-field="ipaddress" className="form-control" placeholder={state.atemIpAddress} aria-label="ipaddress" aria-describedby="basic-addon1" onChange={handleChange} />
-            </div>
-            <div className="input-group mb-3">
-                <div className="input-group-prepend">
-                    <span className="input-group-text" id="basic-addon2">Host Agent IP Address:</span>
+                    <span className="input-group-text" id="basic-addon2">Agent Host or IP Address:</span>
                 </div>
                 <input type="text" data-field="hostipaddress" className="form-control" placeholder={state.hostAgentIpAddress} aria-label="hostipaddress" aria-describedby="basic-addon2" onChange={handleChange} />
             </div>
+            <div className="input-group mb-3">
+                <div className="input-group-prepend">
+                    <span className="input-group-text" id="basic-addon1">ATEM IP Address:</span>
+                </div>
+                <input type="text" data-field="ipaddress" className="form-control" placeholder={state.atemIpAddress} aria-label="ipaddress" aria-describedby="basic-addon1" onChange={handleChange} />
+            </div>            
             <button type="button" className="btn btn-primary" onClick={e => { save() }}>Save</button>
         </div>
         <h3>Streaming</h3>
@@ -136,7 +137,7 @@ const Setup = ({ server, livestreamUrl, liveStreamEnabled, onLivestreamUrlChange
         </div>
         <h3>Instructions</h3>
         <div className="well" style={{ display: "block" }}>
-            <p>Open <a href="https://atem.streamlia.com">https://atem.streamlia.com</a> in a browser to access this system (obviously you have done that already, which is why you are here!). </p>
+            <p>Open <a href="https://atem.streamlia.com">https://atem.streamlia.com</a>. Set the network location of the host agent.</p>
             <div>
                 <QRCode value="https://atem.streamlia.com" />
             </div>

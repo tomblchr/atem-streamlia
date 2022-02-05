@@ -18,12 +18,16 @@ interface IAppState {
     livestreamUrl: string;
     livestreamEnabled: boolean;
     hostAgentNetworkLocation: string;
+    atemNetworkLocation: string;
     server: ServerHubConnection | undefined;
 }
 
 const App = (): JSX.Element => {
 
-    const [state, setState] = React.useState<IAppState>({ livestreamUrl: "", livestreamEnabled: false, server: undefined, hostAgentNetworkLocation: "10.0.0.171" });
+    const hostAgentNetworkLocationDefault = window.localStorage.getItem("hostAgentNetworkLocation") ?? "";
+    const atemNetworkLocationDefault = window.localStorage.getItem("atemNetworkLocation") ?? "";
+
+    const [state, setState] = React.useState<IAppState>({ server: undefined, livestreamUrl: "", livestreamEnabled: false, hostAgentNetworkLocation: hostAgentNetworkLocationDefault, atemNetworkLocation: atemNetworkLocationDefault });
 
     React.useEffect(() => {
         
@@ -48,6 +52,12 @@ const App = (): JSX.Element => {
 
     const handleHostAgentNetworkLocationChange = (value: string) => {
         setState({...state, hostAgentNetworkLocation: value});
+        window.localStorage.setItem("hostAgentNetworkLocation", value);
+    }
+
+    const handleAtemNetworkLocationChange = (value: string) => {
+        setState({...state, atemNetworkLocation: value});
+        window.localStorage.setItem("atemNetworkLocation", value);
     }
 
     return (
@@ -74,6 +84,7 @@ const App = (): JSX.Element => {
                 <Setup server={state.server}
                     livestreamUrl={state.livestreamUrl}
                     liveStreamEnabled={state.livestreamEnabled}
+                    hostAgentNetworkLocation={state.hostAgentNetworkLocation}
                     onLivestreamUrlChange={handleLivestreamUrlChange}
                     onLivestreamEnabledChange={handleLivestreamEnabledChange}
                     onHostAgentNetworkLocationChange={handleHostAgentNetworkLocationChange} />

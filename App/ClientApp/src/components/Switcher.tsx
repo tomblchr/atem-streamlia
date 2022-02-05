@@ -36,10 +36,11 @@ const Switcher = ({ server, onLivestreamUrlChange }: ISwitcherProps): React.Reac
             console.log(`ReceiveSceneChange - ${msg.downstreamKeyOnAir}`);
             setScene(message);
         });
-        server?.connection.on("ReceiveLivestreamPreviewUrl", message => {
-            console.log(`ReceiveLivestreamPreviewUrl - ${message}`);
-            onLivestreamUrlChange(message);
-        });
+
+        //server?.connection.on("ReceiveLivestreamPreviewUrl", message => {
+        //    console.log(`ReceiveLivestreamPreviewUrl - ${message}`);
+        //    onLivestreamUrlChange(message);
+        //});
 
         if (server?.connection.state === HubConnectionState.Connected) {
             server?.connection.send("SendSceneChange");
