@@ -1,6 +1,7 @@
 {
-  "short_name": "SwitcherServer",
-  "name": "SwitcherServer",
+  "name": "streamlia ATEM controller",
+  "short_name": "streamlia",
+  "description": "Control your ATEM video switcher remotely.",
   "icons": [
     {
       "src": "favicon.ico",
@@ -9,7 +10,7 @@
     }
   ],
   "start_url": "./index.html",
-  "display": "standalone",
+  "display": "fullscreen",
   "theme_color": "#000000",
   "background_color": "#ffffff"
 }

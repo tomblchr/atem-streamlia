@@ -141,6 +141,7 @@ const Setup = ({ server, livestreamUrl, liveStreamEnabled, hostAgentNetworkLocat
             <div>
                 <QRCode value="https://atem.streamlia.com" />
             </div>
+            <p>Version: { process.env.REACT_APP_COMMIT_HASH } Environment: { process.env.NODE_ENV }</p>
         </div>
     </section>
 }
