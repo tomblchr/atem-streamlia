@@ -20,6 +20,7 @@
     <FileVersion>2.0.0.0</FileVersion>
     <Version>2.0.0</Version>
     <ApplicationIcon>favicon.ico</ApplicationIcon>
+    <UserSecretsId>8f4dc8ee-8546-4726-8e94-a79526e2bd10</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
