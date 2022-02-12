@@ -107,6 +107,9 @@
     <PropertyGroup>
       <CurrentDate>$([System.DateTime]::Now.ToString(yyyy.MM.dd))</CurrentDate>
     </PropertyGroup>
+    <Delete Files="$(OutputPath)publish\SwitcherServer.pdb" />
+    <Delete Files="$(OutputPath)publish\SwitcherServer.Views.pdb" />
+    <Delete Files="$(OutputPath)publish\appsettings.Development.json" />
     <ZipDirectory Overwrite="true" SourceDirectory="$(OutputPath)\publish" DestinationFile="$(MSBuildProjectDirectory)\bin\SwitcherServer.$(CurrentDate).zip" />
   </Target>
 
