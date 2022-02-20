@@ -80,7 +80,6 @@ const Setup = ({ server, livestreamUrl, liveStreamEnabled, hostAgentNetworkLocat
     const save = () => {
 
         onHostAgentNetworkLocationChange(state.hostAgentIpAddress);
-        callapi(state.hostAgentIpAddress);
 
         if (server?.connection && server.connection.state === HubConnectionState.Connected) {
             server?.connection.send("SendConnect", state.atemIpAddress);
