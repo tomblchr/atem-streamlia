@@ -1,5 +1,5 @@
 import * as React from "react";
-import { HubConnection } from "@microsoft/signalr";
+import { HubConnection, HubConnectionState } from "@microsoft/signalr";
 
 export interface IPeakMeterProps {
     vertical: boolean;
@@ -60,12 +60,14 @@ const PeakMeter = ({ vertical, connection, height, width }: IPeakMeterProps): Re
 
     var next = React.useRef<IIndexedPeakMetersState>(init);
     var isMounted = React.useRef<boolean>(false);
+
     
     React.useEffect(() => {
 
         isMounted.current = true;
+        const isConnected = connection?.state === HubConnectionState.Connected;
 
-        const subscription = connection?.stream("ReceiveVolumeChange").subscribe({
+        const subscription = isConnected ? connection?.stream("ReceiveVolumeChange").subscribe({
             next: (message) => {
                 volumeMessageHandler(message);
             },
@@ -75,7 +77,7 @@ const PeakMeter = ({ vertical, connection, height, width }: IPeakMeterProps): Re
             error: (err) => {
                 console.error(err);
             }
-        });
+        }) : undefined;
 
         return () => {
             isMounted.current = false;

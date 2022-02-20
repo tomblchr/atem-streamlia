@@ -1,6 +1,7 @@
 import * as React from "react";
 import { IInput } from "./Inputs";
 import ServerHubConnection from "./ServerHubConnection";
+import { HubConnectionState } from "@microsoft/signalr";
 
 interface ISceneDetail {
     program: number;
@@ -27,7 +28,11 @@ const TallyLight = ({ server }: ITallyLightProps): React.ReactElement => {
             setScene(message);
         });
 
-        server?.connection.send("SendSceneChange");
+        if (server?.connection.state === HubConnectionState.Connected) {
+            server?.connection.send("SendSceneChange");
+        } else {
+            console.debug("SignalR not connected to server");
+        }
 
         return () => {
             // clean up
