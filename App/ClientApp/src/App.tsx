@@ -33,7 +33,7 @@ const App = (): JSX.Element => {
         
         const newConnection = new ServerHubConnection(state.hostAgentNetworkLocation);
 
-        setState({ ...state, server: newConnection });
+        setState(s => { return {...s, server: newConnection }});
 
         return () => {
             // clean up
@@ -54,12 +54,12 @@ const App = (): JSX.Element => {
         setState({...state, hostAgentNetworkLocation: value});
         window.localStorage.setItem("hostAgentNetworkLocation", value);
     }
-
+/*
     const handleAtemNetworkLocationChange = (value: string) => {
         setState({...state, atemNetworkLocation: value});
         window.localStorage.setItem("atemNetworkLocation", value);
     }
-
+*/
     return (
         <Layout>
             <ConnectionMonitor connection={state.server?.connection} />

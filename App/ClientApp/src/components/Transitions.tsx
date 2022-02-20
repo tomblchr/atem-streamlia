@@ -32,12 +32,12 @@ const Transitions = ({ connection }: ITransitionsProps): React.ReactElement => {
         connection?.on("ReceiveInTransition", message => {
             const it: boolean = message;
             console.log(`ReceiveInTransition - ${it}`);
-            setState({ inTransition: it, position: state.position, framesRemaining: state.framesRemaining });
+            setState(s => {return {...s, inTransition: it}});
         });
         connection?.on("ReceiveTransitionPosition", message => {
             const it: ITransistionState = message;
             console.log(`ReceiveTransitionPosition - ${it.position},${it.framesRemaining}`);
-            setState({ inTransition: it.inTransition || it.position > 0, position: it.position, framesRemaining: it.framesRemaining });
+            setState(s => { return {...s, inTransition: it.inTransition || it.position > 0 }});
         });
 
         return () => {

@@ -67,6 +67,20 @@ const PeakMeter = ({ vertical, connection, height, width }: IPeakMeterProps): Re
         isMounted.current = true;
         const isConnected = connection?.state === HubConnectionState.Connected;
 
+        const volumeMessageHandler = (message: IPeakMetersState): void => {
+            if (message && isMounted.current) {
+                try {
+                    const current: IIndexedPeakMetersState = { ...next.current };
+                    current[message.inputId] = message;
+                    next.current = current;
+                    requestAnimationFrame(updateMeter);
+                }
+                catch (e) {
+                    console.error(e);
+                }
+            }
+        };
+
         const subscription = isConnected ? connection?.stream("ReceiveVolumeChange").subscribe({
             next: (message) => {
                 volumeMessageHandler(message);
@@ -86,19 +100,7 @@ const PeakMeter = ({ vertical, connection, height, width }: IPeakMeterProps): Re
 
     }, [connection]);
 
-    const volumeMessageHandler = (message: IPeakMetersState): void => {
-        if (message && isMounted.current) {
-            try {
-                const current: IIndexedPeakMetersState = { ...next.current };
-                current[message.inputId] = message;
-                next.current = current;
-                requestAnimationFrame(updateMeter);
-            }
-            catch (e) {
-                console.error(e);
-            }
-        }
-    };
+
 
     // volume can be received at hundreds of messages per second
     // only update the screen at the animation rate of the browser

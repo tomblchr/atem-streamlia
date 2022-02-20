@@ -39,24 +39,26 @@ const Setup = ({ server, livestreamUrl, liveStreamEnabled, hostAgentNetworkLocat
     }, [server, onLivestreamUrlChange]);
 
     React.useEffect(() => {
-        callapi(state.hostAgentIpAddress);
-    }, []);  
 
-    const callapi = (h: string) => {
-        if (window.location.host === "atem.streamlia.com") {
-            console.log("Centrally hosted");
-            return;
-        }
-        hostURL(h)
-            .then(response => {
-                response.text().then(value => {
-                    setState({ ...state, atemIpAddress: state.atemIpAddress });
+        const callapi = (h: string) => {
+            if (window.location.host === "atem.streamlia.com") {
+                console.log("Centrally hosted");
+                return;
+            }
+            hostURL(h)
+                .then(response => {
+                    response.text().then(value => {
+                        setState(s => {return { ...s, atemIpAddress: state.atemIpAddress }});
+                    });
+                })
+                .catch(reason => {
+                    console.error(reason);
                 });
-            })
-            .catch(reason => {
-                console.error(reason);
-            });
-    };
+        };
+
+        callapi(state.hostAgentIpAddress);
+
+    }, [state.hostAgentIpAddress, state.atemIpAddress]);  
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.dataset.field === "ipaddress") {
@@ -78,7 +80,6 @@ const Setup = ({ server, livestreamUrl, liveStreamEnabled, hostAgentNetworkLocat
     const save = () => {
 
         onHostAgentNetworkLocationChange(state.hostAgentIpAddress);
-        callapi(state.hostAgentIpAddress);
 
         if (server?.connection && server.connection.state === HubConnectionState.Connected) {
             server?.connection.send("SendConnect", state.atemIpAddress);
