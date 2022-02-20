@@ -3,10 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Cryptography.X509Certificates;
-using System.Threading.Tasks;
 
 namespace SwitcherServer
 {
@@ -48,8 +45,10 @@ namespace SwitcherServer
                 })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    var config = BuildConfiguration(args);
-                    var port = config.GetValue<int>("HostPort", 5001);
+                    var config   = BuildConfiguration(args);
+                    var port     = config.GetValue<int>("HostPort", 5001);
+                    var certFile = config.GetValue<string>("CertificateFile", string.Empty);
+                    var password = config.GetValue<string>("CertificatePassword", string.Empty);
 
                     webBuilder.UseStartup<Startup>();
                     webBuilder.UseConfiguration(config);
@@ -58,17 +57,42 @@ namespace SwitcherServer
                         options.ListenAnyIP(port, configure =>
                         {
                             configure.Protocols = Microsoft.AspNetCore.Server.Kestrel.Core.HttpProtocols.Http1;
-#if DEBUG
-                            // will use the dotnetcore development certificates
-                            configure.UseHttps();
-#else
-                            var csi = new CertificateStoreInspector(_loggerFactory.CreateLogger<CertificateStoreInspector>());
-                            var certificate = csi.GetCertificate("Root", StoreLocation.CurrentUser) 
-                                ?? csi.GetCertificate("My", StoreLocation.CurrentUser);
-
-                            if (certificate != null)
+#if DEBUGS
+                            
+                            if (port == 443)
                             {
-                                configure.UseHttps(certificate);
+                                if (certFile == string.Empty)
+                                {
+                                    _logger.LogInformation($"Use the dotnetcore development certificates");
+                                    configure.UseHttps();
+                                }
+                                else
+                                {
+                                    _logger.LogInformation($"Using certificate from {certFile}");
+                                    configure.UseHttps(certFile, password);
+                                }
+                            }
+#else
+                            if (port == 443)
+                            {
+                                if (certFile == string.Empty)
+                                {
+                                    var csi = new CertificateStoreInspector(_loggerFactory.CreateLogger<CertificateStoreInspector>());
+                                    var certificate = csi.GetCertificate("Root", StoreLocation.CurrentUser) ?? csi.GetCertificate("My", StoreLocation.CurrentUser);
+                                    if (certificate == null)
+                                    {
+                                        _logger.LogError("Unable to find a certificate for HTTPS");
+                                    }
+                                    else
+                                    {
+                                        configure.UseHttps(certificate);
+                                    }    
+                                }
+                                else
+                                {
+                                    _logger.LogInformation($"Using certificate from {certFile}");
+                                    configure.UseHttps(certFile, password);
+                                }
                             }
 #endif
                         });
@@ -80,6 +104,8 @@ namespace SwitcherServer
             return new ConfigurationBuilder()
                 .SetBasePath(GetRootPath())
                 .AddJsonFile("appsettings.json", true)
+                .AddUserSecrets<Program>()
+                .AddEnvironmentVariables()
                 .AddCommandLine(args)
                 .Build();
         }

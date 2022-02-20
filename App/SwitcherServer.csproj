@@ -16,10 +16,11 @@
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <TargetLatestRuntimePatch>true</TargetLatestRuntimePatch>
-    <AssemblyVersion>2.0.0.0</AssemblyVersion>
-    <FileVersion>2.0.0.0</FileVersion>
-    <Version>2.0.0</Version>
+    <AssemblyVersion>3.0.0.0</AssemblyVersion>
+    <FileVersion>3.0.0.0</FileVersion>
+    <Version>3.0.0</Version>
     <ApplicationIcon>favicon.ico</ApplicationIcon>
+    <UserSecretsId>8f4dc8ee-8546-4726-8e94-a79526e2bd10</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -106,6 +107,9 @@
     <PropertyGroup>
       <CurrentDate>$([System.DateTime]::Now.ToString(yyyy.MM.dd))</CurrentDate>
     </PropertyGroup>
+    <Delete Files="$(OutputPath)publish\SwitcherServer.pdb" />
+    <Delete Files="$(OutputPath)publish\SwitcherServer.Views.pdb" />
+    <Delete Files="$(OutputPath)publish\appsettings.Development.json" />
     <ZipDirectory Overwrite="true" SourceDirectory="$(OutputPath)\publish" DestinationFile="$(MSBuildProjectDirectory)\bin\SwitcherServer.$(CurrentDate).zip" />
   </Target>
 
