@@ -50,6 +50,7 @@ const TallyLight = ({ server }: ITallyLightProps): React.ReactElement => {
 
     return (
         <section className="channels">
+            <h3>Tally Light</h3>
             <div className={isLive ? "well tally active" : "well tally"}>
                 <p>Camera {isLive ? "LIVE!" : isPreview ? "PREVIEW!" : "Off" }</p>
             </div>
