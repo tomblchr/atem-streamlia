@@ -1,4 +1,4 @@
-﻿import ServerHubConnection from "./ServerHubConnection";
+import ServerHubConnection from "./ServerHubConnection";
 
 interface IConnectToServer {
     server: ServerHubConnection | null;
