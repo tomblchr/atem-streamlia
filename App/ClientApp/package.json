@@ -1,6 +1,6 @@
 {
   "name": "switcherserver",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
   "homepage": "https://atem.streamlia.com",
   "license": "MIT",
@@ -94,8 +94,7 @@
   },
   "scripts": {
     "start": "node scripts/start.js",
-    "build": "node scripts/build.js && webpack --mode=production",
-    "test": "cross-env CI=true node scripts/test.js --env=jsdom",
+    "build": "node scripts/build.js && webpack --progress --mode=production",
     "lint": "eslint ./src/",
     "release": "npm run build && webpack --mode=production",
     "publish": "npm run release && dotnet publish -c Release"

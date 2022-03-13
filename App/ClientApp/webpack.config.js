@@ -45,7 +45,16 @@ module.exports = {
         }),
         new MiniCssExtractPlugin({
             filename: "css/[name].[chunkhash].css"
-        })
+        }),
+        {
+            apply: (compiler) => {
+                compiler.hooks.done.tap("DonePlugin", (stats) => {
+                    //ensure that webpack exits once compile is done
+                    console.log(`Compile is done! ${stats}`);
+                    setTimeout(() => { process.exit(0) });
+                });
+            }
+        }
     ],
     optimization: {
         runtimeChunk: 'single',
@@ -62,5 +71,6 @@ module.exports = {
     performance: {
         maxEntrypointSize: 1024000,
         maxAssetSize: 1024000
-   },
+    },
+    watch: true
 };
