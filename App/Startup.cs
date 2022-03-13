@@ -133,7 +133,7 @@ namespace SwitcherServer
 
         public void OnStarted()
         {
-            _logger.LogInformation($"----------- Open a broswer at {NetworkInspector.GetUrl(Configuration)} ---------------");
+            _logger.LogInformation($"--- Open a browser at {NetworkInspector.GetUrl(Configuration)} or https://atem.streamlia.com (and set the Agent IP address to {NetworkInspector.GetLocalIPv4()}) ---");
         }
 
         public void OnShutdown(object state)
