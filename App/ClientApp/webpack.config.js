@@ -46,5 +46,21 @@ module.exports = {
         new MiniCssExtractPlugin({
             filename: "css/[name].[chunkhash].css"
         })
-    ]
+    ],
+    optimization: {
+        runtimeChunk: 'single',
+        splitChunks: {
+            cacheGroups: {
+                vendor: {
+                    test: /[\\/]node_modules[\\/]/,
+                    name: 'vendors',
+                    chunks: 'all',
+                }
+            }
+        }
+    },
+    performance: {
+        maxEntrypointSize: 1024000,
+        maxAssetSize: 1024000
+   },
 };
