@@ -44,6 +44,12 @@ code {
     }
 }
 
+.button-text {
+    font-size: x-small;    
+    text-align: center;
+    width: 4rem;
+}
+
 .navbar-brand {
     height: 3rem;
 }

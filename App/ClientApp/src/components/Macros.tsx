@@ -16,8 +16,12 @@ interface IMacroState {
 }
 
 const Macros = ({ connection }: IMacroProps): React.ReactElement => {
+    
+    const initial: IMacroState = { macros: [{ id: 0, name: "Something", description: "This is what something does" },
+                                            { id: 1, name: "Something More", description: "This will show slides on the screen"},
+                                            { id: 2, name: "Something Else", description: "How do we wrap this so it is not wider than the button?"}]};
 
-    const [state, setState] = React.useState<IMacroState>({ macros: [] });
+    const [state, setState] = React.useState<IMacroState>(initial);
 
     React.useEffect(() => {
         
@@ -42,11 +46,14 @@ const Macros = ({ connection }: IMacroProps): React.ReactElement => {
         <h3>Macros</h3>
         <div className="well">
             {state.macros.map((c, i) => (
+            <div title={`${c.description}`}>
                 <div key={c.id}
                     className="button"
                     onClick={_ => sendRunMacro(c.id)}>
-                    <p title={`${c.name} - ${c.description}`}>{c.id}</p>
+                    <p>{c.id}</p>
                 </div>
+                <div className="button-text">{c.name}</div>
+            </div>
             ))}
         </div>
     </section>
