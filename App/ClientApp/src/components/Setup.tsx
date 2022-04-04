@@ -3,6 +3,7 @@ import QRCode from "qrcode.react";
 import { hostURL } from "../api/atemconnection";
 import ServerHubConnection from "./ServerHubConnection";
 import { HubConnectionState } from "@microsoft/signalr";
+import { GitHub } from "react-feather";
 
 interface ISetupState {
     // IP address of ATEM
@@ -138,11 +139,14 @@ const Setup = ({ server, livestreamUrl, liveStreamEnabled, hostAgentNetworkLocat
         </div>
         <h3>Instructions</h3>
         <div className="well" style={{ display: "block" }}>
-            <p>Open <a href="https://atem.streamlia.com">https://atem.streamlia.com</a>. Set the network location of the host agent.</p>
+            <p>Open <a href="https://atem.streamlia.com">https://atem.streamlia.com</a>. 
+               Set the network location of the <a href="https://github.com/tomblchr/atem-streamlia/releases">host agent</a>. 
+               See <a href="https://github.com/tomblchr/atem-streamlia"><GitHub /></a> for details.
+               Version: { process.env.REACT_APP_COMMIT_HASH } Environment: { process.env.NODE_ENV }
+            </p>
             <div>
                 <QRCode value="https://atem.streamlia.com" />
             </div>
-            <p>Version: { process.env.REACT_APP_COMMIT_HASH } Environment: { process.env.NODE_ENV }</p>
         </div>
     </section>
 }
