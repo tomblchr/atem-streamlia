@@ -101,7 +101,7 @@ section h3 {
 	background: #222;
 	border-radius: 7px;
 	box-shadow: 0px 0px 3px black inset;
-	display: inline-flex;
+	display: flex;
 	flex-flow: wrap;
 	padding: 10px;
 	position: relative;

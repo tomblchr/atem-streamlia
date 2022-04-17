@@ -25,7 +25,19 @@ interface ISceneDetail {
 
 const Switcher = ({ server, onLivestreamUrlChange }: ISwitcherProps): React.ReactElement => {
 
-    const [scene, setScene] = React.useState<ISceneDetail | undefined>();
+    const demo: ISceneDetail = {
+        program: 3, preview: 2, downstreamKeyOnAir: false, downstreamKeyTieOn: false,
+        inputs: [
+            { id: 0, inputType: 1702392942, name: "1", longName: "Joe Anderson" },
+            { id: 1, inputType: 1702392942, name: "2", longName: "Joe Montana" },
+            { id: 2, inputType: 1702392942, name: "3", longName: "Joe Montana" },
+            { id: 3, inputType: 1702392942, name: "4", longName: "Joe Montana" },
+            { id: 4, inputType: 1702392942, name: "MR", longName: "Joe Montana" },
+            { id: 5, inputType: 1702392942, name: "BL", longName: "Joe Montana" }
+        ]
+    };
+
+    const [scene, setScene] = React.useState<ISceneDetail>(demo);
 
     //const [connection, setConnection] = React.useState<IConnectToServer>({ server: null});
 

@@ -46,7 +46,7 @@ const Macros = ({ connection }: IMacroProps): React.ReactElement => {
         <h3>Macros</h3>
         <div className="well">
             {state.macros.map((c, i) => (
-            <div title={`${c.description}`}>
+            <div title={`${c.description}`} key={`t-${c.id}`}>
                 <div key={c.id}
                     className="button"
                     onClick={_ => sendRunMacro(c.id)}>
