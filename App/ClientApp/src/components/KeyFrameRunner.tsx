@@ -52,18 +52,20 @@ const KeyFrameRunner = ({ connection }: IKeyFrameRunnerProps): React.ReactElemen
 
     return <section className="keyframerunner">
         <h3>Key Frame Runner</h3>
-        <div className="well" style={{ display: "flex", flexDirection: "row" }}>
-            <div className={state.isRunning && state.destination === FlyKeyFrame.FrameA ? "button red" : "button"} onClick={c => sendRunKeyFrame(FlyKeyFrame.FrameA)}>
-                <p>A</p>
-            </div>
-            <div className={state.isRunning && state.destination === FlyKeyFrame.FrameB ? "button red" : "button"} onClick={c => sendRunKeyFrame(FlyKeyFrame.FrameB)}>
-                <p>B</p>
-            </div>
-            <div className={state.isRunning && state.destination === FlyKeyFrame.FrameFull ? "button red" : "button"} onClick={c => sendRunKeyFrame(FlyKeyFrame.FrameFull)}>
-                <p>Full</p>
-            </div>
-            <div className={state.isRunning && state.destination === FlyKeyFrame.FrameInfinityCentreOfKey ? "button red" : "button"} onClick={c => sendRunKeyFrame(FlyKeyFrame.FrameInfinityCentreOfKey)}>
-                <p>&#8734;</p>
+        <div className="well">
+            <div style={{ display: "flex", flexDirection: "row" }}>
+                <div className={state.isRunning && state.destination === FlyKeyFrame.FrameA ? "button red" : "button"} onClick={c => sendRunKeyFrame(FlyKeyFrame.FrameA)}>
+                    <p>A</p>
+                </div>
+                <div className={state.isRunning && state.destination === FlyKeyFrame.FrameB ? "button red" : "button"} onClick={c => sendRunKeyFrame(FlyKeyFrame.FrameB)}>
+                    <p>B</p>
+                </div>
+                <div className={state.isRunning && state.destination === FlyKeyFrame.FrameFull ? "button red" : "button"} onClick={c => sendRunKeyFrame(FlyKeyFrame.FrameFull)}>
+                    <p>Full</p>
+                </div>
+                <div className={state.isRunning && state.destination === FlyKeyFrame.FrameInfinityCentreOfKey ? "button red" : "button"} onClick={c => sendRunKeyFrame(FlyKeyFrame.FrameInfinityCentreOfKey)}>
+                    <p>&#8734;</p>
+                </div>
             </div>
         </div>
     </section>
