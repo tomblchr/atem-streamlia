@@ -1,4 +1,5 @@
 import { HubConnection, HubConnectionBuilder, LogLevel } from "@microsoft/signalr";
+import * as Toast from "./Toaster";
 
 class ServerHubConnection {
 
@@ -40,6 +41,7 @@ class ServerHubConnection {
                 this.connection?.send("SendHealthCheckRequest");
             })
             .catch((err) => {
+                Toast.ToastMessage(`Unable to start signalr connection - ${err}`);
                 console.error(`Unable to start signalr connection - ${err}`);
             });
 

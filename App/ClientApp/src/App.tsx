@@ -13,12 +13,14 @@ import ServerHubConnection from './components/ServerHubConnection';
 import "./global.css";
 import "./custom.css";
 import ConnectionMonitor from './components/ConnectionMonitor';
+import Toaster from './components/Toaster';
 
 interface IAppState {
     livestreamUrl: string;
     livestreamEnabled: boolean;
     hostAgentNetworkLocation: string;
     atemNetworkLocation: string;
+    showToast?: boolean;
     server: ServerHubConnection | undefined;
 }
 
@@ -33,7 +35,7 @@ const App = (): JSX.Element => {
         
         const newConnection = new ServerHubConnection(state.hostAgentNetworkLocation);
 
-        setState(s => { return {...s, server: newConnection }});
+        setState(s => { return {...s, server: newConnection, showToast: true }});
 
         return () => {
             // clean up
@@ -54,6 +56,7 @@ const App = (): JSX.Element => {
         setState({...state, hostAgentNetworkLocation: value});
         window.localStorage.setItem("hostAgentNetworkLocation", value);
     }
+
 /*
     const handleAtemNetworkLocationChange = (value: string) => {
         setState({...state, atemNetworkLocation: value});
@@ -63,6 +66,7 @@ const App = (): JSX.Element => {
     return (
         <Layout>
             <ConnectionMonitor connection={state.server?.connection} />
+            <Toaster message="Welcome!" />
             {state.livestreamEnabled &&
                 <section className='video-player'>
                     <h3>Livestream Preview (Delayed)</h3>
@@ -89,6 +93,7 @@ const App = (): JSX.Element => {
                     onLivestreamEnabledChange={handleLivestreamEnabledChange}
                     onHostAgentNetworkLocationChange={handleHostAgentNetworkLocationChange} />
             </Route>
+            
         </Layout>
     );
 

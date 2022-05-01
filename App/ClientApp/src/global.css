@@ -282,3 +282,7 @@ section.transition {
 .media-thumb input {
   visibility: hidden;
 }
+
+.toast {
+  background-color: #000;
+}
