@@ -9,6 +9,7 @@ interface ISetupState {
     // IP address of ATEM
     atemIpAddress: string;
     hostAgentIpAddress: string;
+    fullscreen: boolean;
 }
 
 interface ISetupProps {
@@ -23,7 +24,7 @@ interface ISetupProps {
 
 const Setup = ({ server, livestreamUrl, liveStreamEnabled, hostAgentNetworkLocation, onLivestreamUrlChange, onLivestreamEnabledChange, onHostAgentNetworkLocationChange }: ISetupProps): React.ReactElement => {
     
-    const [state, setState] = React.useState<ISetupState>({ atemIpAddress: "10.0.0.201", hostAgentIpAddress: hostAgentNetworkLocation });
+    const [state, setState] = React.useState<ISetupState>({ atemIpAddress: "10.0.0.201", hostAgentIpAddress: hostAgentNetworkLocation, fullscreen: (document.fullscreenElement !== null) });
 
     React.useEffect(() => {
 
@@ -63,9 +64,9 @@ const Setup = ({ server, livestreamUrl, liveStreamEnabled, hostAgentNetworkLocat
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.dataset.field === "ipaddress") {
-            setState({ atemIpAddress: event.target.value, hostAgentIpAddress: state.hostAgentIpAddress });
+            setState({...state, atemIpAddress: event.target.value });
         } else if (event.target.dataset.field === "hostipaddress") {
-            setState({ atemIpAddress: state.atemIpAddress, hostAgentIpAddress: event.target.value });
+            setState({...state, hostAgentIpAddress: event.target.value });
         }
     };
 
@@ -100,6 +101,21 @@ const Setup = ({ server, livestreamUrl, liveStreamEnabled, hostAgentNetworkLocat
         }
     }
 
+    const goFullscreen = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (!document.exitFullscreen) {
+            console.error("Full screen mode not supported");
+            return;
+        }
+
+        if (event.target.checked) {
+            document.firstElementChild?.requestFullscreen();
+        } else {
+            document.exitFullscreen();
+        }
+
+        setState({...state, fullscreen: event.target.checked});
+    }
+
     return <section className="setup">
         <h3>Setup</h3>
         <div className="well">
@@ -124,7 +140,7 @@ const Setup = ({ server, livestreamUrl, liveStreamEnabled, hostAgentNetworkLocat
                 <label className="form-check-label" htmlFor="customSwitch1"> Enable Livestream</label>
             </div>
         </div>
-        <h3>Preview</h3>
+        <h3>View</h3>
         <div className="well well-column">
             <div className="input-group mb-3">
                 <div className="input-group-prepend">
@@ -133,8 +149,12 @@ const Setup = ({ server, livestreamUrl, liveStreamEnabled, hostAgentNetworkLocat
                 <input type="text" className="form-control" placeholder={livestreamUrl} aria-label="livestreamurl" aria-describedby="basic-addon1" onChange={handleLivestreamUrlChange} />
             </div>
             <div className="form-check form-switch">
-                <input className="form-check-input" type="checkbox" role="switch" id="customSwitch2" checked={liveStreamEnabled} onChange={handleLivestreamEnabledChange} />
+                <input className="form-check-input" type="checkbox" role="switch" id="customSwitch2" onChange={handleLivestreamEnabledChange} />
                 <label className="form-check-label" htmlFor="customSwitch2"> Enable Livestream Preview</label>
+            </div>
+            <div className="form-check form-switch">
+                <input className="form-check-input" type="checkbox" role="switch" id="switchFullscreen" checked={state.fullscreen} onChange={goFullscreen} />
+                <label className="form-check-label" htmlFor="switchFullscreen"> Fullscreen</label>
             </div>
         </div>
         <h3>Instructions</h3>
