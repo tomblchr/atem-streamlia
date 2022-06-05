@@ -13,7 +13,9 @@ import ServerHubConnection from './components/ServerHubConnection';
 import "./global.css";
 import "./custom.css";
 import ConnectionMonitor from './components/ConnectionMonitor';
-import Toaster from './components/Toaster';
+
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 interface IAppState {
     livestreamUrl: string;
@@ -66,7 +68,16 @@ const App = (): JSX.Element => {
     return (
         <Layout>
             <ConnectionMonitor connection={state.server?.connection} />
-            <Toaster message="Welcome!" />
+            <ToastContainer position="bottom-right"
+                theme="dark"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={true}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover />
             {state.livestreamEnabled &&
                 <section className='video-player'>
                     <h3>Livestream Preview (Delayed)</h3>

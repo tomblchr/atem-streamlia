@@ -1,5 +1,6 @@
 import * as React from "react";
 import { HubConnection } from "@microsoft/signalr";
+import * as Log from "../api/log";
 
 export interface ITransitionStyleProps {
     connection: HubConnection | undefined;
@@ -24,7 +25,7 @@ const TransitionStyle = ({ connection }: ITransitionStyleProps): React.ReactElem
     React.useEffect(() => {
         
         connection?.on("ReceiveTransitionStyle", message => {
-            console.log(`ReceiveTransitionStyle - ${message}`);
+            Log.debug(`ReceiveTransitionStyle - ${message}`);
             setState({ current: message });
         });
 
@@ -36,8 +37,8 @@ const TransitionStyle = ({ connection }: ITransitionStyleProps): React.ReactElem
 
     const sendTransitionStyle = async (transition: SwitcherTransitionStyle): Promise<void> => {
         await connection?.send("SendTransitionStyle", transition)
-            .then(() => { console.log(`SendTransitionStyle ${transition}`) })
-            .catch(e => console.log("SendTransitionStyle failed: ", e));
+            .then(() => { Log.debug(`SendTransitionStyle ${transition}`) })
+            .catch(e => Log.error("SendTransitionStyle failed: ", e));
     };
 
     return <section className="transition-style">

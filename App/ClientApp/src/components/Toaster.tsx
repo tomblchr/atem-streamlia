@@ -29,7 +29,6 @@ const Toaster = ({message, show = true, error = false}: IToasterProps): React.Re
 }
 
 export const ToastMessage = (m: string): void => {
-    alert('TM');
     ReactDOM.createPortal(<Toaster message={m} error={true} />, document.body);
 }
 

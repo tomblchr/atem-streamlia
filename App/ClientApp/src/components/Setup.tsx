@@ -1,6 +1,7 @@
 import * as React from "react";
 import QRCode from "qrcode.react";
 import { hostURL } from "../api/atemconnection";
+import * as Log from "../api/log";
 import ServerHubConnection from "./ServerHubConnection";
 import { HubConnectionState } from "@microsoft/signalr";
 import { GitHub } from "react-feather";
@@ -29,7 +30,7 @@ const Setup = ({ server, livestreamUrl, liveStreamEnabled, hostAgentNetworkLocat
     React.useEffect(() => {
 
         server?.connection.on("ReceiveLivestreamPreviewUrl", message => {
-            console.log(`ReceiveLivestreamPreviewUrl - ${message}`);
+            Log.debug(`ReceiveLivestreamPreviewUrl - ${message}`);
             onLivestreamUrlChange(message);
         });
 
@@ -44,7 +45,7 @@ const Setup = ({ server, livestreamUrl, liveStreamEnabled, hostAgentNetworkLocat
 
         const callapi = (h: string) => {
             if (window.location.host === "atem.streamlia.com") {
-                console.log("Centrally hosted");
+                Log.info("Centrally hosted");
                 return;
             }
             hostURL(h)
@@ -54,7 +55,7 @@ const Setup = ({ server, livestreamUrl, liveStreamEnabled, hostAgentNetworkLocat
                     });
                 })
                 .catch(reason => {
-                    console.error(reason);
+                    Log.error(reason);
                 });
         };
 
@@ -86,7 +87,7 @@ const Setup = ({ server, livestreamUrl, liveStreamEnabled, hostAgentNetworkLocat
         if (server?.connection && server.connection.state === HubConnectionState.Connected) {
             server?.connection.send("SendConnect", state.atemIpAddress);
         } else {
-            console.error(`No server connection ${state.atemIpAddress} - ${state.hostAgentIpAddress}`);
+            Log.error(`No server connection ${state.atemIpAddress} - ${state.hostAgentIpAddress}`);
         }
     };
 
@@ -103,7 +104,7 @@ const Setup = ({ server, livestreamUrl, liveStreamEnabled, hostAgentNetworkLocat
 
     const goFullscreen = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (!document.exitFullscreen) {
-            console.error("Full screen mode not supported");
+            Log.error("Full screen mode not supported");
             return;
         }
 
