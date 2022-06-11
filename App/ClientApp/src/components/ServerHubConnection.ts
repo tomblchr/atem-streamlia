@@ -1,5 +1,6 @@
 import { HubConnection, HubConnectionBuilder, LogLevel } from "@microsoft/signalr";
 import * as Log from "../api/log";
+
 class ServerHubConnection {
 
     public connection: HubConnection;
@@ -26,7 +27,7 @@ class ServerHubConnection {
                     return 6000;
                 }
             })
-            .configureLogging(LogLevel.Information)
+            .configureLogging(new Log.AtemLogger(LogLevel.Debug))
             .build();
 
         this.connection = newConnection;

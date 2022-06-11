@@ -1,4 +1,32 @@
 import { toast as toastify } from 'react-toastify';
+import { ILogger, LogLevel } from "@microsoft/signalr";
+
+export class AtemLogger implements ILogger {
+
+    level: LogLevel;
+
+    constructor(level?: LogLevel) {
+        this.level = level ?? LogLevel.Error;
+    }
+
+    log(logLevel: LogLevel, message: string): void {
+        if (this.level <= logLevel) {
+            switch (logLevel) {
+                case LogLevel.Trace:
+                case LogLevel.Debug: 
+                    debug(message); break;
+                case LogLevel.Information:
+                    info(message); break;
+                case LogLevel.Warning:
+                    warn(message); break;
+                case LogLevel.Error:
+                case LogLevel.Critical:
+                    error(message); break;
+            }
+        }
+    }
+
+}
 
 export function debug(message: string) {
     toastify.info(message);
