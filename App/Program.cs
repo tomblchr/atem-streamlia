@@ -66,10 +66,14 @@ namespace SwitcherServer
                                     _logger.LogInformation($"Use the dotnetcore development certificates");
                                     configure.UseHttps();
                                 }
-                                else
+                                else if (Path.Exists(certFile))
                                 {
                                     _logger.LogInformation($"Using certificate from {certFile}");
                                     configure.UseHttps(certFile, password);
+                                }
+                                else
+                                {
+                                    _logger.LogError($"Could not find certificate file {certFile}");
                                 }
                             }
 #else
@@ -88,10 +92,15 @@ namespace SwitcherServer
                                         configure.UseHttps(certificate);
                                     }    
                                 }
-                                else
+                                else if (System.IO.File.Exists(certFile))
                                 {
                                     _logger.LogInformation($"Using certificate from {certFile}");
                                     configure.UseHttps(certFile, password);
+                                }
+                                else
+                                {
+                                    _logger.LogError($"Could not find certificate file {certFile}");
+                                    configure.UseHttps();
                                 }
                             }
 #endif

@@ -6,7 +6,7 @@
   "license": "MIT",
   "dependencies": {
     "@babel/core": "7.14.3",
-    "@microsoft/signalr": "5.0.14",
+    "@microsoft/signalr": "6.0.5",
     "@pmmmwh/react-refresh-webpack-plugin": "0.5.3",
     "@svgr/webpack": "6.2.1",
     "@types/bootstrap": "5.0.15",
