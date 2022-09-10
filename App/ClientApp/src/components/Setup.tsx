@@ -25,7 +25,11 @@ interface ISetupProps {
 
 const Setup = ({ server, livestreamUrl, liveStreamEnabled, hostAgentNetworkLocation, onLivestreamUrlChange, onLivestreamEnabledChange, onHostAgentNetworkLocationChange }: ISetupProps): React.ReactElement => {
     
-    const [state, setState] = React.useState<ISetupState>({ atemIpAddress: "10.0.0.201", hostAgentIpAddress: hostAgentNetworkLocation, fullscreen: (document.fullscreenElement !== null) });
+    const [state, setState] = React.useState<ISetupState>({ 
+        atemIpAddress: "10.0.0.201", 
+        hostAgentIpAddress: hostAgentNetworkLocation, 
+        fullscreen: (document.fullscreenElement !== null) 
+    });
 
     React.useEffect(() => {
 
@@ -50,7 +54,9 @@ const Setup = ({ server, livestreamUrl, liveStreamEnabled, hostAgentNetworkLocat
             }
             hostURL(h)
                 .then(response => {
+                    Log.debug(`Respone from ${h}...`);
                     response.text().then(value => {
+                        Log.debug(value);
                         setState(s => {return { ...s, atemIpAddress: state.atemIpAddress }});
                     });
                 })

@@ -66,7 +66,7 @@ namespace SwitcherServer
                                     _logger.LogInformation($"Use the dotnetcore development certificates");
                                     configure.UseHttps();
                                 }
-                                else if (Path.Exists(certFile))
+                                else if (System.IO.File.Exists(certFile))
                                 {
                                     _logger.LogInformation($"Using certificate from {certFile}");
                                     configure.UseHttps(certFile, password);

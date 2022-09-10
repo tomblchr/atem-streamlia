@@ -32,18 +32,18 @@ const ConnectionMonitor = ({ connection } : IConnectionMonitor): React.ReactElem
                 setState({ serverConnection: false, switchConnection: false });
             });
             connection.onreconnected(id => {
-                Log.info(`ConnectionMonitor connected to server: ${id}`);
+                Log.info(`Connected to server: ${id}`);
                 setState({ switchConnection: false, serverConnection: connection?.state === HubConnectionState.Connected });
             });
             connection.on("ReceiveConnectConfirmation", message => {
                 setState({ switchConnection: true, serverConnection: true });
             });
             connection.on("ReceiveConnectionStatus", message => {
-                Log.info(`ReceiveConnectionStatus - ${message}`);
+                Log.debug(`ReceiveConnectionStatus - ${message}`);
                 setState({ switchConnection: message, serverConnection: true });
             });
             connection.on("ReceiveStreamingStatus", message => {
-                Log.info(`ReceiveStreamingStatus - ${message}`);
+                Log.debug(`ReceiveStreamingStatus - ${message}`);
                 setStreaming({ isStreaming: message });
             });
         }
