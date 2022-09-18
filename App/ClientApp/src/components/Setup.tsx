@@ -57,7 +57,7 @@ const Setup = ({ server, livestreamUrl, liveStreamEnabled, hostAgentNetworkLocat
                     Log.debug(`Respone from ${h}...`);
                     response.text().then(value => {
                         Log.debug(value);
-                        setState(s => {return { ...s, atemIpAddress: state.atemIpAddress }});
+                        setState(s => {return { ...s, atemIpAddress: value.replace("https://", "") }});
                     });
                 })
                 .catch(reason => {
@@ -87,6 +87,8 @@ const Setup = ({ server, livestreamUrl, liveStreamEnabled, hostAgentNetworkLocat
     }
 
     const save = () => {
+
+        Log.info(`Connecting to agent@${state.hostAgentIpAddress} and ATEM@${state.atemIpAddress}`);
 
         onHostAgentNetworkLocationChange(state.hostAgentIpAddress);
 
@@ -130,13 +132,13 @@ const Setup = ({ server, livestreamUrl, liveStreamEnabled, hostAgentNetworkLocat
                 <div className="input-group-prepend">
                     <span className="input-group-text" id="basic-addon2">Agent Host or IP Address:</span>
                 </div>
-                <input type="text" data-field="hostipaddress" className="form-control" placeholder={state.hostAgentIpAddress} aria-label="hostipaddress" aria-describedby="basic-addon2" onChange={handleChange} />
+                <input type="text" data-field="hostipaddress" className="form-control" placeholder={state.hostAgentIpAddress} aria-label="hostipaddress" aria-describedby="basic-addon2" onBlur={handleChange} />
             </div>
             <div className="input-group mb-3">
                 <div className="input-group-prepend">
                     <span className="input-group-text" id="basic-addon1">ATEM IP Address:</span>
                 </div>
-                <input type="text" data-field="ipaddress" className="form-control" placeholder={state.atemIpAddress} aria-label="ipaddress" aria-describedby="basic-addon1" onChange={handleChange} />
+                <input type="text" data-field="ipaddress" className="form-control" placeholder={state.atemIpAddress} aria-label="ipaddress" aria-describedby="basic-addon1" onBlur={handleChange} />
             </div>            
             <button type="button" className="btn btn-primary" onClick={e => { save() }}>Save</button>
         </div>
