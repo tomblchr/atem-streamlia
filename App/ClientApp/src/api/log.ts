@@ -29,7 +29,6 @@ export class AtemLogger implements ILogger {
 }
 
 export function debug(message: string) {
-    toastify.info(message);
     console.debug(message);
 }
 
