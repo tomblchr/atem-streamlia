@@ -44,13 +44,12 @@ const Switcher = ({ server, onLivestreamUrlChange }: ISwitcherProps): React.Reac
 
     React.useEffect(() => {
 
-        server?.connection.on("ReceiveSceneChange", message => {
-            const msg = message as ISceneDetail;
-            Log.debug(`ReceiveSceneChange - ${msg.downstreamKeyOnAir}`);
+        server?.connection.on("ReceiveSceneChange", (message: ISceneDetail) => {
+            Log.debug(`ReceiveSceneChange - ${message.downstreamKeyOnAir}`);
             setScene(message);
         });
 
-        server?.connection.on("ReceiveLivestreamPreviewUrl", message => {
+        server?.connection.on("ReceiveLivestreamPreviewUrl", (message: any) => {
             Log.debug(`ReceiveLivestreamPreviewUrl - ${message}`);
             //onLivestreamUrlChange(message);
         });
@@ -71,11 +70,11 @@ const Switcher = ({ server, onLivestreamUrlChange }: ISwitcherProps): React.Reac
         <div key="switcher">
             <Inputs program={scene?.program} preview={scene?.preview} inputs={scene?.inputs} connection={server?.connection} />
             <Transitions connection={server?.connection} />
-            <NextTransition connection={server?.connection} />
-            <TransitionStyle connection={server?.connection} />
             <KeyFrameRunner connection={server?.connection} />
             <Macros connection={server?.connection} />
             <DownstreamKey connection={server?.connection} onAir={scene?.downstreamKeyOnAir ?? false} tieOn={scene?.downstreamKeyTieOn ?? false} />
+            <NextTransition connection={server?.connection} />
+            <TransitionStyle connection={server?.connection} />
             <FadeToBlack connection={server?.connection} />
         </div>
     )
