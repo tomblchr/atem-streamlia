@@ -133,12 +133,14 @@ const Setup = ({ server, livestreamUrl, liveStreamEnabled, hostAgentNetworkLocat
                     <span className="input-group-text" id="basic-addon2">Agent Host or IP Address:</span>
                 </div>
                 <input type="text" data-field="hostipaddress" className="form-control" placeholder={state.hostAgentIpAddress} aria-label="hostipaddress" aria-describedby="basic-addon2" onBlur={handleChange} />
+                <a target="_blank" rel="noreferrer" href={`https://${state.hostAgentIpAddress}`} className="btn btn-primary">Test...</a>
             </div>
             <div className="input-group mb-3">
                 <div className="input-group-prepend">
                     <span className="input-group-text" id="basic-addon1">ATEM IP Address:</span>
                 </div>
                 <input type="text" data-field="ipaddress" className="form-control" placeholder={state.atemIpAddress} aria-label="ipaddress" aria-describedby="basic-addon1" onBlur={handleChange} />
+                <a target="_blank" rel="noreferrer" href={`https://${state.atemIpAddress}`} className="btn btn-primary">Test...</a>
             </div>            
             <button type="button" className="btn btn-primary" onClick={e => { save() }}>Save</button>
         </div>
