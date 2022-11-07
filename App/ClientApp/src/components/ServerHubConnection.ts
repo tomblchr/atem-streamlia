@@ -1,4 +1,4 @@
-import { HubConnection, HubConnectionBuilder, LogLevel } from "@microsoft/signalr";
+import { HubConnection, HubConnectionBuilder, HubConnectionState, LogLevel } from "@microsoft/signalr";
 import * as Log from "../api/log";
 
 class ServerHubConnection {
@@ -34,6 +34,20 @@ class ServerHubConnection {
 
         Log.info(`Starting the signalr server connection at ${url}`);
 
+        this.ignition();
+
+        this.connection.onreconnected(id => {
+            Log.debug(`Connection restored - ${id}`);
+        });
+    }
+
+    /* start the signalr connection */
+    public ignition() {
+        if (this.connection.state === HubConnectionState.Connected) {
+            Log.debug("Good news. We're connected!");
+            return;            
+        }
+
         this.connection
             .start()
             .then(() => {
@@ -43,10 +57,6 @@ class ServerHubConnection {
             .catch((err) => {
                 Log.error(`Unable to start signalr connection - ${err}`);
             });
-
-        this.connection.onreconnected(id => {
-            Log.debug(`Connection restored - ${id}`);
-        });
     }
 
     getValidUrl(hostname: string, path: string): string {

@@ -44,7 +44,7 @@ export function warn(message: string): void {
 
 export function error(message?: any, ...optionalParams: any[]): void {
     toastify.error(message);
-    console.log(message, optionalParams);
+    console.error(message, optionalParams);
 }
 
 export function log(message?: any, ...optionalParams: any[]): void {
