@@ -1,5 +1,6 @@
 import * as React from "react";
 import { HubConnection } from "@microsoft/signalr";
+import * as Log from "../api/log";
 
 export interface ITransitionsProps {
     connection: HubConnection | undefined;
@@ -17,26 +18,26 @@ const Transitions = ({ connection }: ITransitionsProps): React.ReactElement => {
 
     const sendAutoTransition = async (): Promise<void> => {
         await connection?.send("SendAutoTransition")
-            .then(() => { console.log(`Auto Transition`) })
-            .catch(e => console.log("Auto transition failed: ", e));
+            .then(() => { Log.debug(`Auto Transition`) })
+            .catch(e => Log.error("Auto transition failed: ", e));
     };
 
     const sendCutTransition = async (): Promise<void> => {
         await connection?.send("SendCutTransition")
-            .then(() => { console.log(`Cut Transition`) })
-            .catch(e => console.log("Cut transition failed: ", e));
+            .then(() => { Log.debug(`Cut Transition`) })
+            .catch(e => Log.error("Cut transition failed: ", e));
     };
 
     React.useEffect(() => {
 
         connection?.on("ReceiveInTransition", message => {
             const it: boolean = message;
-            console.log(`ReceiveInTransition - ${it}`);
+            Log.debug(`ReceiveInTransition - ${it}`);
             setState(s => {return {...s, inTransition: it}});
         });
         connection?.on("ReceiveTransitionPosition", message => {
             const it: ITransistionState = message;
-            console.log(`ReceiveTransitionPosition - ${it.position},${it.framesRemaining}`);
+            Log.debug(`ReceiveTransitionPosition - ${it.position},${it.framesRemaining}`);
             setState(s => { return {...s, inTransition: it.inTransition || it.position > 0 }});
         });
 
@@ -47,7 +48,7 @@ const Transitions = ({ connection }: ITransitionsProps): React.ReactElement => {
     }, [connection]);
 
     const sliderChange = (value: string): void => {
-        console.log(`Transition slider set to ${value}`);
+        Log.debug(`Transition slider set to ${value}`);
     }
 
     return <section className="transition">

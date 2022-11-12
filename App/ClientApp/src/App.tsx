@@ -14,11 +14,15 @@ import "./global.css";
 import "./custom.css";
 import ConnectionMonitor from './components/ConnectionMonitor';
 
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 interface IAppState {
     livestreamUrl: string;
     livestreamEnabled: boolean;
     hostAgentNetworkLocation: string;
     atemNetworkLocation: string;
+    showToast?: boolean;
     server: ServerHubConnection | undefined;
 }
 
@@ -33,7 +37,7 @@ const App = (): JSX.Element => {
         
         const newConnection = new ServerHubConnection(state.hostAgentNetworkLocation);
 
-        setState(s => { return {...s, server: newConnection }});
+        setState(s => { return {...s, server: newConnection, showToast: true }});
 
         return () => {
             // clean up
@@ -54,6 +58,7 @@ const App = (): JSX.Element => {
         setState({...state, hostAgentNetworkLocation: value});
         window.localStorage.setItem("hostAgentNetworkLocation", value);
     }
+
 /*
     const handleAtemNetworkLocationChange = (value: string) => {
         setState({...state, atemNetworkLocation: value});
@@ -63,6 +68,16 @@ const App = (): JSX.Element => {
     return (
         <Layout>
             <ConnectionMonitor connection={state.server?.connection} />
+            <ToastContainer position="bottom-right"
+                theme="dark"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={true}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover />
             {state.livestreamEnabled &&
                 <section className='video-player'>
                     <h3>Livestream Preview (Delayed)</h3>
@@ -89,6 +104,7 @@ const App = (): JSX.Element => {
                     onLivestreamEnabledChange={handleLivestreamEnabledChange}
                     onHostAgentNetworkLocationChange={handleHostAgentNetworkLocationChange} />
             </Route>
+            
         </Layout>
     );
 

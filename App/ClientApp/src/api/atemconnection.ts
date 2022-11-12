@@ -1,3 +1,5 @@
+import * as Log from './log';
+
 export async function apiTransition(): Promise<Response> {
     const options: RequestInit = {
         method: "POST"
@@ -10,9 +12,11 @@ export async function hostURL(host?: string): Promise<Response> {
         method: "GET"
     };
 
+    const url = `https://${host}/api/atemconnection/streamliaurl`;
+
     if (host) {
-        return fetch(`https://${host}/api/atemconnection/streamliaurl`, options);
-        //return fetch(`https://${host}/echo/get/json`, options);
+        Log.debug(`Connecting to server @ ${url}`);
+        return fetch(url, options);
     }
 
     return fetch("/api/atemconnection/streamliaurl", options);

@@ -1,5 +1,6 @@
 import * as React from "react";
 import { HubConnection } from "@microsoft/signalr";
+import * as Log from "../api/log";
 
 interface IMacroProps {
     connection: HubConnection | undefined;
@@ -26,7 +27,7 @@ const Macros = ({ connection }: IMacroProps): React.ReactElement => {
     React.useEffect(() => {
         
         connection?.on("ReceiveMacros", message => {
-            console.log(`ReceiveMacros - ${message}`);
+            Log.debug(`ReceiveMacros - ${message}`);
             setState({ macros: message });
         });
         
@@ -38,8 +39,8 @@ const Macros = ({ connection }: IMacroProps): React.ReactElement => {
 
     const sendRunMacro = async (id: number): Promise<void> => {
         await connection?.send("SendRunMacro", id)
-            .then(() => { console.log(`SendRunMacro ${id}`) })
-            .catch(e => console.log("SendRunMacro failed: ", e));
+            .then(() => { Log.debug(`SendRunMacro ${id}`) })
+            .catch(e => Log.error("SendRunMacro failed: ", e));
     }
 
     return <section className="macro">

@@ -1,5 +1,6 @@
 import * as React from "react";
 import { HubConnection } from "@microsoft/signalr";
+import * as Log from "../api/log";
 
 export interface ITransitionsProps {
     connection: HubConnection | undefined;
@@ -16,14 +17,14 @@ const FadeToBlack = ({connection} : ITransitionsProps): React.ReactElement => {
 
     const sendFadeToBlackTransition = async (toBlack: boolean): Promise<void> => {
         await connection?.send("SendFadeToBlackTransition")
-            .then(() => { console.log(`FadeToBlack`) })
-            .catch(e => console.log("FadeToBlack failed: ", e));
+            .then(() => { Log.debug(`FadeToBlack`) })
+            .catch(e => Log.error("FadeToBlack failed: ", e));
     };
 
     React.useEffect(() => {
         
         connection?.on("ReceiveIsFadeToBlack", message => {
-            console.log(`ReceiveIsFadeToBlack - ${message}`);
+            Log.debug(`ReceiveIsFadeToBlack - ${message}`);
             setState(message);
         });
 

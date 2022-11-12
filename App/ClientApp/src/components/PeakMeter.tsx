@@ -1,6 +1,6 @@
 import * as React from "react";
 import { HubConnection, HubConnectionState } from "@microsoft/signalr";
-
+import * as Log from "../api/log";
 export interface IPeakMeterProps {
     vertical: boolean;
     height: number;
@@ -76,7 +76,7 @@ const PeakMeter = ({ vertical, connection, height, width }: IPeakMeterProps): Re
                     requestAnimationFrame(updateMeter);
                 }
                 catch (e) {
-                    console.error(e);
+                    Log.error(e);
                 }
             }
         };
@@ -86,10 +86,10 @@ const PeakMeter = ({ vertical, connection, height, width }: IPeakMeterProps): Re
                 volumeMessageHandler(message);
             },
             complete: () => {
-                console.log("Volume stream completed");
+                Log.debug("Volume stream completed");
             },
             error: (err) => {
-                console.error(err);
+                Log.error(err);
             }
         }) : undefined;
 

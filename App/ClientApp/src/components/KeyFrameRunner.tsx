@@ -1,5 +1,6 @@
 import * as React from "react";
 import { HubConnection } from "@microsoft/signalr";
+import * as Log from "../api/log";
 
 enum FlyKeyFrame {
     None = 0,
@@ -46,8 +47,8 @@ const KeyFrameRunner = ({ connection }: IKeyFrameRunnerProps): React.ReactElemen
 
     const sendRunKeyFrame = async (keyFrame: FlyKeyFrame): Promise<void> => {
         await connection?.send("SendRunKeyFrame", keyFrame)
-            .then(() => { console.log(`SendRunKeyFrame ${keyFrame}`) })
-            .catch(e => console.log("SendRunKeyFrame failed: ", e));
+            .then(() => { Log.debug(`SendRunKeyFrame ${keyFrame}`) })
+            .catch(e => Log.error("SendRunKeyFrame failed: ", e));
     }
 
     return <section className="keyframerunner">

@@ -1,6 +1,6 @@
 import * as React from "react";
-import { HubConnection } from "@microsoft/signalr";
-
+import { HubConnection, HubConnectionState } from "@microsoft/signalr";
+import * as Log from "../api/log";
 export interface IInput {
     id: number;
     name: string;
@@ -19,16 +19,27 @@ const Inputs = ({inputs, program, preview, connection}: IInputsProps): React.Rea
 
     const inputPorts = [1702392942, 1651269995, 1836082796];
 
+    const connected = (): boolean => {
+        const result = connection?.state === HubConnectionState.Connected;
+        return result;
+    }
+
     const sendProgramChange = async (channel: number): Promise<void> => {
+
+        if (!connected()) return;
+
         await connection?.send("SendProgramChange", channel)
-            .then(() => { console.log(`Program change: ${channel}`) })
-            .catch(e => console.log("SendProgramChange failed: ", e));
+            .then(() => { Log.debug(`Program change: ${channel}`) })
+            .catch(e => Log.error("SendProgramChange failed: ", e));
     };
 
     const sendPreviewChange = async (channel: number): Promise<void> => {
+
+        if (!connected()) return;
+
         await connection?.send("SendPreviewChange", channel)
-            .then(() => { console.log(`Preview change: ${channel}`) })
-            .catch(e => console.log("SendPreviewChange failed: ", e));
+            .then(() => { Log.debug(`Preview change: ${channel}`) })
+            .catch(e => Log.error("SendPreviewChange failed: ", e));
     };
 
     return <section className="channels">

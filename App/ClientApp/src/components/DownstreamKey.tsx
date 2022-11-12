@@ -1,5 +1,6 @@
 import * as React from "react";
 import { HubConnection } from "@microsoft/signalr";
+import * as Log from "../api/log"
 
 export interface IDownstreamKeyProps {
     onAir: boolean;
@@ -17,30 +18,30 @@ const DownstreamKey = ({onAir, tieOn, connection }: IDownstreamKeyProps): React.
 
     const sendDownstreamKeyOnAir = async (on: boolean): Promise<void> => {
         await connection?.send("SendDownstreamKeyOnAir", on)
-            .then(() => { console.log(`DownstreamKeyOnAir`) })
-            .catch(e => console.log("DownstreamKeyOnAir failed: ", e));
+            .then(() => { Log.log(`DownstreamKeyOnAir`) })
+            .catch(e => Log.error("DownstreamKeyOnAir failed: ", e));
     };
 
     const sendDownstreamKeyTieOn = async (on: boolean): Promise<void> => {
         await connection?.send("SendDownstreamKeyTie", on)
-            .then(() => { console.log(`DownstreamKeyTie`) })
-            .catch(e => console.log("SendDownstreamKeyTie failed: ", e));
+            .then(() => { Log.debug(`DownstreamKeyTie`) })
+            .catch(e => Log.error("SendDownstreamKeyTie failed: ", e));
     };
 
     const sendDownstreamKeyAutoTransition = async (): Promise<void> => {
         await connection?.send("SendDownstreamKeyAutoTransition")
-            .then(() => { console.log(`DownstreamKeyAutoTransition`) })
-            .catch(e => console.log("DownstreamKeyAutoTransition failed: ", e));
+            .then(() => { Log.debug(`DownstreamKeyAutoTransition`) })
+            .catch(e => Log.error("DownstreamKeyAutoTransition failed: ", e));
     };
 
     React.useEffect(() => {
 
         connection?.on("ReceiveDownstreamKeyInTransition", message => {
-            console.log(`ReceiveDownstreamKeyInTransition - ${message}`);
+            Log.debug(`ReceiveDownstreamKeyInTransition - ${message}`);
             setState({ inTransition: message });
         });
         connection?.on("ReceiveTransitionPosition", message => {
-            //console.log(`ReceiveTransitionPosition - ${message}`);
+            //Log.debug(`ReceiveTransitionPosition - ${message}`);
             //setState({ inTransition: state.inTransition, position: message.position, framesRemaining: message.framesRemaining });
         });
 

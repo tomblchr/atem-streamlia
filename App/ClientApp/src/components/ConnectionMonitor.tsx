@@ -1,6 +1,7 @@
 import * as React from "react";
 import { HubConnection, HubConnectionState } from "@microsoft/signalr";
 import { AlertTriangle, Server, Radio, StopCircle, Sliders } from "react-feather";
+import * as Log from "../api/log";
 
 interface IConnectionMonitor {
     connection: HubConnection | undefined;
@@ -21,27 +22,28 @@ const ConnectionMonitor = ({ connection } : IConnectionMonitor): React.ReactElem
     const [streaming, setStreaming] = React.useState<IStreamingState>({ isStreaming: false });
 
     React.useEffect(() => {
+
         if (connection) {
 
-            console.log(`ConnectionMonitor: ${connection.state}`);
+            Log.info(`ConnectionMonitor: ${connection.state}`);
             setState({ switchConnection: false, serverConnection: connection?.state === HubConnectionState.Connected });
             connection.onreconnecting(error => {
-                console.log(`Reconnecting because - ${error?.message}`);
+                Log.warn(`Reconnecting because - ${error?.message}`);
                 setState({ serverConnection: false, switchConnection: false });
             });
             connection.onreconnected(id => {
-                console.log(`ConnectionMonitor connected to server: ${id}`);
+                Log.info(`Connected to server: ${id}`);
                 setState({ switchConnection: false, serverConnection: connection?.state === HubConnectionState.Connected });
             });
             connection.on("ReceiveConnectConfirmation", message => {
                 setState({ switchConnection: true, serverConnection: true });
             });
             connection.on("ReceiveConnectionStatus", message => {
-                console.log(`ReceiveConnectionStatus - ${message}`);
+                Log.debug(`ReceiveConnectionStatus - ${message}`);
                 setState({ switchConnection: message, serverConnection: true });
             });
             connection.on("ReceiveStreamingStatus", message => {
-                console.log(`ReceiveStreamingStatus - ${message}`);
+                Log.debug(`ReceiveStreamingStatus - ${message}`);
                 setStreaming({ isStreaming: message });
             });
         }

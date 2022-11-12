@@ -35,6 +35,7 @@ namespace SwitcherServer.Controllers
         [Route("streamliaurl")]
         public IActionResult GetStreamliaURL()
         {
+            // return ATEM IP address?
             return Ok(NetworkInspector.GetUrl(_configuration));
         }
 

@@ -86,12 +86,13 @@ a.tab:hover {
 h2 {
   font-weight: 300;
 }
+
 section {
-  margin: 0 1rem 1rem 0;
+  margin: 0 0.5rem 0.5rem 1rem;
 }
 
 section h3 {
-	color: #999;
+  color: #999;
   font-size: 1rem;
   font-weight: 300;
   margin: .5rem;
@@ -281,4 +282,8 @@ section.transition {
 
 .media-thumb input {
   visibility: hidden;
+}
+
+.toast {
+  background-color: #000;
 }

@@ -1,4 +1,5 @@
-import { HubConnection, HubConnectionBuilder, LogLevel } from "@microsoft/signalr";
+import { HubConnection, HubConnectionBuilder, HubConnectionState, LogLevel } from "@microsoft/signalr";
+import * as Log from "../api/log";
 
 class ServerHubConnection {
 
@@ -11,7 +12,7 @@ class ServerHubConnection {
             // localhost here means the client appis being served up by the agent/backend service
             url = this.getValidUrl(hostname, url);
 
-            console.info(`Connection to ${url}...`);
+            Log.info(`Connection to ${url}...`);
         }
 
         const newConnection: HubConnection = new HubConnectionBuilder()
@@ -19,33 +20,43 @@ class ServerHubConnection {
             .withAutomaticReconnect({
                 nextRetryDelayInMilliseconds: retryContext => {
                     if (retryContext.elapsedMilliseconds < 60000) {
-                        console.log("Try to connect to server again in 1 second");
+                        Log.info("Will attempt to connect to server again in 1 second");
                         return 1000;
                     }
-                    console.log("Try to connect to server again in 6 seconds");
+                    Log.info("Will attempt to connect to server again in 6 seconds");
                     return 6000;
                 }
             })
-            .configureLogging(LogLevel.Information)
+            .configureLogging(new Log.AtemLogger(LogLevel.Warning))
             .build();
 
         this.connection = newConnection;
 
-        console.log(`Starting the signalr server connection at ${url}`);
+        Log.info(`Starting the signalr server connection at ${url}`);
+
+        this.ignition();
+
+        this.connection.onreconnected(id => {
+            Log.debug(`Connection restored - ${id}`);
+        });
+    }
+
+    /* start the signalr connection */
+    public ignition() {
+        if (this.connection.state === HubConnectionState.Connected) {
+            Log.debug("Good news. We're connected!");
+            return;            
+        }
 
         this.connection
             .start()
             .then(() => {
-                console.log("Request healthcheck");
+                Log.debug("Request healthcheck");
                 this.connection?.send("SendHealthCheckRequest");
             })
             .catch((err) => {
-                console.error(`Unable to start signalr connection - ${err}`);
+                Log.error(`Unable to start signalr connection - ${err}`);
             });
-
-        this.connection.onreconnected(id => {
-            console.log(`Connection restored - ${id}`);
-        });
     }
 
     getValidUrl(hostname: string, path: string): string {
@@ -55,7 +66,7 @@ class ServerHubConnection {
             return urlToTry;
         }
         catch(x) {
-            console.error(`${hostname} is not a valid host. This should be an IP address or host name.`);
+            Log.error(`${hostname} is not a valid host. This should be an IP address or host name.`);
             return path;
         }
     }

@@ -1,6 +1,6 @@
 import * as React from "react";
 import { HubConnection } from "@microsoft/signalr";
-
+import * as Log from "../api/log";
 export interface IKeyProps {
     connection: HubConnection | undefined;
 }
@@ -34,20 +34,20 @@ const NextTransition = ({ connection }: IKeyProps): React.ReactElement => {
     
     const sendBackgroundIncluded = (includeBackground: boolean): void => {
         connection?.send("SendNextTransitionBackground", includeBackground)
-            .then(() => { console.log(`SendNextTransitionBackground`) })
-            .catch(e => console.log("SendNextTransitionBackground failed: ", e));
+            .then(() => { Log.debug(`SendNextTransitionBackground`) })
+            .catch(e => Log.error("SendNextTransitionBackground failed: ", e));
     };
 
     const sendKeyOnAir = (key: number, onAir: boolean): void => {
         connection?.send("SendKeyOnAir", key, onAir)
-            .then(() => { console.log(`SendKeyOnAir (${key},${onAir})`) })
-            .catch(e => console.log("SendKeyOnAir failed: ", e));
+            .then(() => { Log.debug(`SendKeyOnAir (${key},${onAir})`) })
+            .catch(e => Log.error("SendKeyOnAir failed: ", e));
     };
 
     const sendKeyIncluded = (key: number, included: boolean): void => {
         connection?.send("SendKeyIncludedInTransition", key, included)
-            .then(() => { console.log(`SendKeyIncludedInTransition (${key},${included})`) })
-            .catch(e => console.log("SendKeyIncludedInTransition failed: ", e));
+            .then(() => { Log.debug(`SendKeyIncludedInTransition (${key},${included})`) })
+            .catch(e => Log.error("SendKeyIncludedInTransition failed: ", e));
     };
  
     return <section className="next-transition">
