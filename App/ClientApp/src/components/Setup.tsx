@@ -138,28 +138,22 @@ const Setup = ({ server, livestreamUrl, liveStreamEnabled, hostAgentNetworkLocat
     return <section className="setup">
         <h3>Setup</h3>
         <div className="well">
-            <div className="input-group mb-3">
-                <div className="input-group-prepend">
-                    <span className="input-group-text" id="basic-addon2">Agent Host or IP Address:</span>
-                </div>
-                <input type="text" data-field="hostipaddress" className="form-control" placeholder={state.hostAgentIpAddress} aria-label="hostipaddress" aria-describedby="basic-addon2" onBlur={handleChange} />
+            <h4>Agent Host or IP Address</h4>
+            <div className="input-group mb-3">                
+                <input type="url" data-field="hostipaddress" className="form-control" placeholder={state.hostAgentIpAddress} aria-label="hostipaddress" aria-describedby="basic-addon2" onBlur={handleChange} />
                 <a target="_blank" rel="noreferrer" href={`https://${state.hostAgentIpAddress}`} className="btn btn-primary">Test...</a>
             </div>
+            <h4>ATEM IP Address</h4>
             <div className="input-group mb-3">
-                <div className="input-group-prepend">
-                    <span className="input-group-text" id="basic-addon1">ATEM IP Address:</span>
-                </div>
-                <input type="text" data-field="ipaddress" className="form-control" placeholder={state.atemIpAddress} aria-label="ipaddress" aria-describedby="basic-addon1" onBlur={handleChange} />
+                <input type="url" data-field="ipaddress" className="form-control" placeholder={state.atemIpAddress} aria-label="ipaddress" aria-describedby="basic-addon1" onBlur={handleChange} />
                 <a target="_blank" rel="noreferrer" href={`https://${state.atemIpAddress}`} className="btn btn-primary">Test...</a>
             </div>            
             <button type="button" className="btn btn-primary" onClick={e => { save() }}>Save</button>
         </div>
         <h3>View</h3>
         <div className="well well-column">
+            <h4>Livestream URL:</h4>
             <div className="input-group mb-3">
-                <div className="input-group-prepend">
-                    <span className="input-group-text" id="basic-addon1">Livestream URL:</span>
-                </div>
                 <input type="text" className="form-control" placeholder={livestreamUrl} aria-label="livestreamurl" aria-describedby="basic-addon1" onChange={handleLivestreamUrlChange} />
             </div>
             <div className="form-check form-switch">

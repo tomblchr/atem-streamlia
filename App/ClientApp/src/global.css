@@ -98,6 +98,11 @@ section h3 {
   margin: .5rem;
 }
 
+h4 {
+  font-size: 1rem;
+  font-weight: 300;
+}
+
 .well {
 	background: #222;
 	border-radius: 7px;

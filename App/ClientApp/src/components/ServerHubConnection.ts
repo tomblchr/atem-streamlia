@@ -12,7 +12,7 @@ class ServerHubConnection {
             // localhost here means the client appis being served up by the agent/backend service
             url = this.getValidUrl(hostname, url);
 
-            Log.info(`Connection to ${url}...`);
+            Log.info(`Connecting to ${url}...`);
         }
 
         const newConnection: HubConnection = new HubConnectionBuilder()
@@ -20,10 +20,10 @@ class ServerHubConnection {
             .withAutomaticReconnect({
                 nextRetryDelayInMilliseconds: retryContext => {
                     if (retryContext.elapsedMilliseconds < 60000) {
-                        Log.info("Will attempt to connect to server again in 1 second");
+                        Log.debug("Will attempt to connect to server again in 1 second");
                         return 1000;
                     }
-                    Log.info("Will attempt to connect to server again in 6 seconds");
+                    Log.debug("Will attempt to connect to server again in 6 seconds");
                     return 6000;
                 }
             })
@@ -32,7 +32,7 @@ class ServerHubConnection {
 
         this.connection = newConnection;
 
-        Log.info(`Starting the signalr server connection at ${url}`);
+        Log.debug(`Starting the signalr server connection at ${url}`);
 
         this.ignition();
 
