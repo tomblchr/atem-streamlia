@@ -11,7 +11,7 @@
 # Build results
 [Bb]in/
 [Oo]bj/
-
+.parcel-cache/
 .vs/
 
 

@@ -61,7 +61,7 @@ namespace SwitcherServer
                 .AddPolicy("CorsPolicy", builder => builder
                     .AllowAnyMethod()
                     .AllowAnyHeader()
-                    .WithOrigins("http://localhost:3000", "https://atem.streamlia.com")
+                    .WithOrigins("http://localhost:1234", "https://atem.streamlia.com")
                     .AllowCredentials()                                                  // needed for signalr
                     ));
 

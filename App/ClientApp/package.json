@@ -1,16 +1,15 @@
 {
   "name": "switcherserver",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "private": true,
   "homepage": "https://atem.streamlia.com",
   "license": "MIT",
   "dependencies": {
-    "@babel/core": "7.14.3",
-    "@microsoft/signalr": "6.0.5",
-    "@pmmmwh/react-refresh-webpack-plugin": "0.5.3",
-    "@svgr/webpack": "6.2.1",
-    "@types/bootstrap": "5.0.15",
-    "@types/qrcode.react": "1.0.1",
+    "@microsoft/signalr": "7.0.2",
+    "@pmmmwh/react-refresh-webpack-plugin": "0.5.10",
+    "@svgr/webpack": "6.5.1",
+    "@types/bootstrap": "5.2.6",
+    "@types/qrcode.react": "1.0.2",
     "@types/react": "17.0.6",
     "@types/react-router": "5.1.14",
     "@types/react-router-dom": "5.1.7",
@@ -55,13 +54,13 @@
     "postcss-preset-env": "7.4.1",
     "postcss-safe-parser": "5.0.2",
     "prompts": "2.4.1",
-    "qrcode.react": "^1.0.1",
+    "qrcode.react": "3.1.0",
     "react": "17.0.2",
     "react-app-polyfill": "^2.0.0",
     "react-bootstrap": "2.3.1",
     "react-dom": "17.0.2",
-    "react-feather": "2.0.9",
-    "react-player": "2.9.0",
+    "react-feather": "2.0.10",
+    "react-player": "2.11.2",
     "react-refresh": "0.10.0",
     "react-router-bootstrap": "0.25.0",
     "react-router-dom": "5.2.0",
@@ -76,14 +75,17 @@
     "terser-webpack-plugin": "4.2.3",
     "ts-loader": "8.2.0",
     "ts-pnp": "1.2.0",
-    "typescript": "4.2.4",
+    "typescript": "4.9.5",
     "url-loader": "4.1.1",
-    "workbox-webpack-plugin": "6.5.1"
+    "workbox-webpack-plugin": "6.5.4"
   },
   "devDependencies": {
-    "@babel/preset-env": "7.16.11",
+    "@parcel/packager-raw-url": "^2.8.3",
+    "@parcel/transformer-webmanifest": "^2.8.3",
     "@types/signalr": "^2.2.37",
     "css-minimizer-webpack-plugin": "^3.4.1",
+    "parcel": "^2.8.3",
+    "process": "^0.11.10",
     "react-dev-utils": "12.0.1",
     "source-map-loader": "^3.0.1",
     "webpack": "5.70.0",
@@ -95,11 +97,13 @@
     "extends": "react-app"
   },
   "scripts": {
-    "start": "node scripts/start.js",
-    "build": "node scripts/build.js && webpack --progress --mode=production",
-    "lint": "eslint ./src/",
-    "release": "npm run build && webpack --mode=production",
-    "publish": "npm run release && dotnet publish -c Release"
+    "clean": "del /Q /S build\\*.*",
+    "startcra": "node scripts/start.js",
+    "buildcra": "node scripts/build.js && webpack --progress --mode=production",
+    "start": "npx parcel ./public/index.html --port 1234 --open",
+    "build": "npx parcel build ./public/index.html --dist-dir ./build/ --no-source-maps --no-cache",
+    "lint": "eslint ./src/"
+
   },
   "browserslist": {
     "production": [
