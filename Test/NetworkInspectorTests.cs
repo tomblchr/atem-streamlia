@@ -13,7 +13,7 @@ namespace SwitcherServerTests
         [Test]
         public void FindIPAddress()
         {
-            var ip = NetworkInspector.GetLocalIPv4(System.Net.NetworkInformation.NetworkInterfaceType.Wireless80211);
+            var ip = NetworkInspector.GetLocalIPv4(System.Net.NetworkInformation.NetworkInterfaceType.Ethernet);
 
             Logger.LogInformation(ip);
 
