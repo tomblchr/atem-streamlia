@@ -1,18 +1,15 @@
-import React, { Component } from "react";
+import React, { PropsWithChildren, Component } from "react";
 import { Container } from "reactstrap";
 import HeaderBanner from "./HeaderBanner";
 
-export class Layout extends Component {
-  static displayName = Layout.name;
+const Layout = ({children}: PropsWithChildren): JSX.Element => {
 
-  render () {
-    return (
-      <React.Fragment>
+    return <React.Fragment>
         <HeaderBanner />
         <Container>
-          {this.props.children}
+          {children}
         </Container>
       </React.Fragment>
-    );
-  }
-}
+};
+
+export default Layout;

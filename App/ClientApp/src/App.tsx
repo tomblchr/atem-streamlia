@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Routes, Route } from 'react-router';
-import { Layout } from './components/Layout';
+import Layout from './components/Layout';
 import ReactPlayer from 'react-player/youtube';
 
 import Audio from './components/Audio';

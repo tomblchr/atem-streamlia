@@ -10,6 +10,7 @@
     "browserslist": "4.16.6",
     "qrcode.react": "3.1.0",
     "react": "18.2.0",
+    "react-bootstrap": "^2.7.2",
     "react-dom": "18.2.0",
     "react-feather": "2.0.10",
     "react-player": "2.11.2",
@@ -18,25 +19,24 @@
     "reactstrap": "9.1.5"
   },
   "devDependencies": {
-    "@parcel/packager-raw-url": "2.8.3",
-    "@parcel/transformer-webmanifest": "2.8.3",
+    "@types/node": "^18.13.0",
     "@types/react": "18.0.28",
     "@types/react-dom": "18.0.10",
     "@types/react-toastify": "^4.1.0",
+    "@vitejs/plugin-react": "^3.1.0",
     "eslint": "8.27.0",
-    "parcel": "2.8.3",
-    "process": "^0.11.10",
-    "typescript": "4.9.5"
+    "process": "0.11.10",
+    "typescript": "4.9.5",
+    "vite": "4.1.1"
   },
   "eslintConfig": {
     "extends": "react-app"
   },
   "scripts": {
     "clean": "del /Q /S build\\*.*",
-    "startcra": "node scripts/start.js",
-    "buildcra": "node scripts/build.js && webpack --progress --mode=production",
-    "start": "npx parcel ./public/index.html --dist-dir ./build/ --port 1234 --open",
-    "build": "npx parcel build ./public/index.html --dist-dir ./build/ --no-source-maps --no-cache",
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
     "lint": "eslint ./src/"
   },
   "browserslist": {
