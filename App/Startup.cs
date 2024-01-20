@@ -69,12 +69,13 @@ namespace SwitcherServer
             services.AddSpaStaticFiles(configuration =>
             {
                 configuration.RootPath = "ClientApp/public";
-
                 // check other locations
                 var folders = new[]
                 {
-                    "ClientApp/public",
-                    "ClientApp/build"
+                    "publish/ClientApp/build",
+                    "publish/ClientApp/public",
+                    "ClientApp/build",
+                    "ClientApp/public"
                 };
                 foreach (var folder in folders)
                 {
@@ -123,7 +124,7 @@ namespace SwitcherServer
 
                 if (env.IsDevelopment())
                 {
-                    spa.UseReactDevelopmentServer(npmScript: "start");
+                    spa.UseProxyToSpaDevelopmentServer("http://localhost:5173");
                 }
             });
 
