@@ -70,10 +70,10 @@ namespace SwitcherServer.Atem
             if (_switcher == null || !_isConnected)
             {
                 _BMDSwitcherConnectToFailure failure = 0;
+                IBMDSwitcherDiscovery discovery = null;
                 try
                 {
-                    var discovery = new CBMDSwitcherDiscovery();
-                    discovery.ConnectTo(_ipaddress, out _switcher, out failure);
+                    discovery = new CBMDSwitcherDiscovery();
                 }
                 catch (System.Runtime.InteropServices.COMException)
                 {
@@ -82,7 +82,16 @@ namespace SwitcherServer.Atem
                 }
                 catch (Exception e)
                 {
-                    _logger.LogError(e, "Could not connect");
+                    _logger.LogError(e, "Could not create local objects");
+                    throw;
+                }
+                try
+                {
+                    discovery.ConnectTo(_ipaddress, out _switcher, out failure);
+                }
+                catch (Exception e)
+                {
+                    _logger.LogError(e, "Could not connect to ATEM");
                 }
                 if (failure == 0)
                 {
