@@ -1,6 +1,7 @@
 /// <reference types="node" />
 /// <reference types="react" />
 /// <reference types="react-dom" />
+/// <reference types="vite/client" />
 
 declare namespace NodeJS {
   interface ProcessEnv {
@@ -68,4 +69,12 @@ declare module '*.module.scss' {
 declare module '*.module.sass' {
   const classes: { readonly [key: string]: string };
   export default classes;
+}
+
+interface ImportMetaEnv {
+  VITE_APP_COMMIT_HASH: string;
+}
+
+interface ImportMeta {
+  env: ImportMetaEnv;
 }
