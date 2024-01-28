@@ -69,19 +69,29 @@ namespace SwitcherServer.Atem
 
             if (_switcher == null || !_isConnected)
             {
-                var discovery = new CBMDSwitcherDiscovery();
                 _BMDSwitcherConnectToFailure failure = 0;
+                IBMDSwitcherDiscovery discovery = null;
+                try
+                {
+                    discovery = new CBMDSwitcherDiscovery();
+                }
+                catch (System.Runtime.InteropServices.COMException)
+                {
+                    _logger.LogError($"ATEM software not installed. Please install ATEM Switchers software from https://www.blackmagicdesign.com/ca/support/family/atem-live-production-switchers");
+                    throw;
+                }
+                catch (Exception e)
+                {
+                    _logger.LogError(e, "Could not create local objects");
+                    throw;
+                }
                 try
                 {
                     discovery.ConnectTo(_ipaddress, out _switcher, out failure);
                 }
-                catch (System.Runtime.InteropServices.COMException e)
-                {
-                    _logger.LogWarning(e, $"Could not connect: {failure}");
-                }
                 catch (Exception e)
                 {
-                    _logger.LogError(e, "Could not connect");
+                    _logger.LogError(e, "Could not connect to ATEM");
                 }
                 if (failure == 0)
                 {

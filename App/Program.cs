@@ -57,7 +57,7 @@ namespace SwitcherServer
                         options.ListenAnyIP(port, configure =>
                         {
                             configure.Protocols = Microsoft.AspNetCore.Server.Kestrel.Core.HttpProtocols.Http1;
-#if DEBUGS
+#if DEBUG
                             
                             if (port == 443)
                             {

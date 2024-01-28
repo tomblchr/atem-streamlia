@@ -45,6 +45,8 @@ const Setup = ({ server, livestreamUrl, liveStreamEnabled, hostAgentNetworkLocat
 
     }, [server, onLivestreamUrlChange]);
 
+    const ver = import.meta.env.VITE_APP_COMMIT_HASH;
+
     /*
 
     React.useEffect(() => {
@@ -174,10 +176,11 @@ const Setup = ({ server, livestreamUrl, liveStreamEnabled, hostAgentNetworkLocat
         </div>
         <h3>Instructions</h3>
         <div className="well" style={{ display: "block" }}>
+            <p>Instal the <a href="CA.pem">server root certificate</a>.</p>
             <p>Open <a href="https://atem.streamlia.com">https://atem.streamlia.com</a>. 
                Set the network location of the <a href="https://github.com/tomblchr/atem-streamlia/releases">host agent</a>. 
                See <a href="https://github.com/tomblchr/atem-streamlia"><GitHub /></a> for details.
-               Version: { process.env.REACT_APP_COMMIT_HASH } Environment: { process.env.NODE_ENV }
+               Verssion: {ver}  Environment: {import.meta.env.MODE}
             </p>
             <div>
                 <QRCode value="https://atem.streamlia.com" />

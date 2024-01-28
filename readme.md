@@ -17,6 +17,12 @@ This application lives along side the ATEM Software Control software (Windows on
 
 This project relies on a COM reference to the BMD interop DLL installed as part of the ATEM Software Control. Build the software using the .NET Framework version of MSBuild, which contains the [ResolveComReference build task](https://docs.microsoft.com/en-ca/visualstudio/msbuild/resolvecomreference-task).
 
+Alternatively, generate a .NET assembly from the BMDSwitcherAPI.idl using...
+
+1. midl.exe .\BMDSwitcherAPI.idl
+1. TlbImp.exe .\BMDSwitcherAPI.tlb
+1. Reference the output assembly DLL in the project
+
 Use the `build.ps1` script to build from the command line.
 
 ## Get Going

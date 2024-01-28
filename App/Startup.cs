@@ -61,7 +61,7 @@ namespace SwitcherServer
                 .AddPolicy("CorsPolicy", builder => builder
                     .AllowAnyMethod()
                     .AllowAnyHeader()
-                    .WithOrigins("http://localhost:3000", "https://atem.streamlia.com")
+                    .WithOrigins("http://localhost:1234", "https://atem.streamlia.com")
                     .AllowCredentials()                                                  // needed for signalr
                     ));
 
@@ -69,12 +69,13 @@ namespace SwitcherServer
             services.AddSpaStaticFiles(configuration =>
             {
                 configuration.RootPath = "ClientApp/public";
-
                 // check other locations
                 var folders = new[]
                 {
-                    "ClientApp/public",
-                    "ClientApp/build"
+                    "publish/ClientApp/dist",
+                    "publish/ClientApp/public",
+                    "ClientApp/dist",
+                    "ClientApp/public"
                 };
                 foreach (var folder in folders)
                 {
@@ -93,7 +94,7 @@ namespace SwitcherServer
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-            }
+                            }
             else
             {
                 app.UseExceptionHandler("/Error");
@@ -123,7 +124,8 @@ namespace SwitcherServer
 
                 if (env.IsDevelopment())
                 {
-                    spa.UseReactDevelopmentServer(npmScript: "start");
+                    // use npm run preview to run the front end separately
+                    spa.UseProxyToSpaDevelopmentServer("http://localhost:4173");
                 }
             });
 

@@ -11,9 +11,10 @@
 # Build results
 [Bb]in/
 [Oo]bj/
-
+.parcel-cache/
 .vs/
 
+**/dist/
 
 # Packages
 *.nupkg

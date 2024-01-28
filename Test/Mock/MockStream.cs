@@ -155,5 +155,10 @@ namespace SwitcherServerTests.Mock
         {
             throw new NotImplementedException();
         }
+
+        public void GetDuration(out byte hours, out byte minutes, out byte seconds, out byte frames, out int dropFrame)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

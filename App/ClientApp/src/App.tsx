@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { Route } from 'react-router';
-import { Layout } from './components/Layout';
-import ReactPlayer from 'react-player';
+import { Routes, Route } from 'react-router';
+import Layout from './components/Layout';
+import ReactPlayer from 'react-player/youtube';
 
 import Audio from './components/Audio';
 import Setup from './components/Setup';
@@ -86,25 +86,18 @@ const App = (): JSX.Element => {
                     </div>
                 </section>
             }
-            <Route exact path='/'>
-                <Switcher server={state.server} onLivestreamUrlChange={handleLivestreamUrlChange} />
-            </Route>
-            <Route path='/audio'>
-                <Audio server={state.server} />
-            </Route>
-            <Route path='/tally-light'>
-                <TallyLight server={state.server} />
-            </Route>
-            <Route path='/setup'>
-                <Setup server={state.server}
-                    livestreamUrl={state.livestreamUrl}
-                    liveStreamEnabled={state.livestreamEnabled}
-                    hostAgentNetworkLocation={state.hostAgentNetworkLocation}
-                    onLivestreamUrlChange={handleLivestreamUrlChange}
-                    onLivestreamEnabledChange={handleLivestreamEnabledChange}
-                    onHostAgentNetworkLocationChange={handleHostAgentNetworkLocationChange} />
-            </Route>
-            
+            <Routes>
+                <Route path='/' element={<Switcher server={state.server} onLivestreamUrlChange={handleLivestreamUrlChange} />} />            
+                <Route path='/audio' element={<Audio server={state.server} />} />            
+                <Route path='/tally-light' element={<TallyLight server={state.server} />} />
+                <Route path='/setup' element={<Setup server={state.server}
+                        livestreamUrl={state.livestreamUrl}
+                        liveStreamEnabled={state.livestreamEnabled}
+                        hostAgentNetworkLocation={state.hostAgentNetworkLocation}
+                        onLivestreamUrlChange={handleLivestreamUrlChange}
+                        onLivestreamEnabledChange={handleLivestreamEnabledChange}
+                        onHostAgentNetworkLocationChange={handleHostAgentNetworkLocationChange} /> } />
+            </Routes>
         </Layout>
     );
 

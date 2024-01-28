@@ -27,7 +27,7 @@ class ServerHubConnection {
                     return 6000;
                 }
             })
-            .configureLogging(new Log.AtemLogger(LogLevel.Warning))
+            .configureLogging(new Log.AtemLogger(LogLevel.Error))
             .build();
 
         this.connection = newConnection;
