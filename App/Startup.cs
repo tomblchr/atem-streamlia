@@ -124,7 +124,8 @@ namespace SwitcherServer
 
                 if (env.IsDevelopment())
                 {
-                    spa.UseProxyToSpaDevelopmentServer("http://localhost:5173");
+                    // use npm run preview to run the front end separately
+                    spa.UseProxyToSpaDevelopmentServer("http://localhost:4173");
                 }
             });
 
