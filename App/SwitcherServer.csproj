@@ -27,11 +27,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="ClientApp\build\**" />
-    <Content Remove="ClientApp\build\**" />
-    <EmbeddedResource Remove="ClientApp\build\**" />
-    <None Remove="ClientApp\build\**" />
-    <TypeScriptCompile Remove="ClientApp\build\**" />
+    <Compile Remove="ClientApp\dist\**" />
+    <Content Remove="ClientApp\dist\**" />
+    <EmbeddedResource Remove="ClientApp\dist\**" />
+    <None Remove="ClientApp\dist\**" />
+    <TypeScriptCompile Remove="ClientApp\dist\**" />
     <TypeScriptCompile Remove="ClientApp\node_modules\**" />
   </ItemGroup>
 
@@ -80,14 +80,14 @@
     <Exec WorkingDirectory="$(SpaRoot)" Command="npm run build" />
   </Target>
 
-  <Target Name="PublishRunParcel" AfterTargets="ComputeFilesToPublish">
+  <Target Name="PublishRunVite" AfterTargets="ComputeFilesToPublish">
     <!-- As part of publishing, ensure the JS resources are freshly built in production mode -->
     <Exec WorkingDirectory="$(SpaRoot)" Command="npm install" />
     <Exec WorkingDirectory="$(SpaRoot)" Command="npm run build" />
 
     <!-- Include the newly-built files in the publish output -->
     <ItemGroup>
-      <DistFiles Include="$(SpaRoot)build\**" />
+      <DistFiles Include="$(SpaRoot)dist\**" />
       <ResolvedFileToPublish Include="@(DistFiles->'%(FullPath)')" Exclude="@(ResolvedFileToPublish)">
         <RelativePath>%(DistFiles.Identity)</RelativePath>
         <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>

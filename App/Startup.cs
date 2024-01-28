@@ -72,9 +72,9 @@ namespace SwitcherServer
                 // check other locations
                 var folders = new[]
                 {
-                    "publish/ClientApp/build",
+                    "publish/ClientApp/dist",
                     "publish/ClientApp/public",
-                    "ClientApp/build",
+                    "ClientApp/dist",
                     "ClientApp/public"
                 };
                 foreach (var folder in folders)
@@ -94,7 +94,7 @@ namespace SwitcherServer
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-            }
+                            }
             else
             {
                 app.UseExceptionHandler("/Error");
