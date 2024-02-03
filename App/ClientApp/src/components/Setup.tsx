@@ -180,7 +180,7 @@ const Setup = ({ server, livestreamUrl, liveStreamEnabled, hostAgentNetworkLocat
             <p>Open <a href="https://atem.streamlia.com">https://atem.streamlia.com</a>. 
                Set the network location of the <a href="https://github.com/tomblchr/atem-streamlia/releases">host agent</a>. 
                See <a href="https://github.com/tomblchr/atem-streamlia"><GitHub /></a> for details.
-               Verssion: {ver}  Environment: {import.meta.env.MODE}
+               Version: {ver}  Environment: {import.meta.env.MODE}
             </p>
             <div>
                 <QRCode value="https://atem.streamlia.com" />
