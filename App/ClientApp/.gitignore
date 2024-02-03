@@ -26,3 +26,4 @@ yarn-error.log*
 # keep build scripts
 !/scripts/*.js
 !/config/**/*.js
+!*.config.js

@@ -71,10 +71,4 @@ declare module '*.module.sass' {
   export default classes;
 }
 
-interface ImportMetaEnv {
-  VITE_APP_COMMIT_HASH: string;
-}
-
-interface ImportMeta {
-  env: ImportMetaEnv;
-}
+declare const __APP_COMMIT_HASH__: string;
