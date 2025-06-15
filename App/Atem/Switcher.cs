@@ -93,9 +93,7 @@ namespace SwitcherServer.Atem
             if (_mixEffectBlocks == null)
             {
                 var items = SwitcherDirect.GetMixEffectBlocks();
-                _mixEffectBlocks = new List<MixEffectBlock>(items
-                    .ToList()
-                    .Select(c => new MixEffectBlock(this, c, _mediator)));
+                _mixEffectBlocks = [.. items.Select(c => new MixEffectBlock(this, c, _mediator))];
             }
 
             return _mixEffectBlocks;

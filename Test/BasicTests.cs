@@ -17,8 +17,8 @@ namespace SwitcherServerTests
         [Test]
         public void TheBasics()
         {
-            Assert.IsNotNull(AtemMini);
-            Assert.IsTrue(AtemMini.IsConnected);
+            Assert.That(AtemMini is not null);
+            Assert.That(AtemMini.IsConnected);
 
             // Log info about the switcher under test
             Logger.LogInformation($"Video Mode: {AtemMini.GetVideoMode()}");

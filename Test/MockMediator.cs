@@ -41,5 +41,10 @@ namespace SwitcherServerTests
         {
             throw new NotImplementedException();
         }
+
+        public Task Send<TRequest>(TRequest request, CancellationToken cancellationToken = default) where TRequest : IRequest
+        {
+            throw new NotImplementedException();
+        }
     }
 }

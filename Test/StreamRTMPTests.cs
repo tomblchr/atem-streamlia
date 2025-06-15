@@ -31,7 +31,7 @@ namespace SwitcherServerTests
             s.Stop();
 
             // assert
-            Assert.IsFalse(s.IsStreamingSupported);
+            Assert.That(!s.IsStreamingSupported);
         }
 
         [Test]
@@ -44,7 +44,7 @@ namespace SwitcherServerTests
             s.Start();
 
             // assert
-            Assert.IsTrue(s.IsStreaming);
+            Assert.That(s.IsStreaming);
         }
 
         [Test]
@@ -57,7 +57,7 @@ namespace SwitcherServerTests
             s.Stop();
 
             // assert
-            Assert.IsFalse(s.IsStreaming);
+            Assert.That(!s.IsStreaming);
         }
     }
 }

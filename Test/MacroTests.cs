@@ -45,7 +45,7 @@ namespace SwitcherServerTests
             pool.ToList().ForEach(c => Logger.LogInformation($"Macro: {c.Id}/{c.Name}-{c.Description}"));
 
             // assert
-            Assert.IsNotEmpty(pool);
+            Assert.That(pool.Any());
         }
     }
 }

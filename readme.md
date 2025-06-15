@@ -43,6 +43,10 @@ Use the `build.ps1` script to build from the command line.
 
 ![Responsive](Doc/screens.png)
 
+## Tests
+
+The test project includes many tests that exercise communication with the ATEM hardware, and will only run if an ATEM Switcher is available and the ATEM software is installed.
+
 ## Inspirations
 
 Looking for an alternative to operate your ATEM? Try these projects...
@@ -67,6 +71,5 @@ Looking for an alternative to operate your ATEM? Try these projects...
 
 ## To Do
 
-* Audio monitoring
 * Keyboard shortcuts
 * Streaming and recording controls

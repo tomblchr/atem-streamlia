@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using Microsoft.VisualStudio.TestPlatform.TestHost;
 using SwitcherServer.Atem;
 using System;
 using System.Collections.Generic;
@@ -8,10 +10,10 @@ namespace SwitcherServerTests
 {
     public class Tests
     {
-        readonly ILogger _logger;
-        readonly Switcher _switcher;
+        static readonly ILogger _logger;
+        static readonly Switcher _switcher;
 
-        public Tests()
+        static Tests()
         {
             using var factory = LoggerFactory
                 .Create(builder => builder
@@ -20,10 +22,14 @@ namespace SwitcherServerTests
 
             _logger = factory.CreateLogger<Tests>();
 
+            var ip = SwitcherServer.Program
+                .BuildConfiguration<Tests>([])
+                .GetValue<string>("AtemIpAddress");
+
             _switcher = new SwitcherBuilder()
                 .Mediator(new MockMediator())
                 .ConnectionKeeper(new SwitcherConnectionKeeper(new MockMediator(), null))
-                .NetworkIP("192.168.68.9")
+                .NetworkIP(ip)
                 .Build();
         }
 

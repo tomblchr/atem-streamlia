@@ -17,7 +17,7 @@ namespace SwitcherServerTests
 
             Logger.LogInformation(ip);
 
-            Assert.AreNotEqual(NetworkInspector.UNKNOWN_IP, ip);
+            Assert.That(NetworkInspector.UNKNOWN_IP != ip);
         }
     }
 }

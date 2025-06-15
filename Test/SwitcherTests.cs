@@ -13,7 +13,7 @@ namespace SwitcherServerTests
         [Test]
         public void TestConnect()
         {
-            Assert.IsNotNull(AtemMini);
+            Assert.That(AtemMini is not null);
         }
 
         [Test]
@@ -23,7 +23,7 @@ namespace SwitcherServerTests
             string videoMode = AtemMini.GetVideoMode();
 
             // assert
-            Assert.AreEqual("bmdSwitcherVideoMode1080p24", videoMode);
+            Assert.That("bmdSwitcherVideoMode1080p24" == videoMode);
         }
 
         [Test]
@@ -33,7 +33,7 @@ namespace SwitcherServerTests
             var inputs = AtemMini.GetInputs();
 
             // assert
-            Assert.IsNotEmpty(inputs);
+            Assert.That(inputs.Any());
 
             // info
             inputs.ToList().ForEach(c => Logger.LogInformation(c.Name));
@@ -46,7 +46,7 @@ namespace SwitcherServerTests
             var meb = AtemMini.GetMixEffectBlocks();
 
             // assert
-            Assert.IsNotEmpty(meb);
+            Assert.That(meb.Any());
 
             // info
             meb.ToList().ForEach(c => Logger.LogInformation($"{c.ProgramInput.Name} => {c.PreviewInput.Name}"));
@@ -59,7 +59,7 @@ namespace SwitcherServerTests
             var dk = AtemMini.GetDownstreamKeys();
 
             // assert
-            Assert.IsNotEmpty(dk);
+            Assert.That(dk.Any());
 
             // info
             dk.ToList().ForEach(c => Logger.LogInformation($"{c.OnAir}"));
@@ -72,7 +72,7 @@ namespace SwitcherServerTests
             var dk = AtemMini.GetMixEffectBlocks().First().Keys;
 
             // assert
-            Assert.IsNotEmpty(dk);
+            Assert.That(dk.Any());
 
             // info
             dk.ToList().ForEach(c => Logger.LogInformation($"{(int)c.TransitionSelectionMask}-{c.OnAir}"));
@@ -85,7 +85,7 @@ namespace SwitcherServerTests
             var transition = AtemMini.GetMixEffectBlocks().First().GetNextTransition();
 
             // assert
-            Assert.IsNotEmpty(transition.Keys);
+            Assert.That(transition.Keys.Any());
 
             // info
             Logger.LogInformation($"{transition.IncludeBackground} => {transition.Keys}");
@@ -108,8 +108,8 @@ namespace SwitcherServerTests
 
             // assert
             var end = AtemMini.GetMixEffectBlocks().First();
-            Assert.AreEqual(startProgram, end.PreviewInput.Id);
-            Assert.AreEqual(startPreview, end.ProgramInput.Id);
+            Assert.That(startProgram == end.PreviewInput.Id);
+            Assert.That(startPreview == end.ProgramInput.Id);
         }
         
         [Test]

@@ -37,7 +37,9 @@ namespace SwitcherServer
 
             services.AddSignalR();
             services.AddControllersWithViews();
-            services.AddMediatR(typeof(Startup));
+            services.AddMediatR(c => {
+                c.AddBehavior(typeof(Startup));
+            });
             services.AddTransient<AtemHubContext>();
             services.AddSingleton<SwitcherConnectionKeeper>();
 

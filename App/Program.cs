@@ -45,7 +45,7 @@ namespace SwitcherServer
                 })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    var config   = BuildConfiguration(args);
+                    var config   = BuildConfiguration<Program>(args);
                     var port     = config.GetValue<int>("HostPort", 5001);
                     var certFile = config.GetValue<string>("CertificateFile", string.Empty);
                     var password = config.GetValue<string>("CertificatePassword", string.Empty);
@@ -108,12 +108,12 @@ namespace SwitcherServer
                     });
                 });
 
-        public static IConfiguration BuildConfiguration(string[] args)
+        public static IConfiguration BuildConfiguration<T>(string[] args) where T : class
         {
             return new ConfigurationBuilder()
                 .SetBasePath(GetRootPath())
                 .AddJsonFile("appsettings.json", true)
-                .AddUserSecrets<Program>()
+                .AddUserSecrets<T>()
                 .AddEnvironmentVariables()
                 .AddCommandLine(args)
                 .Build();

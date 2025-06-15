@@ -18,7 +18,7 @@ namespace SwitcherServerTests
             var result = AtemMini.SwitcherDirect.GetFairlightAudioMixer();
 
             // assert
-            Assert.IsNotNull(result);
+            Assert.That(result is not null);
         }
 
         [Test]
@@ -28,8 +28,8 @@ namespace SwitcherServerTests
             var result = AtemMini.GetFairlightAudioMixer();
 
             // assert
-            Assert.IsNotNull(result);
-            Assert.GreaterOrEqual(0, result.MasterOutFaderGain);
+            Assert.That(result is not null);
+            Assert.That(result.MasterOutFaderGain >= 0);
         }
 
         [Test]
@@ -39,8 +39,8 @@ namespace SwitcherServerTests
             var result = AtemMini.GetFairlightAudioMixer().Inputs;
 
             // assert
-            Assert.IsNotNull(result);
-            Assert.GreaterOrEqual(result.Count(), 0);
+            Assert.That(result is not null);
+            Assert.That(result.Count() >= 0);
         }
 
         [Test]
@@ -50,8 +50,8 @@ namespace SwitcherServerTests
             var result = AtemMini.GetFairlightAudioMixer().Inputs.SelectMany(c => c.Sources);
 
             // assert
-            Assert.IsNotNull(result);
-            Assert.GreaterOrEqual(result.Count(), 0);
+            Assert.That(result is not null);
+            Assert.That(result.Count() >= 0);
             result.ToList().ForEach(c => { Logger.LogInformation($"{c.Input.Id}/{c.Id}=> Active: {c.IsActive},{c.MixOption},{c.InputGain},{c.FaderGain}"); });
         }
     }
