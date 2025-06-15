@@ -1,5 +1,5 @@
 import * as React from "react";
-import QRCode from "qrcode.react";
+import { QRCodeSVG } from "qrcode.react";
 //import { hostURL } from "../api/atemconnection";
 import * as Log from "../api/log";
 import ServerHubConnection from "./ServerHubConnection";
@@ -183,7 +183,7 @@ const Setup = ({ server, livestreamUrl, liveStreamEnabled, hostAgentNetworkLocat
                Version: {ver} Environment: {import.meta.env.MODE}
             </p>
             <div>
-                <QRCode value="https://atem.streamlia.com" />
+                <QRCodeSVG value="https://atem.streamlia.com" />
             </div>
         </div>
     </section>

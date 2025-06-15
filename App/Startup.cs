@@ -1,16 +1,11 @@
-using BMDSwitcherAPI;
-using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using SwitcherServer.Atem;
 using System;
-using System.ComponentModel;
 
 namespace SwitcherServer
 {
@@ -37,22 +32,20 @@ namespace SwitcherServer
 
             services.AddSignalR();
             services.AddControllersWithViews();
-            services.AddMediatR(c => {
-                c.AddBehavior(typeof(Startup));
-            });
+            services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<Startup>());
             services.AddTransient<AtemHubContext>();
             services.AddSingleton<SwitcherConnectionKeeper>();
 
             services.AddSingleton<IConnectionChangeNotifyQueue, ConnectionChangeNotificationQueue>();
             services.AddSingleton<IVolumeChangeNotificationQueue, VolumeChangeNotificationQueue>();
-            services.AddHostedService<AtemWorker>();            
+            services.AddHostedService<AtemWorker>();
 
             if (Environment.IsDevelopment())
             {
                 services.AddTransient<MessageNotificationHandler>();
             }
 
-            services.AddSingleton(services => 
+            services.AddSingleton(services =>
             {
                 return new SwitcherBuilder(services)
                     .NetworkIP(ip)
@@ -96,7 +89,7 @@ namespace SwitcherServer
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                            }
+            }
             else
             {
                 app.UseExceptionHandler("/Error");
@@ -155,6 +148,5 @@ namespace SwitcherServer
 
             _logger.LogInformation("Shutdown sequence complete.");
         }
-
     }
 }
